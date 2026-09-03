@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}} &mdash; Genomic Benchmarks audit</title>
+<!-- A page's own stylesheets go above `site.css`, never below it: the rules in
+     site.css that correct the vendored table's own are order-dependent, and a
+     vendor sheet loaded last would win them back. -->
+{{head_extra}}
+<link rel="stylesheet" href="{{root}}assets/site.css">
+</head>
+<!-- `data-root` is how deep this page sits: the scripts build every link and the
+     one fetch from it, because a dataset page is one directory down and a framed
+     report is two, and a leading slash would break the whole site under a project
+     page's prefix. -->
+<body data-root="{{root}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="{{root}}index.html">Genomic Benchmarks <strong>audit</strong></a>
+    <nav>
+      <a href="{{root}}index.html">Overview</a>
+      <a href="{{root}}catalogue.html">Datasets</a>
+      <a href="{{root}}checks.html">Checks</a>
+      <a href="{{root}}core-set.html">Core Set</a>
+      <a href="{{root}}reports.html">Reports</a>
+      <a href="{{root}}methods.html">Methods</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+{{content}}
+</main>
+
+<footer class="colophon">
+  <div class="wrap">
+    <p>
+      Every number on this site comes from one committed file,
+      <code>docs/data/catalogue.json</code>, built offline from the tables this
+      repository carries under <code>data/</code>. Nothing is fetched at render
+      time and nothing is computed in the browser except the sorting, the
+      filtering and the grouping.
+    </p>
+    <dl class="provenance">
+      <dt>Measurements</dt>
+      <dd><code>genomic-benchmarks-qc</code>, run <code>{{qc_run}}</code></dd>
+      <dt>Audit</dt>
+      <dd><code>gb-audit {{package_version}}</code>, run <code>{{audit_run}}</code></dd>
+      <dt>Reports and full tables</dt>
+      <dd>{{record_line}}</dd>
+      <dt>Catalogue schema</dt>
+      <dd>version {{schema_version}}</dd>
+    </dl>
+    <p class="fine">
+      There is no build date here on purpose. Everything above comes from pinned
+      files, so two builds of the same commit produce the same page, and what a
+      reader needs in order to find these numbers again is the run label rather
+      than the hour it was rendered.
+    </p>
+  </div>
+</footer>
+
+<!-- Every word this site's tables, panels and figures render, kept in a page
+     rather than in the scripts beside it, so that tools/vocab_check.py reads all
+     of them. It scans this directory for prose and a .js file is not prose to it,
+     which would make a script the one place site copy could avoid the check. It
+     is in the shared shell rather than in each page because two copies of a
+     caveat is how a site ends up making two different claims about one
+     measurement; a page uses the keys it needs and ignores the rest.
+     `gb_audit/site.py` reads this same block for the words it renders
+     server-side. -->
+<script type="application/json" id="site-copy">
+{
+  "columns": {
+    "benchmark_id": "Dataset",
+    "collection": "Collection",
+    "task_category_grouped": "Task category",
+    "molecular_level": "Level",
+    "task_type": "Task type",
+    "species": "Species",
+    "total_size": "Rows",
+    "overall_verdict": "Rollup flag",
+    "n_checks_failed": "Checks flagged Fail",
+    "max_probe_auroc": "Strongest probe AUROC",
+    "max_leaked_test_pct": "Worst split overlap",
+    "in_core_set": "Core Set"
+  },
+  "column_help": {
+    "overall_verdict": "The worst flag the {{n_checks}} checks returned on this dataset's reference split. A rollup of what was measured, not a judgement about the dataset.",
+    "n_checks_failed": "How many of the {{n_checks}} checks returned Fail on the reference split.",
+    "max_probe_auroc": "The AUROC the strongest single sequence feature reaches on the reference split. A lower bound on what a learned model could recover from that feature alone.",
+    "max_leaked_test_pct": "The largest overlap the leakage scan found between two splits: the percentage of one split's sequences that were also present in the other. Open the dataset to see which two splits.",
+    "in_core_set": "Whether this dataset passed all {{n_gates}} Core Set gates.",
+    "total_size": "Sequences across every split, as the data package reports them."
+  },
+  "flags": {
+    "Pass": "Pass",
+    "Warning": "Warning",
+    "Fail": "Fail",
+    "Unknown": "Unknown"
+  },
+  "flag_help": {
+    "Pass": "The check ran and returned Pass. That establishes only that this check did not separate the classes.",
+    "Warning": "The check ran and returned Warning.",
+    "Fail": "The check ran and returned Fail.",
+    "Unknown": "The check ran and could not be scored. This is not a Pass.",
+    "blank": "The check had nothing to run on. This is not a Pass either, and it is not the same statement as Unknown."
+  },
+  "panel": {
+    "reference": "reference",
+    "reference_lead": "Measured on the",
+    "reference_tail": "split, which is this dataset's reference split.",
+    "probe_lead": "reaches AUROC",
+    "probe_tail": "on the reference split, from that feature alone.",
+    "probe_bound": "A lower bound: a stronger feature, or a model, may recover more.",
+    "no_probe": "No probe reported an AUROC for this dataset.",
+    "leakage_none": "The leakage scan found no sequences of one split present in another.",
+    "leakage_some": "of the sequences in {query} were also found in {target}.",
+    "leakage_reverse": "The same comparison the other way: {pct} of the sequences in {target} were found in {query}.",
+    "leakage_scope": "The largest of the {n} split comparisons the scan made on this dataset.",
+    "leakage_absent": "The leakage scan had nothing to compare: this dataset ships one split only.",
+    "leakage_unscanned": "This dataset was not scanned for leakage.",
+    "pass_note": "No check returned Warning or Fail on the reference split. That establishes only that these {{n_checks}} checks do not separate the classes.",
+    "checks_heading": "The {{n_checks}} checks on the reference split",
+    "splits_heading": "Splits, and what each was measured on",
+    "leakage_heading": "Split comparisons",
+    "reports_heading": "Reports",
+    "core_set_member": "In the Core Set",
+    "core_set_absent": "Not in the Core Set",
+    "core_set_rank": "rank",
+    "missing_entry": "This page was built for a dataset the catalogue beside it does not carry, which means the two came from different builds. The identifier asked for was"
+  },
+  "reports": {
+    "class_kind": "class distributions",
+    "leakage_kind": "leakage scan",
+    "open": "Open report",
+    "raw": "Open the raw file",
+    "back": "Back to the dataset",
+    "rendered_by": "Rendered by genomic-benchmarks-qc. Shown here unchanged, inside its own frame.",
+    "unpacked": "The reports for this dataset are in this build and can be read here.",
+    "linked": "The reports for this dataset are not in this build. They can be downloaded from the record.",
+    "unpublished": "The reports for this dataset are not in this build, and the record they live on is not published yet.",
+    "none": "This dataset has no rendered reports."
+  },
+  "kinds": {
+    "probe": "probe",
+    "integrity": "integrity",
+    "leakage scan": "leakage scan"
+  },
+  "empty": {
+    "no_rows": "No dataset matches these filters.",
+    "clear": "Clear filters"
+  }
+}
+</script>
+
+<script src="{{root}}assets/site.js"></script>
+{{scripts}}
+</body>
+</html>

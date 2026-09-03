@@ -1,0 +1,55 @@
+<section class="page-head">
+  <h1>The {{n_checks_word}} checks</h1>
+  <p class="lede">
+    {{n_probe_checks_cap}} probe checks fit one sequence feature against the class
+    labels and report how well it separates them. {{n_integrity_checks_cap}}
+    integrity checks count duplicates and unique bases. Together those
+    {{n_split_checks_word}} run per split. The last, the leakage scan, runs across
+    pairs of splits.
+  </p>
+  <p>
+    Each returns one of {{n_flags_word}} flags. <strong>Pass</strong>, <strong>Warning</strong>
+    and <strong>Fail</strong> are scored outcomes. <strong>Unknown</strong> is not
+    a fourth degree of severity: the check ran and could not be scored, which is a
+    different statement from any of the {{n_scored_flags_word}} &mdash; and
+    different again from a blank, which means the check had nothing to run on.
+  </p>
+</section>
+
+<section class="figures">
+  <h2>What each check returned across the corpus</h2>
+  {{fig_check_bars}}
+
+  <table class="listing">
+    <caption>
+      The same counts as a table, with the two absences kept apart: Unknown is a
+      check that ran and could not be scored, blank is a check with nothing to run
+      on.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Check</th>
+        <th scope="col">Kind</th>
+        <th scope="col" class="right">Pass</th>
+        <th scope="col" class="right">Warning</th>
+        <th scope="col" class="right">Fail</th>
+        <th scope="col" class="right">Unknown</th>
+        <th scope="col" class="right">Blank</th>
+        <th scope="col" class="right">Scored</th>
+      </tr>
+    </thead>
+    <tbody>
+{{check_rows}}
+    </tbody>
+  </table>
+</section>
+
+<section class="figures" id="matrix">
+  <h2>Every dataset, every check</h2>
+  <p>
+    {{n_datasets}} rows by {{n_checks}} columns, grouped by collection and ordered
+    worst-first inside each group. Each cell is the flag that check returned on
+    that dataset's reference split.
+  </p>
+  {{fig_flag_matrix}}
+</section>

@@ -1,0 +1,37 @@
+<section class="page-head">
+  <h1>All {{n_datasets}} datasets</h1>
+  <p class="lede">
+    Every dataset the run measured, with the flag each one rolled up to, the AUROC
+    its strongest probe reached, and the largest overlap the leakage scan found
+    between two of its splits. Sort any column; filter by any facet; open a row
+    for the dataset's own page.
+  </p>
+  <p class="note">
+    Every figure in this table was measured on that dataset's <strong>reference
+    split</strong> &mdash; <code>train</code> for all but one of them. It is not a
+    maximum taken over splits, and the dataset page names the split for each
+    number it shows.
+  </p>
+</section>
+
+<section class="controls" id="controls">
+  <div class="search-row">
+    <label for="search">Search</label>
+    <input type="search" id="search" placeholder="collection, dataset, species&hellip;"
+           autocomplete="off">
+    <button type="button" id="clear" class="ghost">Clear filters</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="facets" id="facets"></div>
+</section>
+
+<div id="table" class="catalogue-table"></div>
+
+<noscript>
+  <p class="note warn">
+    This table sorts and filters {{n_datasets}} rows in the browser, so it needs
+    scripting. Without it, every dataset still has its own page &mdash; and
+    <a href="checks.html">the checks page</a> carries the whole
+    {{n_datasets}}-by-{{n_checks}} matrix as static HTML.
+  </p>
+</noscript>

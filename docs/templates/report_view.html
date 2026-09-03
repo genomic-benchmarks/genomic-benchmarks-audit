@@ -1,0 +1,29 @@
+<nav class="crumb">
+  <a href="../../index.html">Overview</a> &rsaquo;
+  <a href="../../catalogue.html">Datasets</a> &rsaquo;
+  <a href="{{dataset_href}}">{{benchmark_id}}</a> &rsaquo;
+  <span>{{report_title}}</span>
+</nav>
+
+<section class="page-head report-head">
+  <h1>{{report_title}}</h1>
+  <p class="lede">{{report_description}}</p>
+  <p class="badge-line">
+    <span class="badge">{{report_kind}}</span>
+    <a class="ghost" href="{{raw_href}}">Open the raw file</a>
+    <a class="ghost" href="{{dataset_href}}">Back to the dataset</a>
+  </p>
+</section>
+
+<!-- An iframe rather than the report's markup inlined. genomic-benchmarks-qc
+     writes a complete document with its own stylesheet; lifting its body in here
+     would put two stylesheets in one scope and make the report's appearance
+     depend on this site's. Framed, it renders exactly as the tool wrote it. -->
+<iframe class="report-frame" src="{{raw_href}}" title="{{report_title}}"
+        loading="lazy"></iframe>
+
+<p class="fine">
+  Rendered by <code>genomic-benchmarks-qc</code> in run <code>{{qc_run}}</code>
+  and shown here unchanged. Some of these reports are tens of megabytes; a frame
+  that is slow to fill is a large report, not a failed request.
+</p>

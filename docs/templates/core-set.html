@@ -1,0 +1,62 @@
+<section class="page-head">
+  <h1>The Core Set</h1>
+  <p class="lede">
+    {{n_gates_cap}} gates applied in order to the {{n_datasets}} measured datasets.
+    {{core_set_size_cap}} came through all of them. A dataset that did not is not
+    thereby unusable &mdash; the gates say which checks returned Fail on it, and
+    nothing more.
+  </p>
+</section>
+
+<section class="figures">
+  <h2>What each gate removed</h2>
+  {{fig_funnel}}
+
+  <table class="listing">
+    <caption>The gates in the order applied, with the threshold each one used.</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="right">Step</th>
+        <th scope="col">Criterion</th>
+        <th scope="col">Requirement</th>
+        <th scope="col">Threshold</th>
+        <th scope="col" class="right">In</th>
+        <th scope="col" class="right">Removed</th>
+        <th scope="col" class="right">Out</th>
+      </tr>
+    </thead>
+    <tbody>
+{{gate_rows}}
+    </tbody>
+  </table>
+</section>
+
+<section class="figures">
+  <h2>The {{core_set_size}} datasets</h2>
+  <table class="listing">
+    <caption>
+      Ranked as the selection ranked them. Every figure was measured on the
+      dataset's reference split.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col" class="right">Rank</th>
+        <th scope="col">Dataset</th>
+        <th scope="col">Task type</th>
+        <th scope="col">Species</th>
+        <th scope="col" class="right">Rows</th>
+        <th scope="col">Rollup flag</th>
+        <th scope="col" class="right">Strongest probe AUROC</th>
+        <th scope="col" class="right">Worst split overlap</th>
+      </tr>
+    </thead>
+    <tbody>
+{{core_rows}}
+    </tbody>
+  </table>
+  <p class="note">
+    A Core Set member can still carry a Warning: the gates screen for Fail. The
+    strongest probe on a member still reaches an AUROC worth reading, and that
+    column is there so it can be read.
+  </p>
+</section>

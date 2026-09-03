@@ -1,0 +1,61 @@
+<section class="page-head">
+  <h1>The {{n_reports}} reports</h1>
+  <p class="lede">
+    <code>genomic-benchmarks-qc</code> renders a self-contained report for every
+    unit it measures: one per split per sequence column for the
+    {{n_split_checks_word}} class-distribution checks, and one per split pair for the
+    leakage scan. There
+    are {{n_reports}} of them across {{n_datasets}} datasets.
+  </p>
+  {{report_state}}
+  <p>
+    They are fetched rather than committed. The archives are 90 MB and the
+    reports unpack to far more, so a clone does not carry them; instead
+    <code>data/reports.csv</code> records each archive's size, digest and every
+    path inside it, which is how this page can list what exists whether or not it
+    was downloaded, and how <code>gb-audit fetch</code> can verify each archive
+    before unpacking it.
+  </p>
+</section>
+
+<section>
+  <h2>What each report holds</h2>
+  <dl class="kinds">
+    <dt>Class distributions</dt>
+    <dd>
+      What the nine class-distribution checks found on one split, for one sequence
+      column: the distribution of each feature by class, the probe fits, and the
+      per-position profiles. A dataset with two sequence columns gets one report
+      per column.
+    </dd>
+    <dt>Leakage scan</dt>
+    <dd>
+      The comparison of one pair of splits: the sequence matches found, and the
+      individual sequences of one split that were also present in the other. This
+      is the report that makes an overlapping held-out sequence identifiable
+      rather than only countable.
+    </dd>
+  </dl>
+</section>
+
+<section>
+  <h2>Every dataset's reports</h2>
+  <table class="listing reports-table">
+    <caption>
+      {{n_datasets_unpacked}} of {{n_datasets}} datasets have their reports in this
+      build. Sizes are the compressed archive.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Dataset</th>
+        <th scope="col" class="right">Class</th>
+        <th scope="col" class="right">Leakage</th>
+        <th scope="col" class="right">Archive</th>
+        <th scope="col">Reports</th>
+      </tr>
+    </thead>
+    <tbody>
+{{report_rows}}
+    </tbody>
+  </table>
+</section>

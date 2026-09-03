@@ -1,0 +1,119 @@
+<nav class="crumb">
+  <a href="../index.html">Overview</a> &rsaquo;
+  <a href="../catalogue.html">Datasets</a> &rsaquo;
+  <span>{{benchmark_id}}</span>
+</nav>
+
+<section class="page-head">
+  <h1><span class="collection-part">{{collection}}:</span><wbr>{{dataset_name}}</h1>
+  {{core_note}}
+  <dl class="facts">
+    <dt>Task</dt><dd>{{task_type}}, {{task_category}}</dd>
+    <dt>Level</dt><dd>{{molecular_level}}</dd>
+    <dt>Species</dt><dd>{{species}}</dd>
+    <dt>Sequences</dt><dd>{{total_size}} across {{n_dataset_splits}} {{split_word}}</dd>
+    <dt>Sequence length</dt><dd>{{min_seq_length}} to {{max_seq_length}}</dd>
+  </dl>
+</section>
+
+<section class="summary">
+  <h2>What the checks returned</h2>
+  <p class="rollup">
+    Worst flag across the {{n_checks_word}} checks on the
+    <code>{{reference_split}}</code> split: {{rollup_flag}}
+  </p>
+  <p>
+    Of the {{n_split_checks_word}} checks that measure a single split,
+    {{n_checks_reported}} ran on <code>{{reference_split}}</code> and
+    {{n_checks_scored}} were scored: {{n_checks_failed}} returned Fail,
+    {{n_checks_warning}} returned Warning, {{n_checks_unknown}} returned Unknown.
+    The leakage scan is counted in the flag above but not in these figures,
+    because it compares pairs of splits rather than measuring one.
+  </p>
+  <p>
+    Every rollup figure on this page was measured on
+    <code>{{reference_split}}</code>, which is this dataset's reference split
+    &mdash; not a maximum over its splits.
+  </p>
+  {{probe_note}}
+  {{leakage_note}}
+</section>
+
+<section class="figures">
+  <h2>The {{n_split_checks_word}} per-split checks</h2>
+  <p>
+    One row per split, one column per check. The leakage scan is not here because
+    it compares split pairs rather than measuring one split; it has its own
+    section below.
+  </p>
+  {{fig_checks}}
+
+  <table class="listing">
+    <caption>Each split, the flag it rolled up to, and its strongest probe.</caption>
+    <thead>
+      <tr>
+        <th scope="col">Split</th>
+        <th scope="col">Sequence columns</th>
+        <th scope="col">Rollup flag</th>
+        <th scope="col" class="right">Checks scored</th>
+        <th scope="col">Strongest probe</th>
+        <th scope="col" class="right">AUROC</th>
+      </tr>
+    </thead>
+    <tbody>
+{{split_rows}}
+    </tbody>
+  </table>
+</section>
+
+<section class="figures">
+  <h2>How far each probe gets</h2>
+  <p>
+    The AUROC each of the {{n_probe_checks_word}} probe checks reaches on each split,
+    from that one feature alone. The axis starts at 0.50 because that is what a
+    feature carrying no class information returns.
+  </p>
+  {{fig_probes}}
+</section>
+
+<section class="figures" id="leakage">
+  <h2>Split comparisons</h2>
+  {{fig_leakage}}
+  <table class="listing">
+    <caption>
+      Each pair, in both directions. The two percentages differ whenever the two
+      splits differ in size, so both are shown rather than the larger one.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Comparison</th>
+        <th scope="col">Flag</th>
+        <th scope="col" class="right">Of the first split</th>
+        <th scope="col" class="right">Of the second</th>
+      </tr>
+    </thead>
+    <tbody>
+{{leakage_rows}}
+    </tbody>
+  </table>
+</section>
+
+<section id="reports">
+  <h2>Reports</h2>
+  <p>
+    The full report <code>genomic-benchmarks-qc</code> rendered for each split and
+    each split pair, with every distribution, every probe fit, and every
+    individually-listed overlapping sequence behind the numbers above.
+  </p>
+  {{report_items}}
+</section>
+
+<section class="onward">
+  <h2>Nearby</h2>
+  {{siblings}}
+  <p class="fine">
+    <a href="../catalogue.html">All {{n_datasets}} datasets</a> &middot;
+    <a href="../checks.html">What each check measures</a> &middot;
+    <a href="../methods.html#reference-split">Why one split is quoted</a>
+  </p>
+</section>

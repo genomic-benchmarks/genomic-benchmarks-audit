@@ -1,0 +1,464 @@
+/* The site's styling. One file, no framework, no webfont request.
+ *
+ * Inter is named first because the organisation site uses it, but it is asked
+ * for by name rather than fetched: a Google Fonts link would be a render-time
+ * request to a third party, which is the one thing docs/vendor/README.md says
+ * this site does not do. A reader with Inter installed sees Inter; everyone else
+ * sees their system's interface font, which is what that stack is for.
+ *
+ * The accent is the teal the organisation site uses. Flags carry colour, but
+ * never colour alone -- every flag is also its own word, because a flag is the
+ * tool's output and a reader has to be able to say which one it was.
+ */
+
+:root {
+  --ink: #16211f;
+  --ink-soft: #4a5754;
+  --ink-faint: #6d7a77;
+  --rule: #dde3e1;
+  --paper: #ffffff;
+  --wash: #f5f8f7;
+  --teal: #0f766e;
+  --teal-dark: #115e56;
+  --teal-wash: #e9f3f1;
+  --fail: #a1121b;
+  --warning: #8a5300;
+  --pass: #14603f;
+  --unknown: #6d7a77;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font: 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: "tnum" 1;   /* figures line up in a column of numbers */
+}
+
+.wrap { max-width: 1220px; margin: 0 auto; padding: 0 24px; }
+
+code, .mono { font-family: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace; }
+code { font-size: 0.88em; background: var(--wash); padding: 0.1em 0.34em; border-radius: 3px; }
+
+a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--teal-dark); }
+
+/* -------------------------------------------------------------- masthead --- */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  position: sticky; top: 0; z-index: 20;
+}
+.masthead .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; gap: 24px; }
+.wordmark { font-size: 15px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.wordmark strong { color: var(--teal); }
+.masthead nav { display: flex; gap: 20px; font-size: 14px; }
+
+/* ----------------------------------------------------------------- copy --- */
+
+main { padding: 40px 0 64px; }
+
+h1 { font-size: 30px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 16px; }
+h2 { font-size: 20px; letter-spacing: -0.015em; margin: 44px 0 12px; }
+
+main p { max-width: 74ch; color: var(--ink-soft); }
+main p b, main p strong { color: var(--ink); }
+
+.lede { font-size: 18px; color: var(--ink); max-width: 74ch; }
+
+.pending {
+  border-left: 3px solid var(--rule);
+  padding: 2px 0 2px 16px;
+  font-size: 15px;
+}
+
+.fine { font-size: 14px; color: var(--ink-faint); }
+
+/* -------------------------------------------------------------- summary --- */
+
+.summary { margin: 28px 0 8px; }
+.summary ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden;
+}
+.summary li { background: var(--wash); padding: 14px 16px; font-size: 14px; color: var(--ink-soft); }
+.summary li b { display: block; font-size: 26px; line-height: 1.1; color: var(--teal); margin-bottom: 4px; }
+
+/* ------------------------------------------------------------- controls --- */
+
+.controls { display: flex; flex-direction: column; gap: 14px; margin: 20px 0 14px; align-items: stretch; }
+.search-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.search-row label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-faint);
+}
+/* Species has nineteen values. A fieldset that grows to fit them pushes the
+ * table off the screen, so the long ones scroll inside their own box. */
+.controls fieldset { max-height: 188px; overflow-y: auto; }
+.controls fieldset {
+  border: 1px solid var(--rule); border-radius: 6px; margin: 0; padding: 8px 14px 12px;
+}
+.controls legend {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-faint); padding: 0 4px;
+}
+.controls label { display: block; font-size: 14px; color: var(--ink-soft); cursor: pointer; }
+.controls label input { margin-right: 6px; }
+#facets { display: flex; gap: 16px; flex-wrap: wrap; }
+#facets label { white-space: nowrap; }
+#search {
+  font: inherit; font-size: 14px; padding: 5px 9px; width: 250px;
+  border: 1px solid var(--rule); border-radius: 4px;
+}
+#search:focus { outline: 2px solid var(--teal-wash); border-color: var(--teal); }
+.count { margin: 8px 0 0; font-size: 13px; color: var(--ink-faint); }
+
+/* ---------------------------------------------------------------- table --- */
+
+.catalogue-table { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+
+.tabulator { background: var(--paper); font-size: 14px; border: none; }
+.tabulator .tabulator-header { border-bottom: 1px solid var(--rule); background: var(--paper); }
+.tabulator .tabulator-header .tabulator-col {
+  background: var(--paper); border-right: none;
+  font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+/* Headers and the wide text columns wrap rather than truncating. The selector is
+ * this long because Tabulator's own rule for the title is, and a shorter one
+ * loses to it. */
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+  white-space: normal; text-overflow: clip; line-height: 1.25;
+}
+.tabulator-row .tabulator-cell.wrap {
+  white-space: normal; text-overflow: clip; line-height: 1.35;
+  /* `overflow-wrap` as well, because a dataset name is one unbroken token:
+   * `genomic-benchmarks:demo_coding_vs_intergenomic_seqs` offers no space to
+   * wrap at, so permission to wrap alone leaves it overflowing. */
+  overflow-wrap: anywhere;
+}
+.tabulator-row { border-bottom: 1px solid var(--rule); }
+.tabulator-row.tabulator-row-even { background: var(--paper); }
+.tabulator-row:hover { background: var(--wash) !important; }
+.tabulator-row .tabulator-cell { border-right: none; padding: 8px 10px; }
+.tabulator .tabulator-row.tabulator-selectable:hover { cursor: pointer; }
+
+.tabulator .tabulator-row.tabulator-group {
+  background: var(--teal-wash); border-bottom: 1px solid var(--rule);
+  font-weight: 500; color: var(--teal-dark); padding: 7px 10px;
+}
+.tabulator .tabulator-row.tabulator-group span { color: var(--ink-faint); font-weight: 400; }
+
+.dataset { color: var(--ink); }
+/* Not scoped to `.dataset`: the collection prefix is also the quiet half of the
+ * landing page's links and of a benchmark page's heading, and it was rendering at
+ * full strength in both. */
+.collection-part { color: var(--ink-faint); }
+
+.tag {
+  display: inline-block; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 3px; background: var(--teal-wash); color: var(--teal-dark);
+  white-space: nowrap;
+}
+
+.flag { font-weight: 600; }
+.flag-Fail { color: var(--fail); }
+.flag-Warning { color: var(--warning); }
+.flag-Pass { color: var(--pass); font-weight: 500; }
+.flag-Unknown { color: var(--unknown); font-weight: 500; font-style: italic; }
+
+.num { font-variant-numeric: tabular-nums; }
+.absent { color: var(--unknown); font-style: italic; }
+
+/* ---------------------------------------------------------------- panel --- */
+
+.panel {
+  display: none;
+  /* Reset explicitly: Tabulator sets `white-space: nowrap` on the row, and the
+   * panel is a child of the row, so every sentence in it inherits nowrap and
+   * runs off the right edge instead of wrapping. */
+  white-space: normal;
+  padding: 16px 18px 18px;
+  background: var(--wash);
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: default;
+}
+.tabulator-row.panel-open .panel { display: block; }
+
+/* On a benchmark page the panel is the page's own content rather than a row's
+ * expanded body, so it is always open and needs a frame of its own -- inside a
+ * table row the row's borders were the frame. */
+.panel.standing {
+  display: block; border: 1px solid var(--rule); border-radius: 6px;
+  padding: 18px 20px 20px; margin: 18px 0 8px;
+}
+
+.panel .headline { font-size: 15px; color: var(--ink); margin: 0 0 4px; }
+.panel .headline b { color: var(--ink); }
+.panel .caveat { margin: 0 0 14px; font-size: 13px; color: var(--ink-faint); max-width: 78ch; }
+
+.panel-grid {
+  display: grid; gap: 26px;
+  /* `minmax(0, …)` rather than `minmax(280px, …)`: a grid item defaults to a
+   * minimum of its content's width, so the checks table -- whose longest row is
+   * "Per position reversed nucleotide content" -- refuses to shrink and paints
+   * over the column beside it. */
+  /* `auto-fit` collapses the tracks it has no child for, so an entry with no
+   * shared-rows section gets two wide columns rather than two narrow ones and a
+   * gap its notes then overflow into. */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: start;
+}
+.panel-grid > div { min-width: 0; }
+.panel .shares li { overflow-wrap: anywhere; }
+.panel h3 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-faint); margin: 0 0 6px; font-weight: 500;
+}
+.panel table { border-collapse: collapse; width: 100%; }
+.panel td { padding: 3px 12px 3px 0; vertical-align: baseline; }
+.panel td.kind { color: var(--ink-faint); font-size: 12px; }
+.panel td.right { text-align: right; }
+.panel .shares { margin: 0; }
+.panel .shares li { margin-bottom: 2px; }
+.panel .note { font-size: 13px; color: var(--ink-faint); max-width: 70ch; }
+
+/* -------------------------------------------------- static data tables --- */
+
+/* The landing page's Core Set list and the ranking tables. Not Tabulator: ten
+ * rows a reader can see all of at once need no virtual DOM, and a landing page
+ * that renders with scripting off is worth more than sorting one. The header
+ * styling deliberately matches the catalogue's so that the two pages read as one
+ * site rather than as two tables that happen to be next to each other. */
+
+.listing { width: 100%; border-collapse: collapse; font-size: 14px; margin: 18px 0 8px; }
+.listing thead th {
+  text-align: left; vertical-align: bottom;
+  font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  padding: 0 10px 8px; border-bottom: 1px solid var(--rule);
+}
+/* A row header is a name, not a column label. Scoped to `thead` above because
+ * the unscoped rule was setting every `<th scope="row">` in upper case, which
+ * turned `GUE_v2:transcription_factor_prediction_mouse_2` into a different
+ * string from the one the catalogue and the URL use. An identifier a reader
+ * cannot copy off the page is an identifier the page has not given them. */
+.listing tbody th {
+  text-align: left; vertical-align: baseline; font-weight: 500;
+  color: var(--ink); padding: 9px 10px; border-bottom: 1px solid var(--rule);
+}
+.listing tbody th.wrap { overflow-wrap: anywhere; }
+.listing td { padding: 9px 10px; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+.listing tbody tr:hover { background: var(--wash); }
+/* A dataset name is one unbroken token, so permission to wrap is not enough. */
+.listing td.wrap { overflow-wrap: anywhere; }
+.listing th.right, .listing td.right { text-align: right; }
+.listing a { color: var(--ink); text-decoration-color: var(--rule); }
+.listing a:hover { color: var(--teal); text-decoration-color: currentColor; }
+.listing .fine { font-size: 12px; }
+
+.crumb { font-size: 13px; color: var(--ink-faint); margin: 0 0 10px; }
+.crumb a { color: var(--ink-faint); }
+
+a.tag { text-decoration: none; }
+a.tag:hover { background: var(--teal); color: var(--paper); }
+
+/* ------------------------------------------------------------- colophon --- */
+
+.colophon { border-top: 1px solid var(--rule); background: var(--wash); padding: 28px 0 40px; }
+.colophon p { font-size: 14px; color: var(--ink-soft); max-width: 78ch; }
+.provenance { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; font-size: 13px; margin: 16px 0; }
+.provenance dt { color: var(--ink-faint); }
+.provenance dd { margin: 0; color: var(--ink-soft); }
+
+@media (max-width: 1000px) {
+  .panel-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 720px) {
+  h1 { font-size: 24px; }
+  .controls fieldset { flex: 1 1 100%; }
+  #search { width: 100%; }
+}
+
+/* ============================================================== the audit === */
+
+/* --------------------------------------------------------------- chrome --- */
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--paper); color: var(--teal); padding: 10px 16px; z-index: 40;
+  border: 1px solid var(--teal); border-radius: 0 0 4px 0;
+}
+.skip:focus { left: 0; }
+
+.page-head { margin: 26px 0 8px; }
+.page-head h1 { margin-bottom: 6px; }
+
+.hero { margin: 34px 0 10px; max-width: 78ch; }
+.hero h1 { font-size: 34px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 14px; }
+
+.note {
+  font-size: 14px; color: var(--ink-soft);
+  background: var(--wash); border-left: 3px solid var(--rule);
+  padding: 10px 14px; margin: 14px 0; max-width: 82ch;
+}
+.note.warn { border-left-color: var(--warning); }
+
+/* ------------------------------------------------------ headline numbers --- */
+
+.stat-grid {
+  list-style: none; padding: 0; margin: 20px 0 8px;
+  display: grid; gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.stat-grid li { border-top: 2px solid var(--teal); padding-top: 12px; min-width: 0; }
+.stat {
+  display: block; font-size: 38px; line-height: 1; letter-spacing: -0.03em;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.stat-label { display: block; font-size: 14px; color: var(--ink-soft); margin: 8px 0 6px; }
+.stat-grid .fine { display: block; font-size: 13px; }
+
+.cards { list-style: none; padding: 0; margin: 18px 0 8px;
+  display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.cards li { border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; min-width: 0; }
+.cards a { text-decoration: none; }
+.cards a strong { font-size: 16px; }
+.cards p { font-size: 14px; color: var(--ink-soft); margin: 6px 0 0; }
+.cards li:hover { border-color: var(--teal); }
+
+/* -------------------------------------------------------------- figures --- */
+
+/* A figure is never the only statement of its numbers. Every one of them carries
+ * a table of the same values in a `<details>` underneath, because a chart is a
+ * picture of a measurement and a reader who wants the measurement should not have
+ * to read it off a bar. That is also what makes the figures usable with a screen
+ * reader, and what makes a number quotable from this site. */
+
+.figures { margin: 30px 0 8px; }
+.figures > p { max-width: 80ch; }
+
+.fig { margin: 18px 0 6px; padding: 0; }
+.fig .chart { display: block; max-width: 100%; height: auto; overflow: visible; }
+.fig figcaption {
+  font-size: 13px; color: var(--ink-faint); max-width: 84ch;
+  margin: 4px 0 0; padding-left: 2px;
+}
+.fig figcaption b { color: var(--ink-soft); font-weight: 600; }
+
+.fig-table { margin: 8px 0 0; font-size: 13px; }
+.fig-table summary {
+  cursor: pointer; color: var(--ink-faint); font-size: 13px;
+  padding: 2px 0; width: max-content;
+}
+.fig-table summary:hover { color: var(--teal); }
+.fig-table table { border-collapse: collapse; margin: 8px 0 4px; font-size: 13px; }
+.fig-table th, .fig-table td {
+  padding: 4px 12px 4px 0; text-align: left; vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+.fig-table td.right, .fig-table th.right { text-align: right; font-variant-numeric: tabular-nums; }
+.fig-table thead th { color: var(--ink-faint); font-weight: 500; }
+
+/* The chart's own type scale. Set here rather than in the SVG so that one file
+ * governs the site's typography, and so a figure inherits the page's font stack
+ * instead of naming one of its own. */
+.chart { font-family: inherit; }
+.chart text { fill: #1c2321; }
+.chart .lab { font-size: 11px; }
+.chart .rowlab { font-size: 10.5px; fill: #2c3634; }
+.chart .colhead { font-size: 9px; fill: #4a5654; }
+.chart .band {
+  font-size: 8.5px; fill: #6d7a77; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.chart .group { font-size: 11px; font-weight: 600; }
+.chart .tick { font-size: 10px; fill: #6d7a77; }
+.chart .axis { font-size: 10px; fill: #4a5654; }
+.chart .val { font-size: 10.5px; fill: #2c3634; font-variant-numeric: tabular-nums; }
+.chart .leg { font-size: 10.5px; fill: #4a5654; }
+.chart .sub { font-size: 9px; fill: #6d7a77; }
+
+/* ---------------------------------------------------------------- flags --- */
+
+/* A flag is a word before it is a colour. The chip carries both, and the two
+ * absences are kept apart: `Unknown` is a check that ran and could not be scored,
+ * a blank is a check that had nothing to run on, and neither is a Pass. */
+.flag-blank { color: var(--ink-faint); font-weight: 400; cursor: help; }
+.flag[title] { cursor: help; }
+
+.kind {
+  font-size: 12px; color: var(--ink-faint);
+}
+
+.badge-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 10px 0 14px; }
+.badge {
+  display: inline-block; font-size: 12px; letter-spacing: 0.03em;
+  padding: 3px 9px; border-radius: 3px; background: var(--wash);
+  color: var(--ink-soft); border: 1px solid var(--rule); white-space: nowrap;
+}
+.badge-core { background: var(--teal-wash); color: var(--teal-dark); border-color: var(--teal-wash); }
+
+.ghost {
+  font-size: 13px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--paper); color: var(--ink-soft); cursor: pointer; text-decoration: none;
+}
+.ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+/* -------------------------------------------------------- dataset pages --- */
+
+.facts {
+  display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px;
+  font-size: 14px; margin: 14px 0 4px; max-width: 70ch;
+}
+.facts dt { color: var(--ink-faint); }
+.facts dd { margin: 0; color: var(--ink-soft); }
+
+.rollup { font-size: 16px; margin: 6px 0 10px; }
+.rollup .flag { font-size: 17px; }
+
+.ref-mark {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--teal-dark); background: var(--teal-wash);
+  padding: 1px 6px; border-radius: 3px; margin-left: 6px; cursor: help;
+}
+.listing tr.is-reference { background: var(--teal-wash); }
+.listing tr.is-reference:hover { background: var(--teal-wash); }
+
+/* -------------------------------------------------------------- reports --- */
+
+.reports { list-style: none; padding: 0; margin: 10px 0 4px; }
+.reports li { padding: 4px 0; font-size: 14px; }
+.reports .fine { margin-left: 8px; font-size: 12px; }
+.report-leakage-scan a { color: var(--ink); }
+
+.reports-table .reports { margin: 0; }
+.reports-table .reports li { padding: 2px 0; font-size: 13px; }
+
+.kinds { max-width: 80ch; }
+.kinds dt { font-weight: 600; margin-top: 12px; }
+.kinds dd { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; }
+
+/* The frame is tall on purpose: these reports are long documents, and a short
+ * frame makes a reader scroll a scrollbar inside a scrollbar. `resize` lets them
+ * make it taller still. */
+.report-frame {
+  width: 100%; height: 78vh; min-height: 520px;
+  border: 1px solid var(--rule); border-radius: 6px; background: var(--paper);
+  margin: 8px 0 10px; resize: vertical;
+}
+.report-head { margin-bottom: 4px; }
+
+@media (max-width: 720px) {
+  .hero h1 { font-size: 26px; }
+  .stat { font-size: 30px; }
+  .report-frame { height: 68vh; }
+}

@@ -1,0 +1,128 @@
+<section class="hero">
+  <h1>What {{n_checks_word}} checks found in {{n_datasets}} genomic benchmark datasets</h1>
+  <p class="lede">
+    <code>genomic-benchmarks-qc</code> measured {{n_datasets}} datasets from
+    {{n_collections}} collections &mdash; {{n_splits}} splits in all &mdash; and
+    rendered {{n_reports}} reports doing it. This site is one pinned run of that
+    tool: run <code>{{qc_run}}</code>, every figure drawn from the tables under
+    <code>data/</code>, nothing recomputed in your browser.
+  </p>
+  <p>
+    Each check returns one of {{n_flags_word}} flags on one split. A flag is a statement
+    about what the check measured, not a judgement about the dataset, and
+    <strong>Pass</strong> is the narrowest of the {{n_flags_word}}: this check did
+    not separate the classes. It certifies nothing about the data, and no
+    combination of the {{n_checks_word}} flags does either.
+  </p>
+</section>
+
+<section class="figures" id="headline">
+  <h2>The corpus in four numbers</h2>
+  <ul class="stat-grid">
+    <li>
+      <span class="stat">{{n_fail}}</span>
+      <span class="stat-label">datasets where at least one check returned
+        <strong>Fail</strong> on the reference split</span>
+      <span class="fine">{{n_warning}} returned Warning as their worst flag,
+        {{n_pass}} returned Pass on every check</span>
+    </li>
+    <li>
+      <span class="stat">{{median_probe_auroc}}</span>
+      <span class="stat-label">median AUROC reached by the strongest single
+        sequence feature, across the {{n_probed}} datasets that were probed</span>
+      <span class="fine">{{n_probe_over_0_7}} datasets reach 0.70 or more from
+        one feature alone</span>
+    </li>
+    <li>
+      <span class="stat">{{n_with_any_leakage}}</span>
+      <span class="stat-label">of the {{n_leakage_scanned}} scanned datasets have
+        at least one sequence present in two splits</span>
+      <span class="fine">{{n_leakage_over_50}} have more than half of one split
+        present in another; {{n_leakage_complete}} have all of it</span>
+    </li>
+    <li>
+      <span class="stat">{{core_set_size}}</span>
+      <span class="stat-label">datasets clear all {{n_gates_word}} Core Set gates</span>
+      <span class="fine">of {{n_datasets}} measured, from {{n_curated}} curated</span>
+    </li>
+  </ul>
+</section>
+
+<section class="figures">
+  <h2>What each check returned</h2>
+  <p>
+    {{n_checks_cap}} checks: {{n_probe_checks_word}} probes that fit a single
+    sequence feature against the class labels and {{n_integrity_checks_word}} that
+    count
+    duplicates and unique bases, plus the leakage scan across split pairs. Each
+    bar is the {{n_datasets}} datasets, split by the flag that check returned on
+    the reference split.
+  </p>
+  {{fig_check_bars}}
+  <p class="note">
+    Every figure on this site opens a table of the same numbers underneath it, and
+    no figure uses colour as its only signal. <a href="checks.html">The checks
+    page</a> takes each of the {{n_checks_word}} in turn.
+  </p>
+</section>
+
+<section class="figures">
+  <h2>How far one feature gets</h2>
+  <p>
+    Each probe fits one feature &mdash; sequence length, GC content, a
+    nucleotide or dinucleotide frequency &mdash; and reports the AUROC it reaches
+    against the class labels. The figure below is the strongest probe per
+    dataset. Read each value as a lower bound on what a model could recover from
+    the sequences alone.
+  </p>
+  {{fig_probe_auroc}}
+</section>
+
+<section class="figures">
+  <h2>Sequences that appear in two splits</h2>
+  <p>
+    The leakage scan compares every pair of splits and counts the sequences of one
+    that are also present in the other. {{n_leakage_scanned}} datasets were
+    scanned; {{n_leakage_unscanned_word}} was not. The bands below count datasets
+    rather than implying a density, because the structure worth seeing is all at
+    one end.
+  </p>
+  {{fig_leakage}}
+</section>
+
+<section class="figures">
+  <h2>Where the datasets come from</h2>
+  <p>
+    {{n_collections}} collections, {{n_species}} species,
+    {{n_task_categories}} task categories. {{n_excluded}} further curated datasets
+    were not measured, for {{n_exclusion_reasons}} recorded reasons that
+    <a href="methods.html#exclusions">the methods page lists</a>.
+  </p>
+  {{fig_collection_bars}}
+</section>
+
+<section class="onward">
+  <h2>Where to go next</h2>
+  <ul class="cards">
+    <li>
+      <a href="catalogue.html"><strong>All {{n_datasets}} datasets</strong></a>
+      <p>Filter by collection, species, task or flag; sort by probe AUROC or split
+        overlap; open any dataset for its own page.</p>
+    </li>
+    <li>
+      <a href="checks.html"><strong>The {{n_checks_word}} checks</strong></a>
+      <p>What each check measures, what it returned across the corpus, and the
+        full {{n_datasets}}-by-{{n_checks}} matrix.</p>
+    </li>
+    <li>
+      <a href="core-set.html"><strong>The Core Set</strong></a>
+      <p>{{n_gates_cap}} gates applied in order, and the {{core_set_size}} datasets
+        that came through all of them.</p>
+    </li>
+    <li>
+      <a href="reports.html"><strong>{{n_reports}} reports</strong></a>
+      <p>The full report <code>genomic-benchmarks-qc</code> rendered for each
+        split and each split pair, readable here.</p>
+    </li>
+  </ul>
+</section>
