@@ -763,7 +763,13 @@ def dataset_page(
     )
 
     if not dataset["leakage"]:
-        leakage = part("leakage_absent", {"n_splits": str(len(dataset["splits"]))})
+        leakage = part(
+            "leakage_absent",
+            {
+                "n_dataset_splits_word": cardinal(len(dataset["splits"])),
+                "split_word": plural(len(dataset["splits"]), "split"),
+            },
+        )
     elif dataset["max_leaked_test_pct"]:
         worst = max(dataset["leakage"], key=lambda p: p["leaked_queries_pct"] or 0)
         leakage = part(
@@ -773,7 +779,7 @@ def dataset_page(
                 "query_split": html.escape(worst["query_split"]),
                 "target_split": html.escape(worst["target_split"]),
                 "reverse_pct": f'{worst["leaked_targets_pct"] or 0:.2f}',
-                "n_comparisons": str(len(dataset["leakage"])),
+                "n_comparisons_word": cardinal(len(dataset["leakage"])),
                 "comparison_word": plural(len(dataset["leakage"]), "comparison"),
             },
         )
@@ -781,7 +787,7 @@ def dataset_page(
         leakage = part(
             "leakage_none",
             {
-                "n_comparisons": str(len(dataset["leakage"])),
+                "n_comparisons_word": cardinal(len(dataset["leakage"])),
                 "comparison_word": plural(len(dataset["leakage"]), "comparison"),
             },
         )
@@ -817,16 +823,38 @@ def dataset_page(
             "probe_note": probe,
             "leakage_note": leakage,
             "split_rows": split_rows(dataset, copy),
-            "leakage_rows": leakage_rows(dataset, copy),
             "report_items": report_items(dataset, copy, prefix="../"),
             "siblings": siblings(dataset, document),
             "fig_checks": charts.render(drawn["dataset-checks"]),
             "fig_probes": charts.render(drawn["dataset-probes"]),
-            "fig_leakage": (
-                charts.render(drawn["dataset-leakage"])
-                if "dataset-leakage" in drawn
-                else ""
-            ),
+            "leakage_section": leakage_section(dataset, drawn, copy, corpus),
+        },
+    )
+
+
+def leakage_section(
+    dataset: dict, drawn: dict, copy: dict, corpus: dict[str, str]
+) -> str:
+    """The split-comparison section, or the sentence that replaces it.
+
+    A dataset with one split has no pair to scan, and rendering the table anyway
+    leaves column headers with nothing under them -- which reads as a page that
+    failed to load rather than as a measurement nobody made.
+    """
+    splits = len(dataset["splits"])
+    values = {
+        **corpus,
+        "n_dataset_splits_word": cardinal(splits),
+        "split_word": plural(splits, "split"),
+    }
+    if not dataset["leakage"] or "dataset-leakage" not in drawn:
+        return part("leakage_section_absent", values)
+    return part(
+        "leakage_section",
+        {
+            **values,
+            "fig_leakage": charts.render(drawn["dataset-leakage"]),
+            "leakage_rows": leakage_rows(dataset, copy),
         },
     )
 
