@@ -1,0 +1,234 @@
+collection,dataset,statistic,check,flag,percentage_of_leaked_queries,percentage_of_leaked_targets,test_split,train_split
+GUE_v2,core_promoter_detection_all,,Data Leakage,Warning,1.74%,0.24%,val,train
+GUE_v2,core_promoter_detection_all,,Data Leakage,Warning,1.45%,0.23%,test,train
+GUE_v2,core_promoter_detection_tata,,Data Leakage,Fail,4.89%,0.75%,val,train
+GUE_v2,core_promoter_detection_tata,,Data Leakage,Fail,6.04%,0.98%,test,train
+GUE_v2,promoter_detection_300_all,,Data Leakage,Warning,1.96%,0.29%,val,train
+GUE_v2,core_promoter_detection_notata,,Data Leakage,Warning,1.11%,0.16%,val,train
+GUE_v2,core_promoter_detection_notata,,Data Leakage,Warning,1.13%,0.16%,test,train
+GUE_v2,promoter_detection_300_notata,,Data Leakage,Warning,1.04%,0.16%,test,train
+GUE_v2,promoter_detection_300_all,,Data Leakage,Warning,1.44%,0.20%,test,train
+GUE_v2,promoter_detection_300_notata,,Data Leakage,Warning,1.04%,0.16%,val,train
+GUE_v2,promoter_detection_300_tata,,Data Leakage,Fail,5.06%,0.67%,val,train
+GUE_v2,transcription_factor_prediction_human_0,,Data Leakage,Fail,2.90%,0.31%,val,train
+GUE_v2,transcription_factor_prediction_human_0,,Data Leakage,Fail,2.60%,0.23%,test,train
+GUE_v2,promoter_detection_300_tata,,Data Leakage,Fail,3.43%,0.47%,test,train
+GUE_v2,transcription_factor_prediction_human_1,,Data Leakage,Fail,2.90%,0.31%,test,train
+GUE_v2,transcription_factor_prediction_human_1,,Data Leakage,Fail,2.80%,0.33%,val,train
+GUE_v2,transcription_factor_prediction_human_2,,Data Leakage,Warning,1.50%,0.25%,test,train
+GUE_v2,transcription_factor_prediction_human_2,,Data Leakage,Fail,4.30%,0.46%,val,train
+GUE_v2,transcription_factor_prediction_human_3,,Data Leakage,Fail,2.70%,0.14%,val,train
+GUE_v2,transcription_factor_prediction_human_4,,Data Leakage,Fail,38.00%,2.99%,val,train
+GUE_v2,transcription_factor_prediction_human_3,,Data Leakage,Fail,2.40%,0.13%,test,train
+GUE_v2,transcription_factor_prediction_human_4,,Data Leakage,Fail,3.20%,0.56%,test,train
+GUE_v2,transcription_factor_prediction_mouse_0,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,transcription_factor_prediction_mouse_0,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,transcription_factor_prediction_mouse_3,,Data Leakage,Warning,0.42%,0.05%,val,train
+GUE_v2,transcription_factor_prediction_mouse_2,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,transcription_factor_prediction_mouse_1,,Data Leakage,Warning,0.16%,0.03%,val,train
+GUE_v2,transcription_factor_prediction_mouse_1,,Data Leakage,Warning,0.19%,0.05%,test,train
+GUE_v2,transcription_factor_prediction_mouse_3,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,transcription_factor_prediction_mouse_4,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,transcription_factor_prediction_mouse_2,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,transcription_factor_prediction_mouse_4,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H3,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K14ac,,Data Leakage,Warning,0.09%,0.02%,test,train
+GUE_v2,epigenetic_marks_prediction_H3,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K14ac,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K36me3,,Data Leakage,Warning,0.03%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K36me3,,Data Leakage,Warning,0.09%,0.01%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K4me1,,Data Leakage,Warning,0.06%,0.01%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K4me2,,Data Leakage,Warning,0.03%,0.00%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K4me1,,Data Leakage,Warning,0.06%,0.01%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K4me2,,Data Leakage,Warning,0.03%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K4me3,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K4me3,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K79me3,,Data Leakage,Warning,0.07%,0.01%,test,train
+GUE_v2,epigenetic_marks_prediction_H3K9ac,,Data Leakage,Warning,0.07%,0.01%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K79me3,,Data Leakage,Warning,0.10%,0.01%,val,train
+GUE_v2,epigenetic_marks_prediction_H3K9ac,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H4,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,epigenetic_marks_prediction_H4ac,,Data Leakage,Pass,0.00%,0.00%,val,train
+GUE_v2,epigenetic_marks_prediction_H4,,Data Leakage,Warning,0.07%,0.01%,val,train
+OmniGenBench,te_prediction_arabidopsis,,Data Leakage,Warning,0.24%,0.03%,val,train
+GUE_v2,epigenetic_marks_prediction_H4ac,,Data Leakage,Warning,0.03%,0.00%,test,train
+OmniGenBench,te_prediction_arabidopsis,,Data Leakage,Warning,0.47%,0.06%,test,train
+OmniGenBench,te_prediction_rice,,Data Leakage,Warning,0.85%,0.13%,test,train
+OmniGenBench,te_prediction_rice,,Data Leakage,Warning,1.19%,0.17%,val,train
+OmniGenBench,lncrna_z_mays,,Data Leakage,Fail,7.40%,2.46%,test,train
+OmniGenBench,lncrna_m_esculenta,,Data Leakage,Warning,0.83%,0.06%,test,train
+OmniGenBench,lncrna_s_lycopersicum,,Data Leakage,Warning,0.80%,0.12%,test,train
+OmniGenBench,lncrna_t_aestivum,,Data Leakage,Fail,23.60%,13.76%,test,train
+OmniGenBench,lncrna_g_max,,Data Leakage,Fail,2.45%,0.19%,test,train
+OmniGenBench,poly_a_arabidopsis_thaliana,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,lncrna_s_bicolor,,Data Leakage,Warning,0.41%,0.05%,test,train
+OmniGenBench,poly_a_oryza_sativa_indica_group,,Data Leakage,Warning,0.10%,0.01%,test,train
+OmniGenBench,poly_a_trifolium_pratense,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,poly_a_oryza_sativa_japonica_group,,Data Leakage,Warning,0.20%,0.03%,test,train
+OmniGenBench,promoter_strength_leaf,,Data Leakage,Warning,0.70%,0.19%,test,train
+OmniGenBench,poly_a_chlamydomonas_reinhardtii,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,promoter_strength_protoplast,,Data Leakage,Warning,0.70%,0.29%,test,train
+OmniGenBench,poly_a_medicago_truncatula,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,terminator_strength_protoplast,,Data Leakage,Warning,0.40%,0.06%,test,train
+OmniGenBench,splicing_arabidopsis_thaliana_acceptor,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,terminator_strength_leaf,,Data Leakage,Warning,0.80%,0.10%,test,train
+OmniGenBench,pro_seq_m_esculenta,,Data Leakage,Pass,0.00%,0.00%,test,train
+OmniGenBench,splicing_arabidopsis_thaliana_donor,,Data Leakage,Pass,0.00%,0.00%,test,train
+GUE_v2,enhancer_promoter_interaction_HUVEC,,Data Leakage,Warning,1.75%,0.35%,test,train
+GUE_v2,enhancer_promoter_interaction_GM12878,,Data Leakage,Warning,1.40%,0.29%,val,train
+GUE_v2,enhancer_promoter_interaction_IMR90,,Data Leakage,Fail,2.05%,0.41%,test,train
+GUE_v2,enhancer_promoter_interaction_NHEK,,Data Leakage,Fail,2.45%,0.51%,val,train
+GUE_v2,enhancer_promoter_interaction_K562,,Data Leakage,Warning,1.25%,0.26%,test,train
+GUE_v2,enhancer_promoter_interaction_NHEK,,Data Leakage,Warning,1.95%,0.39%,test,train
+mRNABench,mrl-sugimoto,,Data Leakage,Fail,12.09%,2.98%,test,train
+mRNABench,mrl-sugimoto,,Data Leakage,Fail,10.61%,2.69%,val,train
+mRNABench,translation-efficiency-human,,Data Leakage,Pass,0.00%,0.00%,val,train
+mRNABench,rnahl-human,,Data Leakage,Pass,0.00%,0.00%,val,train
+mRNABench,rnahl-mouse,,Data Leakage,Warning,0.15%,0.03%,test,train
+mRNABench,translation-efficiency-mouse,,Data Leakage,Pass,0.00%,0.00%,test,train
+mRNABench,translation-efficiency-mouse,,Data Leakage,Pass,0.00%,0.00%,val,train
+mRNABench,rnahl-mouse,,Data Leakage,Warning,0.39%,0.08%,val,train
+GUE_v2,enhancer_promoter_interaction_HUVEC,,Data Leakage,Warning,1.90%,0.38%,val,train
+GUE_v2,enhancer_promoter_interaction_GM12878,,Data Leakage,Warning,0.90%,0.18%,test,train
+GUE_v2,enhancer_promoter_interaction_HeLa_S3,,Data Leakage,Warning,1.90%,0.41%,test,train
+GUE_v2,enhancer_promoter_interaction_HeLa_S3,,Data Leakage,Warning,1.80%,0.36%,val,train
+GUE_v2,enhancer_promoter_interaction_IMR90,,Data Leakage,Fail,2.40%,0.50%,val,train
+GUE_v2,enhancer_promoter_interaction_K562,,Data Leakage,Warning,1.80%,0.37%,val,train
+mRNABench,translation-efficiency-human,,Data Leakage,Pass,0.00%,0.00%,test,train
+mRNABench,rnahl-human,,Data Leakage,Warning,0.10%,0.04%,test,train
+genomic-benchmarks,drosophila_enhancers_stark,,Data Leakage,Warning,0.81%,0.33%,test,train
+genomic-benchmarks,human_nontata_promoters,,Data Leakage,Fail,34.08%,17.11%,test,train
+genomic-benchmarks,human_enhancers_cohn,,Data Leakage,Warning,0.85%,0.38%,test,train
+genomic-benchmarks,demo_coding_vs_intergenomic_seqs,,Data Leakage,Fail,6.86%,3.20%,test,train
+BEACON,MeanRibosomeLoading,,Data Leakage,Pass,0.00%,0.00%,val,train
+BEACON,MeanRibosomeLoading,,Data Leakage,Pass,0.00%,0.00%,test,train
+genomic-benchmarks,demo_human_or_worm,,Data Leakage,Warning,1.61%,0.68%,test,train
+BEACON,CRISPROnTarget,,Data Leakage,Pass,0.00%,0.00%,test,train
+nucleotide_benchmarks,H3K4me3,,Data Leakage,Warning,0.39%,0.02%,test,train
+nucleotide_benchmarks,H3K4me2,,Data Leakage,Warning,0.89%,0.11%,test,train
+nucleotide_benchmarks,H3K4me1,,Data Leakage,Warning,0.87%,0.18%,test,train
+nucleotide_benchmarks,H3K9ac,,Data Leakage,Warning,1.00%,0.07%,test,train
+nucleotide_benchmarks,H4K20me1,,Data Leakage,Warning,0.66%,0.09%,test,train
+nucleotide_benchmarks,H3K27ac,,Data Leakage,Warning,0.56%,0.05%,test,train
+nucleotide_benchmarks,enhancers,,Data Leakage,Warning,1.50%,0.24%,test,train
+genomic-benchmarks,human_enhancers_ensembl,,Data Leakage,Fail,37.17%,9.31%,test,train
+BEACON,CRISPROnTarget,,Data Leakage,Pass,0.00%,0.00%,val,train
+nucleotide_benchmarks,H3K9me3,,Data Leakage,Warning,1.06%,0.04%,test,train
+nucleotide_benchmarks,H2AFZ,,Data Leakage,Warning,1.00%,0.14%,test,train
+nucleotide_benchmarks,promoter_tata,,Data Leakage,Pass,0.00%,0.00%,test,train
+nucleotide_benchmarks,H3K27me3,,Data Leakage,Warning,0.93%,0.10%,test,train
+nucleotide_benchmarks,promoter_all,,Data Leakage,Warning,0.88%,0.05%,test,train
+nucleotide_benchmarks,promoter_no_tata,,Data Leakage,Warning,0.58%,0.03%,test,train
+nucleotide_benchmarks,splice_sites_acceptors,,Data Leakage,Warning,0.60%,0.12%,test,train
+miRBench,AGO2_CLASH_Hejret2023,,Data Leakage,Warning,0.39%,0.05%,test,train
+nucleotide_benchmarks,splice_sites_donors,,Data Leakage,Warning,0.73%,0.11%,test,train
+nucleotide_benchmarks,H3K36me3,,Data Leakage,Warning,0.87%,0.16%,test,train
+genomic-benchmarks,human_ocr_ensembl,,Data Leakage,Warning,1.16%,0.49%,test,train
+miRBench,AGO2_eCLIP_Manakov2022,,Data Leakage,Warning,1.30%,0.02%,test_leftout,train
+BEACON,Isoform,,Data Leakage,Fail,36.48%,27.44%,val,train
+BEACON,Isoform,,Data Leakage,Fail,37.24%,29.89%,test,train
+miRBench,AGO2_eCLIP_Manakov2022,,Data Leakage,Warning,0.40%,0.16%,test,train
+mRNABench,mrl-sample-designed,,Data Leakage,Fail,100.00%,99.66%,test,train
+mRNABench,mrl-sample-varying,,Data Leakage,Fail,82.23%,72.02%,val,train
+mRNABench,mrl-sample-varying,,Data Leakage,Fail,81.68%,72.02%,test,train
+mRNABench,mrl-sample-designed,,Data Leakage,Fail,100.00%,99.69%,val,train
+mRNABench,mrl-sample-mcherry,,Data Leakage,Fail,100.00%,99.98%,val,train
+mRNABench,mrl-sample-mcherry,,Data Leakage,Fail,100.00%,99.98%,test,train
+mRNABench,mrl-sample-egfp-pseudo,,Data Leakage,Fail,100.00%,99.90%,val,train
+mRNABench,mrl-sample-egfp-unmod,,Data Leakage,Fail,100.00%,99.90%,val,train
+mRNABench,mrl-sample-egfp-unmod,,Data Leakage,Fail,100.00%,99.90%,test,train
+mRNABench,mrl-sample-egfp-m1pseudo,,Data Leakage,Fail,100.00%,99.90%,test,train
+mRNABench,mrl-sample-egfp-m1pseudo,,Data Leakage,Fail,100.00%,99.90%,val,train
+mRNABench,mrl-sample-egfp-pseudo,,Data Leakage,Fail,100.00%,99.90%,test,train
+GUE_v2,core_promoter_detection_all,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,core_promoter_detection_tata,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,promoter_detection_300_all,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,core_promoter_detection_notata,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,promoter_detection_300_notata,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,promoter_detection_300_tata,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_human_0,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_human_1,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_human_2,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_human_3,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_human_4,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,transcription_factor_prediction_mouse_0,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,transcription_factor_prediction_mouse_3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,transcription_factor_prediction_mouse_2,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,transcription_factor_prediction_mouse_1,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,transcription_factor_prediction_mouse_4,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,epigenetic_marks_prediction_H3,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,epigenetic_marks_prediction_H3K14ac,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H3K36me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H3K4me1,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H3K4me2,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H3K4me3,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,epigenetic_marks_prediction_H3K79me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H3K9ac,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H4,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,epigenetic_marks_prediction_H4ac,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,te_prediction_arabidopsis,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,te_prediction_rice,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,lncrna_z_mays,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+OmniGenBench,lncrna_m_esculenta,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,lncrna_s_lycopersicum,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,lncrna_t_aestivum,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+OmniGenBench,lncrna_g_max,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+OmniGenBench,poly_a_arabidopsis_thaliana,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,lncrna_s_bicolor,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,poly_a_oryza_sativa_indica_group,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,poly_a_trifolium_pratense,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,poly_a_oryza_sativa_japonica_group,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,promoter_strength_leaf,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,poly_a_chlamydomonas_reinhardtii,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,promoter_strength_protoplast,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,poly_a_medicago_truncatula,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,terminator_strength_protoplast,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,splicing_arabidopsis_thaliana_acceptor,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,terminator_strength_leaf,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+OmniGenBench,pro_seq_m_esculenta,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+OmniGenBench,splicing_arabidopsis_thaliana_donor,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,enhancer_promoter_interaction_HUVEC,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,enhancer_promoter_interaction_GM12878,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+GUE_v2,enhancer_promoter_interaction_IMR90,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,enhancer_promoter_interaction_NHEK,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+GUE_v2,enhancer_promoter_interaction_K562,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+mRNABench,mrl-sugimoto,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,translation-efficiency-human,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+mRNABench,rnahl-human,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+mRNABench,rnahl-mouse,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+mRNABench,translation-efficiency-mouse,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+GUE_v2,enhancer_promoter_interaction_HeLa_S3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+genomic-benchmarks,drosophila_enhancers_stark,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+genomic-benchmarks,human_nontata_promoters,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+genomic-benchmarks,human_enhancers_cohn,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+genomic-benchmarks,demo_coding_vs_intergenomic_seqs,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+BEACON,MeanRibosomeLoading,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+genomic-benchmarks,demo_human_or_worm,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+BEACON,CRISPROnTarget,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+nucleotide_benchmarks,H3K4me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H3K4me2,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H3K4me1,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H3K9ac,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H4K20me1,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H3K27ac,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,enhancers,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+genomic-benchmarks,human_enhancers_ensembl,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+nucleotide_benchmarks,H3K9me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H2AFZ,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,promoter_tata,Split leakage (percentage_of_leaked_queries),,Pass,,,,
+nucleotide_benchmarks,H3K27me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,promoter_all,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,promoter_no_tata,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,splice_sites_acceptors,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+miRBench,AGO2_CLASH_Hejret2023,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,splice_sites_donors,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+nucleotide_benchmarks,H3K36me3,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+genomic-benchmarks,human_ocr_ensembl,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+miRBench,AGO2_eCLIP_Manakov2022,Split leakage (percentage_of_leaked_queries),,Warning,,,,
+BEACON,Isoform,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-designed,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-varying,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-mcherry,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-egfp-pseudo,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-egfp-unmod,Split leakage (percentage_of_leaked_queries),,Fail,,,,
+mRNABench,mrl-sample-egfp-m1pseudo,Split leakage (percentage_of_leaked_queries),,Fail,,,,

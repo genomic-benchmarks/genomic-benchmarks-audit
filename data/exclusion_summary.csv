@@ -1,0 +1,15 @@
+excluded,n_datasets,collections
+Multi-label classification data format is not supported by our framework.,18,"BEACON, OmniGenBench, mRNABench"
+Multi-class classification data format is not supported by our framework.,8,"BEACON, GUE_v2, genomic-benchmarks, nucleotide_benchmarks"
+Multi-class classification (nucleotide-level) data format is not supported by our framework.,5,BEACON
+Multi-variable regression data format is not supported by our framework.,5,OmniGenBench
+Token classification data format is not supported by our framework.,4,OmniGenBench
+Data format is not supported by our framework.,2,mRNABench
+"Dataset includes multiple prediction tasks, of which some contain only a single class.",2,mRNABench
+"Dataset is too small to be considered; for binary classification tasks, the train set must contain at least 500 examples in both classes.",2,mRNABench
+"Dataset is too small to be considered; for regression tasks, the train set must yield at least 500 examples in both groups after binarizing labels at the median.",2,mRNABench
+Multi-label regression data format is not supported by our framework.,2,BEACON
+"Dataset is too small to be considered. For binary classification tasks, the train set must contain at least 500 examples in both classes.",1,genomic-benchmarks
+"Dataset is too small to be considered. For regression tasks, the train set must yield at least 500 examples in both groups after binarizing labels at the median.",1,BEACON
+Dataset license does not allow for redistribution; processing from raw data is infeasible.,1,mRNABench
+Token regression data format is not supported by our framework.,1,OmniGenBench

@@ -1,0 +1,147 @@
+# The machine-checkable part of VOCABULARY.md.
+#
+# TOML rather than YAML so the checker needs nothing installed: tomllib is in
+# the standard library from Python 3.11. Patterns are TOML literal strings
+# (single quotes), which pass through to `re` without escape processing.
+#
+# severity = "error"  the term is wrong in every sentence a site page could
+#                     write, so the match alone settles it
+# severity = "warn"   the term's acceptability depends on the sentence; a
+#                     human decides, and records the decision in a vocab-ok
+#                     comment if the word stays
+#
+# Matching runs over prose only. Code spans, fenced blocks, link targets and
+# URLs are blanked first, so `overall_verdict` and combined_classes_results.csv
+# never trip a rule.
+
+[settings]
+paths = ["docs", "README.md", "VOCABULARY.md", "data/README.md"]
+# `docs/reports/` is deliberately reachable only through this exclude. It holds
+# 423 documents written by genomic-benchmarks-qc, not by this repository, and
+# they are published unchanged -- rendering the tool's own words through a filter
+# would make the site's copy of a report differ from the report. The site frames
+# them; it does not speak for them.
+#
+# `site/` is excluded for a duller reason: it is a render of `docs/`, so every
+# hit in it is a hit already reported against the template it came from, at a
+# line number that does not exist in any file a person can edit.
+exclude = ["docs/reports", "site"]
+
+# ---------------------------------------------------------------- errors ---
+
+[[rule]]
+id = "au-roc"
+pattern = '\bAU[-–—_ ]ROC\b'
+severity = "error"
+message = "Write AUROC. The manuscript settled on it 75 uses to 5."
+
+[[rule]]
+id = "tool-name"
+pattern = '\bGenBench\s?QC\b'
+severity = "error"
+message = "The tool is genomic-benchmarks-qc, never GenBenchQC."
+
+[[rule]]
+id = "golden-set"
+pattern = '\b(golden set|gold[- ]standard)\b'
+severity = "error"
+message = "Core Set. Gold standard means ground truth in genomics, and this set was screened on its inputs, not its labels."
+
+[[rule]]
+id = "high-quality"
+pattern = '\bhigh[- ]quality\b'
+severity = "error"
+message = "Name the criterion instead: no Fail on any of the ten checks."
+
+[[rule]]
+id = "split-provenance"
+pattern = '(splits we drew|splits drawn here|splits we chose|splits we made|splits we had to draw|our own splits|we drew (the |our )?splits|drew (the |our )?splits)'
+severity = "error"
+message = "The mRNABench splits come from that collection's own splitting function at its own defaults. The one thing that is ours is the seed."
+
+[[rule]]
+id = "drew-flag"
+pattern = '\bdrew (a|an|the) (pass|warning|fail|flag)\b'
+severity = "error"
+message = "A dataset was flagged Warning; nothing was drawn."
+
+[[rule]]
+id = "spurious"
+pattern = '\bspurious\b'
+severity = "error"
+message = "Avoid entirely. The measured quantity is separability, and its origin is undetermined."
+
+[[rule]]
+id = "dataset-failed"
+pattern = '\bthe (dataset|benchmark|split) (failed|passed)\b'
+severity = "error"
+message = "The dataset was flagged Fail on <check>. A flag is the tool's output, not a verdict on the dataset."
+
+[[rule]]
+id = "signature-of"
+pattern = '\bis the signature of\b'
+severity = "error"
+message = "Write: is consistent with."
+
+[[rule]]
+id = "caused-by"
+pattern = '\b(is|are|was|were) (caused by|the consequence of|a consequence of)\b'
+severity = "error"
+message = "Write: would be expected if. Assert causation only where the construction step is documented."
+
+[[rule]]
+id = "trivial"
+pattern = '\btrivial(ly)?\b'
+severity = "error"
+message = "Write: separable from a single feature."
+
+[[rule]]
+id = "lowercase-flag"
+pattern = '\b([Aa]|[Aa]n|[Tt]he|[Aa]ny|[Nn]o|[Ee]very|[Oo]ne|[Ii]ts) (pass|warning|fail)\b|\bflagged (pass|warning|fail)\b'
+ignorecase = false
+severity = "error"
+message = "Pass / Warning / Fail are capitalised when they are the tool's flag."
+
+# -------------------------------------------------------------- warnings ---
+
+[[rule]]
+id = "failed-check"
+pattern = '\b(failed|passed)( the| a| an)?( [\w-]+){0,3} (check|probe|scan)\b'
+severity = "warn"
+message = "If this is QC: flagged Fail on <check>. If this is the submission validator, the sense is different and a vocab-ok comment settles it."
+
+[[rule]]
+id = "bias"
+pattern = '\bbias(ed|es|ing)?\b'
+severity = "warn"
+message = "Separability. Exploitable bias is fine where exploitability is the point, and the statistical sense (an estimator biased upward) is fine."
+
+[[rule]]
+id = "shortcut"
+pattern = '\bshortcuts?\b'
+severity = "warn"
+message = "Separability. Permitted for shortcut learning citing prior work about models, and for generated data where the alternative route was constructed."
+
+[[rule]]
+id = "artefact"
+pattern = '\bartefacts?\b|\bartifacts?\b'
+severity = "warn"
+message = "Only with evidence of the construction step that produced it."
+
+[[rule]]
+id = "flaw"
+pattern = '\b(flaws?|flawed|broken|problematic|problems?)\b'
+severity = "warn"
+message = "Name the check, or say flagged. A separability measurement does not establish that a dataset is defective."
+
+[[rule]]
+id = "verdict"
+pattern = '\bverdicts?\b'
+severity = "warn"
+message = "Write: the worst flag received across the ten checks."
+
+[[rule]]
+id = "clean"
+pattern = '\bclean(er|est|ly)?\b'
+severity = "warn"
+message = "Pass never licenses clean. It establishes only that these ten checks do not separate the classes."

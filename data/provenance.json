@@ -1,0 +1,60 @@
+{
+  "audit_run": "2026-08-27_corpus-rollups",
+  "qc_run": "2026-08-27_full-corpus",
+  "source_repository": "GenBench2_paper",
+  "zenodo_record_id": "22288544",
+  "zenodo_concept_record_id": "22288543",
+  "zenodo_record_registered": false,
+  "copied": "2026-09-04",
+  "generated_by": "scripts/regenerate_audit_data.py",
+  "files": {
+    "combined_classes_results.csv": {
+      "bytes": 234009,
+      "sha256": "37276c9c967497873a1d06c8f87d80cd20a809774973f32d6ff81302b4621086"
+    },
+    "combined_splits_results.csv": {
+      "bytes": 20489,
+      "sha256": "c42891b47407ea6f0c540ddd4bd65387787f089f0a81670117e08e79b26f87e1"
+    },
+    "core_set.csv": {
+      "bytes": 2605,
+      "sha256": "5339b5fe9c38d4e25756381576209ff7bea028caf8e9b2a71921155b0e24f1b3"
+    },
+    "core_set_criteria.csv": {
+      "bytes": 621,
+      "sha256": "f0e04c3eaeda1256472cedfa46c7ad28f3b3c9996a1b63b05a4483729d1d3ce0"
+    },
+    "core_set_selection_trace.csv": {
+      "bytes": 2667,
+      "sha256": "df82fb8204ca743cf8f1b0bbe28d47341c28685ec26359ff76aa4c6f025c22b9"
+    },
+    "dataset_level_summary.csv": {
+      "bytes": 36944,
+      "sha256": "060f3000428907b94c24077aa249ac93d534a1deb4ab68a9e5a4cbd8d67b5bd4"
+    },
+    "exclusion_summary.csv": {
+      "bytes": 1635,
+      "sha256": "b1a586e911b8c4fa8432fc13393fd23a8a735d7130013cbb2198e094952533d5"
+    },
+    "reports.csv": {
+      "bytes": 24109,
+      "sha256": "f04cf8c6c1a5b14fceed28ecd528b63e66e57598ed2685f26ffbfd51eb9a2af6"
+    },
+    "splits.csv": {
+      "bytes": 15929,
+      "sha256": "333989e7234f129b80b199d9a2dc8431ff9678990be0a1233512d1f139e84147"
+    },
+    "summary_by_check.csv": {
+      "bytes": 1262,
+      "sha256": "24dd053c7f817d3a850fef3a6ed598a03630937442f809761ec55c13225e68bb"
+    },
+    "summary_by_collection.csv": {
+      "bytes": 992,
+      "sha256": "8e96990ef78189a61d1175cb28f44df3017d088450933fd8ffcb4d24c1b0fe1d"
+    },
+    "summary_by_task_category.csv": {
+      "bytes": 1092,
+      "sha256": "03511fd8263a8db75c5472f7def8155579a6fc07f1b5a27e3bec35557b8056f7"
+    }
+  }
+}

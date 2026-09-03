@@ -1,0 +1,6 @@
+step,criterion,requirement,threshold,n_in,n_removed,n_out
+1,evaluable,Defines the reference split and was scanned for leakage,"reference split = 'train', leakage scan present",93,1,92
+2,integrity,"No Fail on unique bases, duplicate sequences between or within labels",flag != Fail in any split,92,27,65
+3,leakage,No Fail on the train-test leakage scan,flag != Fail in any split pair (< 2% of held-out sequences),65,11,54
+4,separability,No Fail on any single-feature probe,strongest-probe AUROC <= 0.7 in every split,54,23,31
+5,diversity selection,"greedy facet coverage, at most 2 per collection",target size 10,31,21,10
