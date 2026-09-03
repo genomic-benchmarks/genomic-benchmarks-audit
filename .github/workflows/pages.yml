@@ -1,0 +1,72 @@
+# Build the site and hand it to GitHub Pages.
+#
+# The output is not committed -- every number it publishes is already diffable in
+# docs/data/catalogue.json -- so this workflow is the only thing that renders it
+# for readers.
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and a queued one is not cancelled: a half-published
+# site is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e .
+
+      # 90 MB of archives, verified against the digests in data/reports.csv
+      # before anything is unpacked. While the Zenodo record is a draft this
+      # needs the record's share token in a repository secret; once the record is
+      # published the secret can go and this step keeps working.
+      #
+      # Allowed to fail on purpose. The site renders without the reports and says
+      # so on every page that would have carried one, which is a better outcome
+      # than no site at all when Zenodo is having a bad afternoon.
+      - name: Fetch the reports
+        id: fetch
+        continue-on-error: true
+        env:
+          GENOMIC_BENCHMARKS_ZENODO_TOKEN: ${{ secrets.ZENODO_DRAFT_TOKEN }}
+        run: gb-audit fetch --jobs 6
+
+      - name: Report what was fetched
+        run: gb-audit fetch --check || true
+
+      - name: Render
+        run: gb-audit render --out ./site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
