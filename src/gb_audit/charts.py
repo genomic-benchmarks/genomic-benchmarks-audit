@@ -37,25 +37,32 @@ from .audit import Dataset, Run
 
 # ------------------------------------------------------------------ palette ---
 
-# One hue per flag, shared with the words.
+# One hue per flag, and the words it belongs to.
 #
 # A flag is a coloured word in the prose and a coloured area in the figures, and
 # no single hex does both jobs -- text on paper has to be dark to be legible, a
-# fill has to be light to be a mark. So the fills below sit on the hues of
-# `--pass`, `--warning` and `--fail` in `site.css`, at the lightnesses an area
-# needs, and Fail is the one hex that serves both. The site had drifted into two
-# palettes for one set of four flags; this is the other half of the one.
+# fill has to be light to be a mark. So Warning below is the hue of `--warning`
+# in `site.css` at the lightness an area needs, and Fail is the one hex serving
+# both. Pass is the exception: `--pass` is a teal green, which lightened into a
+# fill reads as teal, so this one is a leaf green chosen against the other two
+# rather than derived from the ink.
 #
 # Validated as a set, in light mode on a white surface, over normal vision and
 # simulated protanopia, deuteranopia and tritanopia. Worst all-pairs CIELAB
-# separation 33.0 (Warning/Fail under deuteranopia), better on every axis than
-# the palette this replaces; lightness strictly ordered Pass > Warning > Fail
-# with adjacent steps of 0.05 and 0.29 relative luminance; the light end clears
-# 2:1 against white, so a Pass cell is still a cell and not a gap in the grid.
+# separation 33.0, Warning against Fail under deuteranopia. Against the palette
+# this replaces it is ahead under normal vision, deuteranopia and tritanopia
+# (41.9 / 33.0 / 35.0 against 41.0 / 31.6 / 26.5) and behind under protanopia,
+# where Pass against Warning comes to 34.8 rather than 41.0 -- comfortably clear
+# of the 9.0 this project asks of a categorical fill, on the axis where a green
+# and an amber are hardest to keep apart. Lightness stays ordered Pass > Warning
+# > Fail with steps of 0.06 and 0.29 relative luminance, which is what carries
+# the severity into greyscale and into print; Pass is a shade lighter than the
+# green it was picked as for that reason alone. The light end clears 2:1 against
+# white, so a Pass cell is still a cell and not a gap in the grid.
 #
 # `site.css` carries the same four values as `--flag-fill-*`, because the grid is
 # HTML and reads them from there. The two lists are changed together.
-FLAG_FILL = {"Pass": "#7cc0ad", "Warning": "#fd8c35", "Fail": "#b91c1c"}
+FLAG_FILL = {"Pass": "#7bc48d", "Warning": "#fd8c35", "Fail": "#b91c1c"}
 
 # `Unknown` is a texture, not a fill: hatched surface behind a hairline, inked in
 # the grey the word `Unknown` is set in wherever it is written out.

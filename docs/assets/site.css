@@ -85,16 +85,17 @@
    *
    * A fill and a text colour cannot be one hex: text on paper has to be dark to
    * be legible, a fill has to be light to be a mark rather than a blot. So what
-   * the two share is the hue. The green above and the green below are one green
-   * at the two lightnesses the two jobs need, the amber likewise, and Fail is a
-   * single hex doing both -- which is what makes the grid and the flag table
-   * read as one key rather than as two.
+   * the two share is mostly the hue: the amber below is the amber above at the
+   * lightness an area needs, and Fail is a single hex doing both, which is what
+   * makes the grid and the flag table read as one key rather than as two. Pass
+   * is the one picked rather than derived -- the green above is a teal green,
+   * and lightened into a fill it reads as teal rather than as green.
    *
    * Set here rather than in the theme block, because a figure keeps a light
    * canvas in both themes and so does the grid. `charts.py` carries the same
    * four values, since it writes them into SVG attributes and cannot read a
    * custom property; the two lists are changed together or not at all. */
-  --flag-fill-pass: #7cc0ad;
+  --flag-fill-pass: #7bc48d;
   --flag-fill-warning: #fd8c35;
   --flag-fill-fail: #b91c1c;
   --flag-fill-unknown: #616a7a;
