@@ -37,16 +37,29 @@ from .audit import Dataset, Run
 
 # ------------------------------------------------------------------ palette ---
 
+# One hue per flag, shared with the words.
+#
+# A flag is a coloured word in the prose and a coloured area in the figures, and
+# no single hex does both jobs -- text on paper has to be dark to be legible, a
+# fill has to be light to be a mark. So the fills below sit on the hues of
+# `--pass`, `--warning` and `--fail` in `site.css`, at the lightnesses an area
+# needs, and Fail is the one hex that serves both. The site had drifted into two
+# palettes for one set of four flags; this is the other half of the one.
+#
 # Validated as a set, in light mode on a white surface, over normal vision and
 # simulated protanopia, deuteranopia and tritanopia. Worst all-pairs CIELAB
-# separation 29.6 (Warning/Fail under tritanopia); lightness strictly ordered
-# Pass > Warning > Fail with adjacent steps of 0.09 and 0.21 relative luminance;
-# the light end clears 2:1 against white, so a Pass cell is still a cell and not
-# a gap in the grid.
-FLAG_FILL = {"Pass": "#8dbc9d", "Warning": "#f57f17", "Fail": "#c62828"}
+# separation 33.0 (Warning/Fail under deuteranopia), better on every axis than
+# the palette this replaces; lightness strictly ordered Pass > Warning > Fail
+# with adjacent steps of 0.05 and 0.29 relative luminance; the light end clears
+# 2:1 against white, so a Pass cell is still a cell and not a gap in the grid.
+#
+# `site.css` carries the same four values as `--flag-fill-*`, because the grid is
+# HTML and reads them from there. The two lists are changed together.
+FLAG_FILL = {"Pass": "#7cc0ad", "Warning": "#fd8c35", "Fail": "#b91c1c"}
 
-# `Unknown` is a texture, not a fill: hatched surface behind a hairline.
-UNKNOWN_INK = "#6d7a77"
+# `Unknown` is a texture, not a fill: hatched surface behind a hairline, inked in
+# the grey the word `Unknown` is set in wherever it is written out.
+UNKNOWN_INK = "#616a7a"
 
 # Split series, validated all-pairs on the same terms: worst separation 14.6.
 SPLIT_FILL = {

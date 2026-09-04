@@ -81,6 +81,24 @@
   --pass: #047857;
   --unknown: #616a7a;
 
+  /* The same four flags as an area instead of as a word.
+   *
+   * A fill and a text colour cannot be one hex: text on paper has to be dark to
+   * be legible, a fill has to be light to be a mark rather than a blot. So what
+   * the two share is the hue. The green above and the green below are one green
+   * at the two lightnesses the two jobs need, the amber likewise, and Fail is a
+   * single hex doing both -- which is what makes the grid and the flag table
+   * read as one key rather than as two.
+   *
+   * Set here rather than in the theme block, because a figure keeps a light
+   * canvas in both themes and so does the grid. `charts.py` carries the same
+   * four values, since it writes them into SVG attributes and cannot read a
+   * custom property; the two lists are changed together or not at all. */
+  --flag-fill-pass: #7cc0ad;
+  --flag-fill-warning: #fd8c35;
+  --flag-fill-fail: #b91c1c;
+  --flag-fill-unknown: #616a7a;
+
   /* A figure keeps a light canvas in both themes. The flag ramp in charts.py was
    * chosen for distinguishability under three colour-vision-deficiency
    * simulations and ordered so that severity reads by lightness as well as hue,
@@ -866,9 +884,19 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
   background: var(--figure-canvas);
   font-size: 8.5px; font-weight: 500; color: #6d7a77;
   letter-spacing: 0.05em; text-transform: uppercase; text-align: center;
-  /* 12 of line, 8 of padding, 1 of rule: the 21 above, spent. */
+  /* 12 of line, 8 of padding, 1 of rule: the 21 above, spent. The rule is drawn
+   * by the pseudo-element below and the border only holds the space, so that the
+   * band row's height stays the 21 the sticky offset is written against. */
   line-height: 12px; height: var(--mx-band);
-  padding: 6px 2px 2px; border-bottom: 1px solid #e6eae9;
+  padding: 6px 2px 2px; border-bottom: 1px solid transparent;
+}
+/* Each family's rule stops six pixels short at both ends, so the three run as
+ * three brackets with a gap at every boundary rather than as one line under all
+ * ten columns. Which six columns are the probe checks is the only thing this row
+ * is for, and a continuous rule was answering a different question. */
+.mx-bands th::after {
+  content: ""; position: absolute; left: 6px; right: 6px; bottom: -1px;
+  height: 1px; background: #cfd6d4;
 }
 .mx-bands td {
   position: sticky; top: var(--masthead-height); left: 0; z-index: 5;
@@ -915,15 +943,21 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
  * rather than as a solid block, and a check with nothing to run on is an empty
  * box rather than a hole in the drawing. */
 .mx-cell { padding: 1px; border-right: 1px solid #eef1f0; }
-.mx-cell a, .mx-blank {
+.mx-cell a {
   display: block; min-width: 46px; height: 15px; border-radius: 2px;
 }
+/* Sized as a cell, not as a mark: `mx-blank` is on the `<td>` itself, and the
+ * legend reuses the class on a swatch. Keeping the width here and off the class
+ * is what lets the swatch be 12 pixels square like the other three. */
+td.mx-blank { min-width: 46px; height: 15px; }
 .mx-cell a:focus-visible { outline: 2px solid #0f766e; outline-offset: 1px; }
 .mx-cell a:hover { outline: 2px solid #0f766e; outline-offset: 0; }
-.mx-Pass a { background: #8dbc9d; }
-.mx-Warning a { background: #f57f17; }
-.mx-Fail a { background: #c62828; }
-.mx-Unknown a { background: #ffffff; border: 1px solid #6d7a77; height: 13px; }
+.mx-Pass a { background: var(--flag-fill-pass); }
+.mx-Warning a { background: var(--flag-fill-warning); }
+.mx-Fail a { background: var(--flag-fill-fail); }
+.mx-Unknown a {
+  background: #ffffff; border: 1px solid var(--flag-fill-unknown); height: 13px;
+}
 
 .mx-empty[hidden] { display: none; }
 .mx-empty {
@@ -941,10 +975,16 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
   width: 12px; height: 12px; border-radius: 2px; flex: none;
   border: 1px solid rgb(28 35 33 / 0.12);
 }
-.mx-swatch.mx-Pass { background: #8dbc9d; }
-.mx-swatch.mx-Warning { background: #f57f17; }
-.mx-swatch.mx-Fail { background: #c62828; }
+.mx-swatch.mx-Pass { background: var(--flag-fill-pass); }
+.mx-swatch.mx-Warning { background: var(--flag-fill-warning); }
+.mx-swatch.mx-Fail { background: var(--flag-fill-fail); }
 .mx-swatch.mx-blank { background: #ffffff; border-color: #b9c2c0; }
+
+/* The note under the grid runs the grid's own width, not the 44rem of fine print
+ * a chart's caption gets. That measure is for a caption sitting under a drawing;
+ * this one sits under a table 1,172 pixels wide, and a line that stops a third of
+ * the way across reads as a stray column beside the thing it is describing. */
+.mx figcaption .fig-caption { max-width: none; }
 
 /* Ten columns and a name column need about 700px, so below 800 the grid gets a
  * scroll container of its own for the sideways axis. That container is also what
@@ -959,7 +999,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 
 @media (max-width: 720px) {
   .mx-grid tr[data-collection] th.mx-name { max-width: 130px; font-size: 10px; }
-  .mx-cell a, .mx-blank { min-width: 34px; }
+  .mx-cell a, td.mx-blank { min-width: 34px; }
   .mx-status { margin-left: 0; }
 }
 
