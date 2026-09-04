@@ -751,8 +751,14 @@ def report_items(dataset: dict, copy: dict, prefix: str = "") -> str:
         # "leakage scan" carries a space, and a space in a class attribute is
         # two classes rather than one hyphenated name.
         marker = report["kind"].replace(" ", "-")
+        # Which splits this report is about, for the reports page's split filter:
+        # the one a class report was measured on, both sides of the comparison for
+        # a leakage scan. Written here rather than derived in the browser, because
+        # the title is a label and the split is the thing.
+        splits = report["pair"] or ([report["split"]] if report["split"] else [])
         items.append(
-            f'    <li class="report report-{marker}">{body} '
+            f'    <li class="report report-{marker}" data-kind="{marker}" '
+            f'data-split="{html.escape(" ".join(splits), quote=True)}">{body} '
             f'<span class="fine">{html.escape(kind)}</span></li>'
         )
     return '<ul class="reports">\n' + "\n".join(items) + "\n  </ul>"
@@ -855,6 +861,34 @@ def catalogue_page(document: dict) -> str:
     )
 
 
+# What a row of the reports table can be narrowed by without opening it. The
+# terms are written onto the row rather than fetched as a second copy of the
+# catalogue: the table is already the list, and `assets/reports.js` removes rows
+# from what is on the page rather than rebuilding it from JSON that could
+# disagree with what was rendered.
+ROW_TERMS = (
+    "benchmark_id",
+    "collection",
+    "dataset_name",
+    "species",
+    "task_category_grouped",
+)
+
+
+def row_facets(dataset: dict, entry: dict) -> str:
+    """The attributes `assets/reports.js` filters one row of the table on."""
+    terms = [str(dataset.get(field) or "") for field in ROW_TERMS]
+    # The titles too, which is how the search box reaches a sequence column: the
+    # corpus has `enhancer`, `promoter` and `noncodingRNA` among them, and a
+    # reader after those has no other way to ask for them.
+    terms += [report["title"] for report in entry["files"]]
+    return (
+        f' data-collection="{html.escape(dataset["collection"], quote=True)}"'
+        f' data-state="{html.escape(entry["state"], quote=True)}"'
+        f' data-search="{html.escape(" ".join(terms).lower(), quote=True)}"'
+    )
+
+
 def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
     entries = [d for d in document["datasets"] if d["reports"]]
     states = {"unpacked": 0, "linked": 0, "unpublished": 0}
@@ -867,7 +901,7 @@ def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
         for report in entry["files"]:
             by_kind[report["kind"] if report["kind"] == "class" else "leakage scan"] += 1
         rows.append(
-            f'    <tr>\n'
+            f'    <tr{row_facets(dataset, entry)}>\n'
             f'      <th scope="row" class="wrap">{dataset_link(dataset)}</th>\n'
             f'      <td class="right num">{by_kind["class"]}</td>\n'
             f'      <td class="right num">{by_kind["leakage scan"] or "&mdash;"}</td>\n'
@@ -880,6 +914,7 @@ def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
         document,
         {
             "title": "The reports",
+            "scripts": '<script src="assets/reports.js"></script>',
             "report_rows": "\n".join(rows),
             "n_datasets_unpacked": str(states["unpacked"]),
             "n_datasets_absent": str(states["linked"] + states["unpublished"]),

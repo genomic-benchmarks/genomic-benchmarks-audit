@@ -48,6 +48,32 @@
 
 <section>
   <h2>Every dataset's reports</h2>
+  <p class="fine">
+    {{n_reports}} reports is a long page. Narrow it to the collection, the kind of
+    report or the split you came for, and what you filter to is in this page's
+    address, so a view of these reports is something you can send someone. With
+    scripting off there is nothing to narrow it with and the table below is the
+    whole list, which is what it is for.
+  </p>
+
+  <!-- Hidden until `assets/reports.js` unhides it. The table below is the whole
+       list whether or not that file runs, and a control that cannot do anything
+       is worse than no control. -->
+  <div class="controls" id="controls" hidden>
+    <div class="search-row">
+      <label for="search">Search</label>
+      <input type="search" id="search" placeholder="collection, dataset, sequence column&hellip;"
+             autocomplete="off">
+      <button type="button" id="clear" class="ghost">Clear filters</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <!-- One chip per condition currently narrowing the table, and one fieldset
+         per facet. A reader who arrives on a filtered link is looking at a subset
+         of the rows and is owed a statement of which subset. -->
+    <div class="chips" id="chips"></div>
+    <div class="facets" id="facets"></div>
+  </div>
+
   <div class="table-card">
   <table class="listing reports-table">
     <caption>
@@ -68,4 +94,5 @@
     </tbody>
   </table>
   </div>
+  <p class="note" id="empty" hidden></p>
 </section>

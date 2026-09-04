@@ -168,6 +168,33 @@ def test_the_reports_live_in_the_site_and_survive_a_rebuild(built, run):
     assert not (out / "index.html").is_dir()
 
 
+def test_the_reports_table_carries_what_its_filters_narrow_on(built):
+    """The reports page filters what is on it, so what it filters on is on it.
+
+    `assets/reports.js` reads these attributes and nothing else -- no second copy
+    of the catalogue -- so a row that lost them would be a row no filter can
+    reach while still looking like every other row.
+    """
+    text = (Path(built["out"]) / "reports.html").read_text(encoding="utf-8")
+    assert 'src="assets/reports.js"' in text
+
+    rows = re.findall(r"<tr (data-collection=.*?)>", text)
+    assert len(rows) == 93
+    for row in rows:
+        assert "data-state=" in row and "data-search=" in row
+
+    # Every report link is reachable by both of the filters that act on links.
+    items = re.findall(r'<li class="report [^"]*" (data-kind=.*?)>', text)
+    assert len(items) == 423
+    assert all("data-split=" in item for item in items)
+    # A leakage scan carries both sides of the comparison: it is a fact about the
+    # held-out split as much as about the split it was compared against.
+    pairs = [i for i in items if 'data-kind="leakage-scan"' in i]
+    assert len(pairs) == 141
+    assert all(len(re.search(r'data-split="([^"]*)"', i).group(1).split()) == 2
+               for i in pairs)
+
+
 def test_a_build_with_no_reports_still_renders_every_page(built_bare):
     """The build must work with no network, and say what it does not have."""
     out = Path(built_bare["out"])

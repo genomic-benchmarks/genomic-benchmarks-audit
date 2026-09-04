@@ -276,6 +276,9 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
 
 /* ------------------------------------------------------------- controls --- */
 
+/* The reports page ships its controls hidden and `assets/reports.js` unhides
+ * them, so the attribute has to beat the display below rather than lose to it. */
+.controls[hidden] { display: none; }
 .controls {
   display: flex; flex-direction: column; gap: 14px; margin: 22px 0 14px;
   align-items: stretch;
@@ -819,6 +822,12 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 
 .reports-table .reports { margin: 0; }
 .reports-table .reports li { padding: 2px 0; font-size: 13px; }
+
+/* Filtering the reports table hides rows and report links with the `hidden`
+ * attribute. A row and a list item each carry a display of their own, so the
+ * attribute has to be said out loud for both. */
+.reports-table tbody tr[hidden], .reports li[hidden] { display: none; }
+.table-card[hidden] { display: none; }
 
 .kinds { max-width: 80ch; }
 .kinds dt { font-weight: 600; margin-top: 14px; color: var(--ink); }
