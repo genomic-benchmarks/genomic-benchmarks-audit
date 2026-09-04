@@ -121,7 +121,7 @@ function panelHtml(d, copy, checks) {
   const reference = `<p class="caveat">${esc(copy.panel.reference_lead)}
     <code>${esc(d.reference_split ?? "")}</code> ${esc(copy.panel.reference_tail)}</p>`;
 
-  return `<div class="panel">
+  return `<div class="panel" id="panel-${esc(d.slug)}">
     ${probe}${caveat}${reference}
     <div class="panel-grid">
       <div>
@@ -135,8 +135,91 @@ function panelHtml(d, copy, checks) {
       <div>
         <h3>${esc(copy.panel.leakage_heading)}</h3>
         ${leakage}
-        <p><a href="${datasetHref(d)}">Open this dataset&rsquo;s page</a></p>
+        <p><a href="${datasetHref(d)}">${esc(copy.panel.open_dataset)}</a></p>
       </div>
     </div>
   </div>`;
 }
+
+/* --------------------------------------------------------------- chrome --- */
+
+/* The theme, the back-to-top button and the copy-the-identifier button. All
+ * three are enhancements: with scripting off the light theme applies, the button
+ * stays hidden, and the identifier is still there to select by hand.
+ */
+
+const THEME_KEY = "gb-audit-theme";
+
+/** The light/dark switch.
+ *
+ * The attribute is already on `<html>` -- the inline script in `base.html` put it
+ * there before the first paint. This only moves it, records the choice, and keeps
+ * the button's label describing what a click would do rather than what is
+ * currently showing.
+ */
+function themeToggle(copy) {
+  const button = document.getElementById("theme-toggle");
+  if (button === null) return;
+
+  const label = () => {
+    const dark = document.documentElement.dataset.theme === "dark";
+    const words = dark ? copy.chrome.to_light : copy.chrome.to_dark;
+    button.setAttribute("aria-label", words);
+    button.setAttribute("title", words);
+  };
+
+  button.addEventListener("click", () => {
+    const dark = document.documentElement.dataset.theme === "dark";
+    document.documentElement.dataset.theme = dark ? "light" : "dark";
+    // A stored choice outranks the system preference, which is why the inline
+    // script reads this key first.
+    try { localStorage.setItem(THEME_KEY, dark ? "light" : "dark"); } catch (error) { /* private mode */ }
+    label();
+  });
+
+  label();
+}
+
+/** Show the back-to-top button once there is something to go back up over. */
+function backToTop(copy) {
+  const button = document.getElementById("to-top");
+  if (button === null) return;
+  button.setAttribute("aria-label", copy.chrome.to_top);
+
+  const update = () => button.classList.toggle("shown", window.scrollY > 600);
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+}
+
+/** Put the text of the element a button names on the clipboard.
+ *
+ * `data-copy` holds the id of the element to read, so the string copied is the
+ * string on the page rather than a second copy of it written into an attribute.
+ */
+function copyButtons(copy) {
+  for (const button of document.querySelectorAll("[data-copy]")) {
+    const source = document.getElementById(button.dataset.copy);
+    if (source === null) continue;
+    const original = button.textContent;
+    button.addEventListener("click", () => {
+      navigator.clipboard.writeText(source.textContent.trim()).then(() => {
+        button.textContent = copy.chrome.copied;
+        button.classList.add("copied");
+        window.setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("copied");
+        }, 1600);
+      });
+    });
+  }
+}
+
+/* Every page loads this file, and every page has the masthead. The catalogue's
+ * own script runs after it and does not repeat any of this. */
+(function chrome() {
+  const copy = readJson("site-copy");
+  if (copy === null) return;
+  themeToggle(copy);
+  backToTop(copy);
+  copyButtons(copy);
+})();

@@ -1,4 +1,5 @@
 <section class="page-head">
+  <p class="eyebrow">What was checked</p>
   <h1>The {{n_checks_word}} checks</h1>
   <p class="lede">
     {{n_probe_checks_cap}} probe checks fit one sequence feature against the class
@@ -17,34 +18,39 @@
 </section>
 
 <section class="figures">
-  <h2>What each check returned across the corpus</h2>
+  <p class="eyebrow">Across the corpus</p>
+  <h2>What each check returned</h2>
   {{fig_check_bars}}
 
-  <table class="listing">
-    <caption>
-      The same counts as a table, with the two absences kept apart: Unknown is a
-      check that ran and could not be scored, blank is a check with nothing to run
-      on.
-    </caption>
-    <thead>
-      <tr>
-        <th scope="col">Check</th>
-        <th scope="col">Kind</th>
-        <th scope="col" class="right">Pass</th>
-        <th scope="col" class="right">Warning</th>
-        <th scope="col" class="right">Fail</th>
-        <th scope="col" class="right">Unknown</th>
-        <th scope="col" class="right">Blank</th>
-        <th scope="col" class="right">Scored</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="table-card">
+    <table class="listing">
+      <caption>
+        The same counts as a table, with the two absences kept apart: Unknown is a
+        check that ran and could not be scored, blank is a check with nothing to run
+        on. <strong>Every count is a link</strong> to those datasets in the
+        catalogue.
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Check</th>
+          <th scope="col">Kind</th>
+          <th scope="col" class="right">Pass</th>
+          <th scope="col" class="right">Warning</th>
+          <th scope="col" class="right">Fail</th>
+          <th scope="col" class="right">Unknown</th>
+          <th scope="col" class="right">Blank</th>
+          <th scope="col" class="right">Scored</th>
+        </tr>
+      </thead>
+      <tbody>
 {{check_rows}}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <section class="figures" id="matrix">
+  <p class="eyebrow">Every cell</p>
   <h2>Every dataset, every check</h2>
   <p>
     {{n_datasets}} rows by {{n_checks}} columns, grouped by collection and ordered
@@ -52,4 +58,30 @@
     that dataset's reference split.
   </p>
   {{fig_flag_matrix}}
+</section>
+
+<section class="onward">
+  <h2>Where to go next</h2>
+  <ul class="cards">
+    <li>
+      <a href="catalogue.html"><strong>All {{n_datasets}} datasets</strong></a>
+      <p>The same flags as a table you can filter and sort, one row per dataset,
+        each row opening its {{n_checks_word}} flags in place.</p>
+    </li>
+    <li>
+      <a href="methods.html#checks"><strong>What each check measures</strong></a>
+      <p>The feature each probe fits, the threshold behind each flag, and what
+        Pass does not say.</p>
+    </li>
+    <li>
+      <a href="core-set.html"><strong>The Core Set</strong></a>
+      <p>{{n_gates_cap}} gates over these same flags, and the {{core_set_size}}
+        datasets that came through all of them.</p>
+    </li>
+    <li>
+      <a href="reports.html"><strong>{{n_reports}} reports</strong></a>
+      <p>What a check actually looked at: every distribution and every probe fit
+        behind one of these flags.</p>
+    </li>
+  </ul>
 </section>

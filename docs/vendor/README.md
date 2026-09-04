@@ -1,5 +1,29 @@
 # Vendored
 
+## Inter and JetBrains Mono
+
+`fonts/inter-latin-variable.woff2` and `fonts/jetbrains-mono-latin-variable.woff2`,
+with the SIL Open Font License 1.1 each of them ships under. 80 KB for the pair.
+
+**Why the files and not the link.** The organisation site loads both from Google
+Fonts. This one is an archive of a measurement run, and the same argument that
+keeps Tabulator here applies: a page that needs a third party to answer before it
+can render is a page with a way to stop rendering that has nothing to do with what
+it archives. It is also a request to a third party made on a reader's behalf every
+time they open a page, which an archive has no reason to make.
+
+**What is in them.** The latin subset of the variable font, which is the same file
+`fonts.googleapis.com` serves for `U+0000-00FF` and the punctuation around it. The
+weight axis is declared in `@font-face` as a range, so `site.css` asks for 400,
+500, 600 and 700 out of one file. A glyph outside that subset — the site uses a
+right arrow in one list marker — falls back to the reader's own interface font,
+which is what the organisation site does with the same subset.
+
+**Upgrading.** Fetch the two `.woff2` files the current `css2?family=Inter…` URL
+names, replace them under `fonts/`, and re-run `python -m pytest tests/`. The
+`@font-face` blocks at the top of `docs/assets/site.css` name the paths; nothing
+else refers to them.
+
 ## Tabulator 6.5.2
 
 `tabulator.min.js`, `tabulator.min.css` and its MIT `LICENSE`, copied into this

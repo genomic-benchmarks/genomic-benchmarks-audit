@@ -1,4 +1,5 @@
 <section class="page-head">
+  <p class="eyebrow">The corpus</p>
   <h1>All {{n_datasets}} datasets</h1>
   <p class="lede">
     Every dataset the run measured, with the flag each one rolled up to, the AUROC
@@ -12,6 +13,12 @@
     maximum taken over splits, and the dataset page names the split for each
     number it shows.
   </p>
+  <p class="fine">
+    Whatever you filter and sort to is in this page's address, so a view of these
+    rows is something you can send someone. What the columns mean is on
+    <a href="checks.html">the checks page</a>; why one split is quoted is on
+    <a href="methods.html#reference-split">the methods page</a>.
+  </p>
 </section>
 
 <section class="controls" id="controls">
@@ -20,8 +27,14 @@
     <input type="search" id="search" placeholder="collection, dataset, species&hellip;"
            autocomplete="off">
     <button type="button" id="clear" class="ghost">Clear filters</button>
-    <span class="count" id="count"></span>
+    <span class="count" id="count" aria-live="polite"></span>
   </div>
+  <!-- Filled by `assets/catalogue.js`: four saved views, and one chip per
+       condition currently narrowing the table. A reader who arrives on a link
+       from another page lands on a subset of the rows and is owed a statement of
+       which subset. -->
+  <div class="presets" id="presets"></div>
+  <div class="chips" id="chips"></div>
   <div class="facets" id="facets"></div>
 </section>
 
@@ -35,3 +48,29 @@
     {{n_datasets}}-by-{{n_checks}} matrix as static HTML.
   </p>
 </noscript>
+
+<section class="onward">
+  <h2>Where to go next</h2>
+  <ul class="cards">
+    <li>
+      <a href="checks.html"><strong>The {{n_checks_word}} checks</strong></a>
+      <p>What each column measures, what it returned across the corpus, and the
+        full {{n_datasets}}-by-{{n_checks}} matrix.</p>
+    </li>
+    <li>
+      <a href="core-set.html"><strong>The Core Set</strong></a>
+      <p>{{n_gates_cap}} gates applied in order, and the {{core_set_size}} datasets
+        that came through all of them.</p>
+    </li>
+    <li>
+      <a href="reports.html"><strong>{{n_reports}} reports</strong></a>
+      <p>The full report <code>genomic-benchmarks-qc</code> rendered for each
+        split and each split pair, readable here.</p>
+    </li>
+    <li>
+      <a href="methods.html"><strong>Methods</strong></a>
+      <p>What was measured, on which split, with which thresholds &mdash; and what
+        a flag does not say.</p>
+    </li>
+  </ul>
+</section>

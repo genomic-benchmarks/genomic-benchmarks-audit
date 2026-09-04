@@ -1,11 +1,21 @@
-<nav class="crumb">
-  <a href="../index.html">Overview</a> &rsaquo;
-  <a href="../catalogue.html">Datasets</a> &rsaquo;
-  <span>{{benchmark_id}}</span>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../index.html">Overview</a> <span aria-hidden="true">&rsaquo;</span>
+  <a href="../catalogue.html">Datasets</a> <span aria-hidden="true">&rsaquo;</span>
+  <a href="{{collection_href}}">{{collection}}</a> <span aria-hidden="true">&rsaquo;</span>
+  <span class="here">{{dataset_name}}</span>
 </nav>
 
 <section class="page-head">
+  <p class="eyebrow">Dataset</p>
   <h1><span class="collection-part">{{collection}}:</span><wbr>{{dataset_name}}</h1>
+  <!-- The identifier is the string that names this dataset anywhere else: in the
+       data package, in the tables under `data/`, in a paper. It is 50 characters
+       long and the heading above breaks it across lines to fit, so it is also
+       written out once unbroken with a button that copies it. -->
+  <p class="id-line">
+    <code id="dataset-id">{{benchmark_id}}</code>
+    <button type="button" class="ghost" data-copy="dataset-id">Copy</button>
+  </p>
   {{core_note}}
   <dl class="facts">
     <dt>Task</dt><dd>{{task_type}}, {{task_category}}</dd>
@@ -14,6 +24,39 @@
     <dt>Sequences</dt><dd>{{total_size}} across {{n_dataset_splits}} {{split_word}}</dd>
     <dt>Sequence length</dt><dd>{{min_seq_length}} to {{max_seq_length}}</dd>
   </dl>
+</section>
+
+<!-- The four figures this page is opened for. Each one is stated again below,
+     inside the paragraph that qualifies it; that is the right place for the
+     qualification and it was the only place for the number. -->
+<section aria-label="This dataset in four numbers">
+  <ul class="stat-grid glance">
+    <li>
+      <span class="stat">{{rollup_flag}}</span>
+      <span class="stat-label">worst flag across the {{n_checks_word}} checks on
+        <code>{{reference_split}}</code>, this dataset's reference split</span>
+    </li>
+    <li>
+      <span class="stat">{{n_checks_failed}}</span>
+      <span class="stat-label">of the {{n_checks_word}} checks returned
+        <strong>Fail</strong> on that split</span>
+      <span class="fine">{{n_checks_warning}} returned Warning,
+        {{n_checks_unknown}} could not be scored</span>
+    </li>
+    <li>
+      <span class="stat">{{glance_probe}}</span>
+      <span class="stat-label">AUROC from the strongest single sequence feature,
+        which is {{strongest_probe}}</span>
+      <span class="fine">A lower bound on what a model could recover from the
+        sequences alone</span>
+    </li>
+    <li>
+      <span class="stat">{{glance_overlap}}</span>
+      <span class="stat-label">of one split's sequences were also present in
+        another, at worst</span>
+      {{glance_overlap_note}}
+    </li>
+  </ul>
 </section>
 
 <section class="summary">
@@ -37,6 +80,13 @@
   </p>
   {{probe_note}}
   {{leakage_note}}
+  <p class="fine">
+    <a href="../checks.html">What each of the {{n_checks_word}} checks measures</a>
+    &middot;
+    <a href="../methods.html#what">What a flag is, and what it does not say</a>
+    &middot;
+    <a href="../methods.html#reference-split">Why one split is quoted</a>
+  </p>
 </section>
 
 <section class="figures">
@@ -48,22 +98,24 @@
   </p>
   {{fig_checks}}
 
-  <table class="listing">
-    <caption>Each split, the flag it rolled up to, and its strongest probe.</caption>
-    <thead>
-      <tr>
-        <th scope="col">Split</th>
-        <th scope="col">Sequence columns</th>
-        <th scope="col">Rollup flag</th>
-        <th scope="col" class="right">Checks scored</th>
-        <th scope="col">Strongest probe</th>
-        <th scope="col" class="right">AUROC</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="table-card">
+    <table class="listing">
+      <caption>Each split, the flag it rolled up to, and its strongest probe.</caption>
+      <thead>
+        <tr>
+          <th scope="col">Split</th>
+          <th scope="col">Sequence columns</th>
+          <th scope="col">Rollup flag</th>
+          <th scope="col" class="right">Checks scored</th>
+          <th scope="col">Strongest probe</th>
+          <th scope="col" class="right">AUROC</th>
+        </tr>
+      </thead>
+      <tbody>
 {{split_rows}}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <section class="figures">
@@ -90,10 +142,6 @@
 
 <section class="onward">
   <h2>Nearby</h2>
-  {{siblings}}
-  <p class="fine">
-    <a href="../catalogue.html">All {{n_datasets}} datasets</a> &middot;
-    <a href="../checks.html">What each check measures</a> &middot;
-    <a href="../methods.html#reference-split">Why one split is quoted</a>
-  </p>
+  {{pager}}
+  {{nearby}}
 </section>

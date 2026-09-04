@@ -4,6 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{title}} &mdash; Genomic Benchmarks audit</title>
+<meta name="description" content="{{title}} in the Genomic Benchmarks audit: what ten quality-control checks returned on {{n_datasets}} published genomic benchmark datasets, dataset by dataset.">
+<meta name="theme-color" content="#0f766e">
+
+<!-- The theme, resolved before the first paint.
+     Inline and above the stylesheet on purpose: read from `localStorage` after
+     the page had rendered, a reader who chose dark would watch the light theme
+     flash first. With scripting off nothing sets the attribute and the light
+     theme applies, which is the one every figure on this site is drawn for. -->
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem("gb-audit-theme");
+      var dark = stored === "dark"
+        || (stored === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch (error) {
+      document.documentElement.dataset.theme = "light";
+    }
+  })();
+</script>
+
 <!-- A page's own stylesheets go above `site.css`, never below it: the rules in
      site.css that correct the vendored table's own are order-dependent, and a
      vendor sheet loaded last would win them back. -->
@@ -18,17 +39,31 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="masthead">
+<header class="masthead" id="top">
   <div class="wrap">
     <a class="wordmark" href="{{root}}index.html">Genomic Benchmarks <strong>audit</strong></a>
-    <nav>
-      <a href="{{root}}index.html">Overview</a>
-      <a href="{{root}}catalogue.html">Datasets</a>
-      <a href="{{root}}checks.html">Checks</a>
-      <a href="{{root}}core-set.html">Core Set</a>
-      <a href="{{root}}reports.html">Reports</a>
-      <a href="{{root}}methods.html">Methods</a>
+    <!-- Exactly one of these carries `aria-current="page"`, set by `site.py`.
+         The attribute is what a screen reader announces; `site.css` turns the
+         same attribute into a colour and a rule, so where you are is never
+         stated by colour alone. -->
+    <nav aria-label="Sections">
+      <a href="{{root}}index.html"{{nav_index}}>Overview</a>
+      <a href="{{root}}catalogue.html"{{nav_catalogue}}>Datasets</a>
+      <a href="{{root}}checks.html"{{nav_checks}}>Checks</a>
+      <a href="{{root}}core-set.html"{{nav_core}}>Core Set</a>
+      <a href="{{root}}reports.html"{{nav_reports}}>Reports</a>
+      <a href="{{root}}methods.html"{{nav_methods}}>Methods</a>
     </nav>
+    <div class="masthead-right">
+      <button type="button" class="icon-button" id="theme-toggle">
+        <svg class="icon-sun" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
+        <svg class="icon-moon" viewBox="0 0 20 20" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+      </button>
+      <a class="gh-pill" href="https://github.com/genomic-benchmarks/genomic-benchmarks-audit">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
   </div>
 </header>
 
@@ -36,8 +71,41 @@
 {{content}}
 </main>
 
+<a class="to-top" href="#top" id="to-top">&uarr; Top</a>
+
 <footer class="colophon">
   <div class="wrap">
+    <!-- The site had no way out of itself: no link to the project it belongs to,
+         to the tool that produced every number on it, or to its own source. -->
+    <nav class="site-links" aria-label="Elsewhere">
+      <div>
+        <h2>This site</h2>
+        <ul>
+          <li><a href="{{root}}catalogue.html">All {{n_datasets}} datasets</a></li>
+          <li><a href="{{root}}checks.html">The {{n_checks_word}} checks</a></li>
+          <li><a href="{{root}}core-set.html">The Core Set</a></li>
+          <li><a href="{{root}}reports.html">The {{n_reports}} reports</a></li>
+          <li><a href="{{root}}methods.html">Methods, and what a flag does not say</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>The project</h2>
+        <ul>
+          <li><a href="https://genomic-benchmarks.github.io/">Genomic Benchmarks</a></li>
+          <li><a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/">genomic-benchmarks-qc documentation</a></li>
+          <li><a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/examples/">Worked examples of a report</a></li>
+          <li><a href="https://pypi.org/project/genomic-benchmarks-qc/">genomic-benchmarks-qc on PyPI</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Source</h2>
+        <ul>
+          <li><a href="https://github.com/genomic-benchmarks/genomic-benchmarks-audit">This site's repository</a></li>
+          <li><a href="https://github.com/genomic-benchmarks/genomic-benchmarks-qc">The tool's repository</a></li>
+          <li><a href="https://github.com/genomic-benchmarks/genomic-benchmarks-qc/issues">Report something wrong</a></li>
+        </ul>
+      </div>
+    </nav>
     <p>
       Every number on this site comes from one committed file,
       <code>docs/data/catalogue.json</code>, built offline from the tables this
@@ -106,6 +174,49 @@
     "Unknown": "The check ran and could not be scored. This is not a Pass.",
     "blank": "The check had nothing to run on. This is not a Pass either, and it is not the same statement as Unknown."
   },
+  "chrome": {
+    "to_dark": "Switch to the dark theme",
+    "to_light": "Switch to the light theme",
+    "to_top": "Back to the top of the page",
+    "copy_id": "Copy this identifier",
+    "copied": "Copied"
+  },
+  "filters": {
+    "heading": "Filtering by",
+    "remove": "Remove this filter",
+    "search": "Search",
+    "check": "Check",
+    "flag": "Flag",
+    "core_set": "Core Set",
+    "core_set_value": "Members only",
+    "leaked_over": "Split overlap above",
+    "probe_over": "Strongest probe AUROC at least",
+    "shown": "{shown} of {total} datasets",
+    "expand": "Show what the checks returned on this dataset",
+    "collapse": "Hide what the checks returned on this dataset"
+  },
+  "nearby": {
+    "walk": "Datasets in this collection",
+    "previous": "Previous",
+    "next": "Next",
+    "first": "First in this collection",
+    "last": "Last in this collection",
+    "position": "{n} of {total} in {collection}",
+    "collection": "All {n} datasets in {value}",
+    "category": "All {n} datasets in the task category {value}",
+    "species": "All {n} datasets on {value}",
+    "neighbours": "Nearest by name in {value}",
+    "more": "and {n} more",
+    "reports_walk": "Reports for this dataset",
+    "report_position": "Report {n} of {total} for this dataset"
+  },
+  "presets": {
+    "heading": "Quick views",
+    "fail": "Flagged Fail somewhere",
+    "core": "In the Core Set",
+    "leakage": "Over half of one split in another",
+    "probe": "One feature reaches 0.70"
+  },
   "panel": {
     "reference": "reference",
     "reference_lead": "Measured on the",
@@ -128,6 +239,7 @@
     "core_set_member": "In the Core Set",
     "core_set_absent": "Not in the Core Set",
     "core_set_rank": "rank",
+    "open_dataset": "Open this dataset's page",
     "missing_entry": "This page was built for a dataset the catalogue beside it does not carry, which means the two came from different builds. The identifier asked for was"
   },
   "reports": {

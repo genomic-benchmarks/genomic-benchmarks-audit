@@ -1,11 +1,12 @@
-<nav class="crumb">
-  <a href="../../index.html">Overview</a> &rsaquo;
-  <a href="../../catalogue.html">Datasets</a> &rsaquo;
-  <a href="{{dataset_href}}">{{benchmark_id}}</a> &rsaquo;
-  <span>{{report_title}}</span>
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="../../index.html">Overview</a> <span aria-hidden="true">&rsaquo;</span>
+  <a href="../../catalogue.html">Datasets</a> <span aria-hidden="true">&rsaquo;</span>
+  <a href="{{dataset_href}}">{{benchmark_id}}</a> <span aria-hidden="true">&rsaquo;</span>
+  <span class="here">{{report_title}}</span>
 </nav>
 
 <section class="page-head report-head">
+  <p class="eyebrow">Report</p>
   <h1>{{report_title}}</h1>
   <p class="lede">{{report_description}}</p>
   <p class="badge-line">
@@ -27,3 +28,7 @@
   and shown here unchanged. Some of these reports are tens of megabytes; a frame
   that is slow to fill is a large report, not a failed request.
 </p>
+
+<!-- A dataset with two sequence columns and three splits has nine of these, and
+     reading them in turn meant going back to the dataset page eight times. -->
+{{report_pager}}

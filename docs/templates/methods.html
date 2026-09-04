@@ -1,4 +1,5 @@
 <section class="page-head">
+  <p class="eyebrow">What was measured</p>
   <h1>Methods</h1>
   <p class="lede">
     What was measured, on what, and what the results do and do not say. Every
@@ -63,6 +64,7 @@
     leakage scan runs across pairs of splits and counts sequences of one that are
     also present in the other.
   </p>
+  <div class="table-card">
   <table class="listing">
     <caption>Each check, and how the {{n_datasets}} datasets came out on it.</caption>
     <thead>
@@ -81,6 +83,7 @@
 {{check_rows}}
     </tbody>
   </table>
+  </div>
 </section>
 
 <section id="probes">
@@ -125,6 +128,7 @@
     as recorded, because a dataset left out for an unsupported file format and one
     left out for an unsupported task are different absences.
   </p>
+  <div class="table-card">
   <table class="listing">
     <caption>Why {{n_excluded}} curated datasets are not in this run.</caption>
     <thead>
@@ -138,6 +142,7 @@
 {{exclusion_rows}}
     </tbody>
   </table>
+  </div>
 </section>
 
 <section id="provenance">

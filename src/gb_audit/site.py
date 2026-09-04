@@ -49,6 +49,7 @@ import json
 import re
 import shutil
 import socketserver
+import urllib.parse
 from pathlib import Path
 
 from . import audit, catalogue, charts, reports, zenodo
@@ -108,6 +109,47 @@ def fill(template: str, values: dict[str, str], where: str) -> str:
 
 def plural(n: int, one: str, many: str | None = None) -> str:
     return one if n == 1 else (many or one + "s")
+
+
+# The masthead's six links. `base.html` carries a `{{nav_*}}` slot on each one and
+# `render_page` fills exactly one of them, so the page a reader is on is marked
+# rather than left for them to work out from the heading.
+NAV_KEYS = ("index", "catalogue", "checks", "core", "reports", "methods")
+
+# An attribute, not a word: `site.css` turns this same attribute into a colour
+# and a rule, and a screen reader reads it directly. Which is how the masthead
+# gets an active state without this module typing anything a reader sees.
+# The leading space is the attribute's own: `base.html` writes the slot flush
+# against the `>`, so an inactive link renders no stray whitespace.
+CURRENT_PAGE = ' aria-current="page"'
+
+
+def nav_marks(here: str | None) -> dict[str, str]:
+    """Which masthead link stands for the page being rendered."""
+    if here is not None and here not in NAV_KEYS:
+        raise TemplateError(
+            f"{here!r} is not one of the masthead's sections "
+            f"({', '.join(NAV_KEYS)})."
+        )
+    return {f"nav_{key}": (CURRENT_PAGE if key == here else "") for key in NAV_KEYS}
+
+
+def catalogue_href(prefix: str = "", **conditions: str) -> str:
+    """A link into the catalogue table, already filtered to a subset of the rows.
+
+    `assets/catalogue.js` reads these same parameter names on load, so a page
+    elsewhere on the site can point at the rows it is talking about: a count on
+    the checks page points at the datasets it counts, a dataset page points at the
+    rest of its collection, the Core Set page points at its members. Every one of
+    those links otherwise had to land on all 93 rows and leave the reader to
+    reconstruct the question.
+
+    The names are the catalogue's own field names, which is why they are not
+    spelled out here -- a facet renamed in the data is a link that stops filtering
+    rather than one that filters on something else.
+    """
+    query = urllib.parse.urlencode(conditions)
+    return html.escape(f"{prefix}catalogue.html?{query}", quote=True)
 
 
 def site_copy(values: dict[str, str] | None = None) -> dict:
@@ -392,8 +434,26 @@ def figures(items) -> str:
     return "\n".join(charts.render(figure) for figure in items)
 
 
+def count_link(n: int, check: str, flag: str, prefix: str = "") -> str:
+    """A count of datasets, pointing at the datasets it counts.
+
+    Zero is an em dash and not a link, because there is nothing on the other end
+    of it -- a link that lands on an empty table is a link that looks broken.
+    """
+    if not n:
+        return '<span class="zero">&mdash;</span>'
+    href = catalogue_href(prefix, check=check, flag=flag)
+    return f'<a class="count-link" href="{href}">{n}</a>'
+
+
 def check_rows(document: dict, copy: dict) -> str:
-    """One row per check: what it is, and how the 93 datasets came out on it."""
+    """One row per check: what it is, and how the 93 datasets came out on it.
+
+    Every non-zero count is a link to the catalogue filtered to the datasets it
+    counts. The table said that 57 datasets were flagged Fail on some check and
+    then left naming them as an exercise; the number is the question and the rows
+    behind it are the answer, so the number is where the link goes.
+    """
     order = [check["name"] for check in document["checks"]]
     kinds = {check["name"]: check["kind"] for check in document["checks"]}
     rows = []
@@ -403,7 +463,7 @@ def check_rows(document: dict, copy: dict) -> str:
             tally[dataset["flags"].get(name)] += 1
         scored = sum(tally[f] for f in ("Pass", "Warning", "Fail", "Unknown"))
         cells = "".join(
-            f'<td class="right num">{tally[flag] or "&mdash;"}</td>'
+            f'<td class="right num">{count_link(tally[flag], name, flag)}</td>'
             for flag in ("Pass", "Warning", "Fail", "Unknown")
         )
         blank = (
@@ -541,28 +601,124 @@ def leakage_rows(dataset: dict, copy: dict) -> str:
     return "\n".join(rows)
 
 
-def siblings(dataset: dict, document: dict) -> str:
-    """The other datasets in this collection, as links.
+# How many neighbours a dataset page names before it stops and links to the rest.
+# GUE_v2 has 33 datasets in it, and a paragraph of 32 comma-separated links is a
+# list in which nothing is findable.
+NEIGHBOURS_NAMED = 8
+
+
+def collection_order(dataset: dict, document: dict) -> list[dict]:
+    """The dataset's whole collection, by name.
+
+    By name rather than by any measurement, so that walking a collection twice is
+    the same walk, and so that the order matches what the catalogue opens in.
+    """
+    return sorted(
+        (d for d in document["datasets"] if d["collection"] == dataset["collection"]),
+        key=lambda d: d["dataset_name"],
+    )
+
+
+def pager(dataset: dict, document: dict, copy: dict) -> str:
+    """Previous and next inside this collection, and where in it this one falls.
+
+    A dataset page was one of 93 with no way to any of the other 92 except back
+    through the catalogue.
+    """
+    family = collection_order(dataset, document)
+    ids = [d["benchmark_id"] for d in family]
+    at = ids.index(dataset["benchmark_id"])
+    words = copy["nearby"]
+
+    def step(other: dict | None, direction: str, edge: str) -> str:
+        if other is None:
+            return f'<span class="pager-none fine">{html.escape(words[edge])}</span>'
+        return (
+            f'<a href="{html.escape(other["slug"], quote=True)}.html">'
+            f'<span class="pager-dir">{html.escape(words[direction])}</span> '
+            f'<span>{html.escape(other["dataset_name"])}</span></a>'
+        )
+
+    position = (
+        words["position"]
+        .replace("{n}", str(at + 1))
+        .replace("{total}", str(len(family)))
+        .replace("{collection}", html.escape(dataset["collection"]))
+    )
+    return (
+        f'<nav class="pager" aria-label="{html.escape(words["walk"], quote=True)}">\n'
+        f'  {step(family[at - 1] if at else None, "previous", "first")}\n'
+        f'  <span class="pager-where">{position}</span>\n'
+        f'  {step(family[at + 1] if at + 1 < len(family) else None, "next", "last")}\n'
+        f"</nav>"
+    )
+
+
+def nearby(dataset: dict, document: dict, copy: dict) -> str:
+    """Ways on from one dataset: the cuts of the corpus it is in, and its neighbours.
+
+    Three links into the filtered catalogue rather than one paragraph naming every
+    other dataset in the collection. "The other datasets on Arabidopsis thaliana"
+    is a question this page can be a starting point for, and a facet the catalogue
+    already has; it was reachable only by going back and ticking the box.
 
     Server-rendered, which is what lets a dataset page carry no script at all.
     """
-    family = [
-        d
-        for d in document["datasets"]
-        if d["collection"] == dataset["collection"]
-        and d["benchmark_id"] != dataset["benchmark_id"]
-    ]
-    if not family:
-        return ""
-    links = ", ".join(
-        dataset_link(other, prefix="../")
-        for other in sorted(family, key=lambda d: d["dataset_name"])
+    words = copy["nearby"]
+    datasets = document["datasets"]
+    lines = []
+
+    def cut(field: str, label: str) -> None:
+        value = dataset[field]
+        if value in (None, ""):
+            return
+        n = sum(1 for d in datasets if d[field] == value)
+        if n < 2:
+            return  # a cut of one is this page, and a link back to itself
+        href = catalogue_href("../", **{field: value})
+        phrase = (
+            words[label]
+            .replace("{n}", str(n))
+            .replace("{value}", html.escape(str(value)))
+        )
+        lines.append(f'    <li><a href="{href}">{phrase}</a></li>')
+
+    cut("collection", "collection")
+    cut("task_category_grouped", "category")
+    cut("species", "species")
+
+    # The nearest by name, which is a window centred on where this dataset falls
+    # rather than the first eight of the collection: for the tenth of 32, the
+    # first eight are the eight furthest from it that the ordering has.
+    family = collection_order(dataset, document)
+    at = [d["benchmark_id"] for d in family].index(dataset["benchmark_id"])
+    window = sorted(
+        sorted(
+            (i for i in range(len(family)) if i != at),
+            key=lambda i: (abs(i - at), i),
+        )[:NEIGHBOURS_NAMED]
     )
-    return (
-        f'<p class="fine">{len(family)} other '
-        f'{plural(len(family), "dataset")} in '
-        f'<strong>{html.escape(dataset["collection"])}</strong>: {links}</p>'
-    )
+    named = ""
+    if window:
+        shown = [family[i] for i in window]
+        links = ", ".join(dataset_link(other, prefix="../") for other in shown)
+        rest = len(family) - 1 - len(shown)
+        more = ""
+        if rest:
+            href = catalogue_href("../", collection=dataset["collection"])
+            more = (
+                f' &middot; <a href="{href}">'
+                f'{words["more"].replace("{n}", str(rest))}</a>'
+            )
+        heading = words["neighbours"].replace(
+            "{value}", html.escape(dataset["collection"])
+        )
+        named = f'<p class="fine">{heading}: {links}{more}</p>'
+
+    arrows = ""
+    if lines:
+        arrows = '<ul class="arrows">\n' + "\n".join(lines) + "\n  </ul>"
+    return "\n  ".join(piece for piece in (arrows, named) if piece)
 
 
 def view_path(archive_stem: str, report_path: str) -> str:
@@ -606,13 +762,23 @@ def report_items(dataset: dict, copy: dict, prefix: str = "") -> str:
 
 
 def render_page(
-    name: str, document: dict, extra: dict[str, str] | None = None
+    name: str,
+    document: dict,
+    extra: dict[str, str] | None = None,
+    *,
+    nav: str | None = None,
 ) -> str:
-    """One page: the named content template inside `base.html`."""
+    """One page: the named content template inside `base.html`.
+
+    `nav` is which masthead link this page is. A dataset page is under Datasets
+    and a framed report is under Reports, because that is where a reader came
+    from rather than what the file is.
+    """
     base = (TEMPLATES / "base.html").read_text(encoding="utf-8")
     content = (TEMPLATES / f"{name}.html").read_text(encoding="utf-8")
 
     values = counts(document)
+    values.update(nav_marks(nav))
     values.update(extra or {})
     values.setdefault("root", "")
     values.setdefault("scripts", "")
@@ -635,6 +801,7 @@ def landing(run: audit.Run, document: dict, copy: dict) -> str:
             "fig_leakage": charts.render(by_slug["leakage"]),
             "fig_collection_bars": charts.render(by_slug["collection-bars"]),
         },
+        nav="index",
     )
 
 
@@ -649,6 +816,7 @@ def checks_page(run: audit.Run, document: dict, copy: dict) -> str:
             "fig_flag_matrix": charts.render(by_slug["flag-matrix"]),
             "fig_check_bars": charts.render(by_slug["check-bars"]),
         },
+        nav="checks",
     )
 
 
@@ -662,7 +830,9 @@ def core_set_page(run: audit.Run, document: dict, copy: dict) -> str:
             "fig_funnel": charts.render(by_slug["core-set-funnel"]),
             "gate_rows": gate_rows(document),
             "core_rows": core_rows(document, copy),
+            "core_set_href": catalogue_href(core="1"),
         },
+        nav="core",
     )
 
 
@@ -681,6 +851,7 @@ def catalogue_page(document: dict) -> str:
                 '<script src="assets/catalogue.js"></script>'
             ),
         },
+        nav="catalogue",
     )
 
 
@@ -718,6 +889,7 @@ def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
             ),
             "route_note": route_note(route, states["unpacked"]),
         },
+        nav="reports",
     )
 
 
@@ -745,6 +917,7 @@ def methods_page(document: dict, copy: dict) -> str:
             "exclusion_rows": exclusion_rows(document),
             "check_rows": check_rows(document, copy),
         },
+        nav="methods",
     )
 
 
@@ -838,12 +1011,55 @@ def dataset_page(
             "core_note": core,
             "probe_note": probe,
             "leakage_note": leakage,
+            # The four figures a reader opens this page for, above the fold. They
+            # were each computed here already and each stated a screen further
+            # down, inside the paragraph that qualifies it -- which is the right
+            # place for the qualification and the wrong one for the number.
+            "strongest_probe": text(dataset["strongest_probe"]),
+            "glance_probe": measurement(dataset["max_probe_auroc"], "{:.3f}", copy),
+            "glance_overlap": measurement(
+                dataset["max_leaked_test_pct"], "{:.2f}%", copy
+            ),
+            "worst_leakage_comparison": text(dataset["worst_leakage_comparison"]),
+            "n_split_comparisons": str(dataset["n_split_comparisons"] or 0),
+            "glance_overlap_note": glance_overlap_note(dataset),
             "split_rows": split_rows(dataset, copy),
             "report_items": report_items(dataset, copy, prefix="../"),
-            "siblings": siblings(dataset, document),
+            "pager": pager(dataset, document, copy),
+            "nearby": nearby(dataset, document, copy),
+            "collection_href": catalogue_href(
+                "../", collection=dataset["collection"]
+            ),
             "fig_checks": charts.render(drawn["dataset-checks"]),
             "fig_probes": charts.render(drawn["dataset-probes"]),
             "leakage_section": leakage_section(dataset, drawn, copy, corpus),
+        },
+        nav="catalogue",
+    )
+
+
+def glance_overlap_note(dataset: dict) -> str:
+    """What the overlap tile's fine print says, which depends on there being one.
+
+    One dataset ships a single split. "The largest of 0 comparisons" is not a
+    smaller version of the same sentence; it is a different one.
+    """
+    comparisons = dataset["n_split_comparisons"] or 0
+    if not comparisons:
+        splits = len(dataset["splits"])
+        return part(
+            "glance_overlap_absent",
+            {
+                "n_dataset_splits_word": cardinal(splits),
+                "split_word": plural(splits, "split"),
+            },
+        )
+    return part(
+        "glance_overlap",
+        {
+            "n_split_comparisons": str(comparisons),
+            "comparison_word": plural(comparisons, "comparison"),
+            "worst_leakage_comparison": text(dataset["worst_leakage_comparison"]),
         },
     )
 
@@ -900,7 +1116,48 @@ def report_view(
             "report_kind": html.escape(kind),
             "report_description": html.escape(report_description(report, copy)),
             "raw_href": html.escape(raw, quote=True),
+            "report_pager": report_pager(dataset, report, copy),
         },
+        nav="reports",
+    )
+
+
+def report_pager(dataset: dict, report: dict, copy: dict) -> str:
+    """The report before and after this one, among the same dataset's reports.
+
+    A dataset with two sequence columns and three splits has nine reports, and
+    reading them in turn meant going back to the dataset page eight times. The
+    order is the one `data/reports.csv` records for the archive, which is the
+    order the dataset page lists them in.
+    """
+    files = dataset["reports"]["files"]
+    at = next(i for i, other in enumerate(files) if other is report)
+    words = copy["nearby"]
+
+    def step(other: dict | None, direction: str) -> str:
+        if other is None:
+            return '<span class="pager-none"></span>'
+        # A sibling viewer sits in this same directory: `view_path` folds a
+        # report's own path into the file name, so the neighbour's file name is
+        # the whole link.
+        href = html.escape(other["path"].replace("/", "-"), quote=True)
+        return (
+            f'<a href="{href}">'
+            f'<span class="pager-dir">{html.escape(words[direction])}</span> '
+            f'<span>{html.escape(other["title"])}</span></a>'
+        )
+
+    position = (
+        words["report_position"]
+        .replace("{n}", str(at + 1))
+        .replace("{total}", str(len(files)))
+    )
+    return (
+        f'<nav class="pager" aria-label="{html.escape(words["reports_walk"], quote=True)}">\n'
+        f'  {step(files[at - 1] if at else None, "previous")}\n'
+        f'  <span class="pager-where">{position}</span>\n'
+        f'  {step(files[at + 1] if at + 1 < len(files) else None, "next")}\n'
+        f"</nav>"
     )
 
 
