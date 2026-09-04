@@ -49,28 +49,49 @@
   </p>
 </noscript>
 
+<section class="figures" id="collections">
+  <p class="eyebrow">By collection</p>
+  <h2>Where the flags fall</h2>
+  <p>
+    The same {{n_datasets}} rows grouped by the {{n_collections_word}} collections
+    they came from, each bar the share of that collection whose {{n_checks_word}}
+    checks rolled up to each flag. Collections differ in task, in size and in how
+    their splits are defined, so a longer red bar is a measurement on those
+    datasets rather than a ranking of the collections.
+  </p>
+  {{fig_collection_bars}}
+</section>
+
 <section class="onward">
   <h2>Where to go next</h2>
   <ul class="cards">
     <li>
-      <a href="checks.html"><strong>The {{n_checks_word}} checks</strong></a>
-      <p>What each column measures, what it returned across the corpus, and the
-        full {{n_datasets}}-by-{{n_checks}} matrix.</p>
+      <a href="checks.html">
+        <strong>The {{n_checks_word}} checks</strong>
+        <p>What each column measures, what it returned across the corpus, and the
+          full {{n_datasets}}-by-{{n_checks}} matrix.</p>
+      </a>
     </li>
     <li>
-      <a href="core-set.html"><strong>The Core Set</strong></a>
-      <p>{{n_gates_cap}} gates applied in order, and the {{core_set_size}} datasets
-        that came through all of them.</p>
+      <a href="core-set.html">
+        <strong>The Core Set</strong>
+        <p>{{n_gates_cap}} gates applied in order, and the {{core_set_size}}
+          datasets that came through all of them.</p>
+      </a>
     </li>
     <li>
-      <a href="reports.html"><strong>{{n_reports}} reports</strong></a>
-      <p>The full report <code>genomic-benchmarks-qc</code> rendered for each
-        split and each split pair, readable here.</p>
+      <a href="reports.html">
+        <strong>{{n_reports}} reports</strong>
+        <p>The full report <code>genomic-benchmarks-qc</code> rendered for each
+          split and each split pair, readable here.</p>
+      </a>
     </li>
     <li>
-      <a href="methods.html"><strong>Methods</strong></a>
-      <p>What was measured, on which split, with which thresholds &mdash; and what
-        a flag does not say.</p>
+      <a href="methods.html">
+        <strong>Methods</strong>
+        <p>What was measured, on which split, with which thresholds &mdash; and
+          what a flag does not say.</p>
+      </a>
     </li>
   </ul>
 </section>

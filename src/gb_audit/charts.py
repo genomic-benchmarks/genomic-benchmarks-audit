@@ -4,6 +4,11 @@ Every figure is written into the HTML at build time. No chart library, no canvas
 no fetch on load: a page that renders at all renders its figures. JavaScript adds
 only the hover readout, and each mark carries its own text in `data-tip`.
 
+The flag matrix is not here. It is 93 rows by ten columns of a categorical
+value -- a table whose cells are coloured rather than a chart -- and `matrix.py`
+writes it as HTML so that every cell can be a link and a filter can be a hidden
+row. It shares this module's palette and its column labels.
+
 Two rules run through the module.
 
 Colour never carries a meaning on its own. Flag marks are drawn in a fill whose
@@ -299,7 +304,7 @@ def _wrap(text: str, width: int, lines: int = 2) -> list[str]:
     return out
 
 
-def _severity_key(dataset: Dataset) -> tuple:
+def severity_key(dataset: Dataset) -> tuple:
     rank = {"Fail": 0, "Warning": 1, "Pass": 2, audit.UNKNOWN: 3, None: 4}
     return (
         rank.get(dataset.overall_verdict, 4),
@@ -309,110 +314,6 @@ def _severity_key(dataset: Dataset) -> tuple:
 
 
 # ------------------------------------------------------- corpus-wide figures ---
-
-
-def flag_matrix(run: Run) -> Figure:
-    """Every dataset against every check, on its reference split.
-
-    The signature figure: 93 rows, 10 columns, one mark each. Grouped by
-    collection and sorted worst-first inside each group, so the shape of the
-    audit -- which checks flag broadly, which collections flag together -- is
-    visible before a single number is read.
-    """
-    datasets = list(run.datasets.values())
-    by_collection: dict[str, list[Dataset]] = {}
-    for dataset in datasets:
-        by_collection.setdefault(dataset.collection, []).append(dataset)
-    order = sorted(by_collection)
-
-    label_w, col_w, cell_w = 262, 66, 62
-    row_h, row_gap = 10, 2
-    pitch = row_h + row_gap
-    band_h, header_h, group_h = 14, 26, 22
-    top = 8 + band_h + header_h
-    left = label_w
-
-    height = top + sum(group_h + len(by_collection[c]) * pitch for c in order) + 34
-    width = left + col_w * len(audit.CHECKS) + 8
-
-    body = []
-
-    # Which family each column belongs to, stated once above the headers.
-    for name, start, stop in KIND_BANDS:
-        x0 = left + start * col_w
-        x1 = left + stop * col_w - (col_w - cell_w)
-        body.append(
-            f'<line x1="{x0:.1f}" y1="14" x2="{x1:.1f}" y2="14" '
-            f'stroke="{MUTED}" stroke-width="1"/>'
-        )
-        body.append(_text((x0 + x1) / 2, 10, name, "band", "middle"))
-
-    for index, check in enumerate(audit.CHECKS):
-        x = left + index * col_w + cell_w / 2
-        line1, line2 = CHECK_SHORT[check]
-        body.append(_text(x, 8 + band_h + 11, line1, "colhead", "middle"))
-        body.append(_text(x, 8 + band_h + 21, line2, "colhead", "middle"))
-
-    rows_out: list[list[object]] = []
-    y = top
-    for collection in order:
-        members = sorted(by_collection[collection], key=_severity_key)
-        body.append(_gridline(8, y + 4, width - 8, y + 4))
-        body.append(_text(8, y + 17, f"{collection}  ({len(members)})", "group"))
-        y += group_h
-        for dataset in members:
-            body.append(_text(label_w - 10, y + row_h - 1.5, dataset.dataset_name, "rowlab", "end"))
-            for index, check in enumerate(audit.CHECKS):
-                flag = dataset.flags[check]
-                tip = (
-                    f"{dataset.benchmark_id}  •  {check}: "
-                    f"{flag or 'no result recorded'}"
-                    f"  •  reference split {dataset.reference_split}"
-                )
-                body.append(
-                    _flag_mark(left + index * col_w, y, cell_w, row_h, flag, tip)
-                )
-            rows_out.append(
-                [dataset.benchmark_id] + [dataset.flags[c] or "" for c in audit.CHECKS]
-            )
-            y += pitch
-
-    body.append(_flag_legend(8, height - 12, ["Pass", "Warning", "Fail"]))
-    body.append(
-        _text(width - 8, height - 11, "blank: the check had nothing to run on", "leg", "end")
-    )
-
-    svg = _svg(
-        width,
-        height,
-        "Flag matrix: every dataset against every check",
-        "A grid of 93 dataset rows by 10 check columns. Each cell is filled "
-        "green for Pass, orange for Warning, red for Fail, and left blank where "
-        "the check had nothing to run on. Rows are grouped by collection.",
-        "".join(body),
-        _hatch_def(),
-    )
-    return Figure(
-        slug="flag-matrix",
-        title="Flag matrix",
-        caption=(
-            "Every one of the 93 included datasets against all ten checks, on "
-            "that dataset’s reference split. Rows are grouped by collection "
-            "and ordered worst-first within a group."
-        ),
-        note=(
-            "One dataset (miRBench:AGO2_eCLIP_Klimentova2022) ships only a test "
-            "split, so the leakage scan had no split pair to compare and its "
-            "cell is blank — which is not the same statement as "
-            "<code>Unknown</code>."
-        ),
-        svg=svg,
-        table=_table(
-            ["Dataset"] + [CHECK_SHORT[c][0] + " " + CHECK_SHORT[c][1] for c in audit.CHECKS],
-            rows_out,
-            "Flag per dataset per check, on the reference split.",
-        ),
-    )
 
 
 def check_bars(run: Run) -> Figure:
@@ -1276,6 +1177,5 @@ def corpus_figures(run: Run) -> tuple[Figure, ...]:
         auroc_histogram(run),
         leakage_bands(run),
         collection_bars(run),
-        flag_matrix(run),
         core_set_funnel(run),
     )

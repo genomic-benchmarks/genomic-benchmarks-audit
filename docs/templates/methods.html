@@ -101,6 +101,12 @@
     {{median_probe_auroc}}, and {{n_probe_over_0_7}} datasets reach 0.70 or more
     from a single feature.
   </p>
+  <p>
+    The figure below is the strongest probe per dataset, one mark each. Read a mark
+    as a lower bound on what a model could recover from the sequences alone, and
+    the spread as the range this corpus covers rather than as a ranking.
+  </p>
+  {{fig_probe_auroc}}
 </section>
 
 <section id="leakage">
@@ -118,6 +124,12 @@
     {{n_leakage_over_50}} have more than half of one split present in another, and
     {{n_leakage_complete}} have all of it.
   </p>
+  <p>
+    The bands below count datasets rather than implying a density, because the
+    structure worth seeing is all at one end: most of the corpus sits in the
+    narrowest band and a handful sit at the top of the range.
+  </p>
+  {{fig_leakage}}
 </section>
 
 <section id="exclusions">

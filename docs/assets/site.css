@@ -93,6 +93,28 @@
   --shadow-lift: 0 4px 12px rgb(17 24 39 / 0.08);
   --radius: 12px;
   --radius-sm: 6px;
+
+  /* The masthead is sticky, so anything else that sticks to the top of the
+   * viewport has to clear it. A token rather than a repeated 64, because the two
+   * numbers drifting apart is a column heading that hides under the nav. */
+  --masthead-height: 64px;
+
+  /* How wide a column of text gets, in one place rather than as a `ch` count per
+   * component. It was 74ch on body text and 70, 78, 80, 82 and 84 elsewhere, and
+   * because `ch` resolves against each block's own font size those six counts
+   * came out as six different widths: on one page a paragraph, a lede and a note
+   * each stopped somewhere different, all of them well short of the 1172px the
+   * figures and the grid are drawn to. One length in `rem` instead, so blocks
+   * set at different sizes share an edge, and the page reads as a column rather
+   * than as text pushed up against the left of the wide things.
+   *
+   * 60rem is about 100 characters at the body size, past the 75 a typography
+   * manual would give you. That is the trade, taken deliberately: at this
+   * container width the alternative is a quarter of every line left empty. Fine
+   * print keeps a shorter line, because it is set smaller and would otherwise
+   * run the longest of anything here. */
+  --measure: 60rem;
+  --measure-fine: 44rem;
 }
 
 /* The dark theme, authored once.
@@ -184,7 +206,7 @@ hr { border: none; border-top: 1px solid var(--rule); margin: 32px 0; }
 }
 .masthead .wrap {
   display: flex; align-items: center; justify-content: space-between;
-  height: 64px; gap: 20px;
+  height: var(--masthead-height); gap: 20px;
 }
 .wordmark {
   font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
@@ -247,11 +269,15 @@ h3 { font-size: 17px; letter-spacing: -0.01em; font-weight: 600; margin: 28px 0 
   font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--accent); margin: 0 0 10px;
 }
+/* The label belongs to the heading under it, so it sits 10px above it and not
+ * the 52 an `h2` opens with -- which put the label nearer the section it had
+ * just left than the one it was announcing. `h1` already opens at 0. */
+.eyebrow + h2 { margin-top: 0; }
 
-main p { max-width: 74ch; color: var(--ink-soft); }
+main p { max-width: var(--measure); color: var(--ink-soft); }
 main p b, main p strong { color: var(--ink); font-weight: 600; }
 
-.lede { font-size: 18px; line-height: 1.6; color: var(--ink-soft); max-width: 74ch; }
+.lede { font-size: 18px; line-height: 1.6; color: var(--ink-soft); max-width: var(--measure); }
 
 .pending {
   border-left: 3px solid var(--rule);
@@ -557,7 +583,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
   border-top: 1px solid var(--rule); background: var(--paper);
   padding: 40px 0 48px; margin-top: 40px;
 }
-.colophon p { font-size: 14px; color: var(--ink-soft); max-width: 78ch; }
+.colophon p { font-size: 14px; color: var(--ink-soft); max-width: var(--measure-fine); }
 .provenance { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; font-size: 13px; margin: 16px 0; }
 .provenance dt { color: var(--ink-faint); }
 .provenance dd { margin: 0; color: var(--ink-soft); }
@@ -604,6 +630,13 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 }
 .skip:focus { left: 0; }
 
+/* Read out, never drawn. The flag matrix puts the flag in every cell this way:
+ * the fill is for the eye and the word is for everything else. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 /* Back to the masthead from the bottom of a dataset page, which is long. Hidden
  * until the page has been scrolled, and never shown to a reader who has asked
  * for less motion to have something appear under their thumb. */
@@ -622,13 +655,13 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .page-head { margin: 8px 0 8px; }
 .page-head h1 { margin-bottom: 8px; }
 
-.hero { margin: 22px 0 10px; max-width: 78ch; }
+.hero { margin: 22px 0 10px; max-width: var(--measure); }
 .hero h1 { font-size: 40px; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 16px; }
 
 .note {
   font-size: 14px; color: var(--ink-soft);
   background: var(--wash); border-left: 3px solid var(--rule-strong);
-  padding: 12px 16px; margin: 16px 0; max-width: 82ch;
+  padding: 12px 16px; margin: 16px 0; max-width: var(--measure);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 .note.warn { border-left-color: var(--warning); }
@@ -652,6 +685,9 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .stat-label { display: block; font-size: 14px; color: var(--ink-soft); margin: 10px 0 6px; line-height: 1.45; }
 .stat-grid .fine { display: block; font-size: 13px; }
 
+/* What the four numbers do not say, directly under them. */
+.after-numbers { margin: 22px 0 8px; }
+
 /* The same panel on a dataset page, where the four cells are that dataset's own
  * figures and each one is a word rather than a count. */
 .glance .stat { font-size: 26px; }
@@ -659,21 +695,36 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .glance .stat-label { margin-top: 8px; }
 .glance li a { font-size: 13px; }
 
+/* The whole card is the link, not the heading inside it. A card that looks
+ * clickable and is only clickable across the two words at the top is a card a
+ * reader has to aim at; the padding moves onto the `<a>` so its hit area is the
+ * box that lifts on hover. `<a>` takes flow content, so the description sits
+ * inside it and needs no second target. */
 .cards {
   list-style: none; padding: 0; margin: 20px 0 8px;
   display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
 }
 .cards li {
-  border: 1px solid var(--rule); border-radius: var(--radius); padding: 20px 22px;
+  display: flex;
+  border: 1px solid var(--rule); border-radius: var(--radius);
   min-width: 0; background: var(--paper); box-shadow: var(--shadow);
 }
-.cards a { text-decoration: none; }
+.cards a {
+  display: block; width: 100%; padding: 20px 22px;
+  text-decoration: none; border-radius: inherit;
+}
 .cards a strong { font-size: 16px; font-weight: 600; }
+.cards a:hover strong { text-decoration: underline; }
 .cards p { font-size: 14px; color: var(--ink-soft); margin: 6px 0 0; }
-.cards li:hover { border-color: var(--accent-line); box-shadow: var(--shadow-lift); }
+.cards li:hover, .cards li:focus-within {
+  border-color: var(--accent-line); box-shadow: var(--shadow-lift);
+}
+/* Inset, because the ring is drawn on the link and the border it would sit
+ * outside of belongs to the `<li>`. */
+.cards a:focus-visible { outline: 2px solid var(--accent-line); outline-offset: -3px; }
 
 /* The organisation site's arrow list, for a short list of what is on a page. */
-.arrows { list-style: none; padding: 0; margin: 14px 0; max-width: 74ch; }
+.arrows { list-style: none; padding: 0; margin: 14px 0; max-width: var(--measure); }
 .arrows li {
   display: flex; gap: 12px; font-size: 15px; color: var(--ink-soft);
   margin-bottom: 10px; line-height: 1.5;
@@ -689,7 +740,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
  * reader, and what makes a number quotable from this site. */
 
 .figures { margin: 34px 0 8px; }
-.figures > p { max-width: 80ch; }
+.figures > p { max-width: var(--measure); }
 
 .fig {
   margin: 20px 0 6px; padding: 18px 20px 14px;
@@ -705,7 +756,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 }
 .fig figcaption { margin: 10px 0 0; }
 .fig .fig-caption, .fig .fig-note {
-  font-size: 13px; color: var(--ink-faint); max-width: 84ch; margin: 4px 0 0;
+  font-size: 13px; color: var(--ink-faint); max-width: var(--measure-fine); margin: 4px 0 0;
 }
 .fig figcaption b { color: var(--ink-soft); font-weight: 600; }
 
@@ -741,6 +792,176 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .chart .val { font-size: 10.5px; fill: #2c3634; font-variant-numeric: tabular-nums; }
 .chart .leg { font-size: 10.5px; fill: #4a5654; }
 .chart .sub { font-size: 9px; fill: #6d7a77; }
+
+/* --------------------------------------------------------- flag matrix --- */
+
+/* The one figure that is a table, and the site's way into itself.
+ *
+ * Rendered by `gb_audit/matrix.py` as real rows and cells rather than as SVG,
+ * because every mark in it is a link and every filter here is a hidden row. The
+ * palette is the same one `charts.py` validated, and for the same reason the SVG
+ * figures keep a light canvas in both themes, so does this grid: the flag ramp was
+ * chosen for a light background and ordered by lightness, and inverting the
+ * surface under it would spend that work. The controls above it sit on the card
+ * and do theme, because they are chrome and not the figure.
+ */
+
+.mx { padding: 14px 16px 12px; }
+.mx-controls[hidden] { display: none; }
+.mx-controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  margin: 0 0 12px;
+}
+.mx-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.mx-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  font-weight: 600; color: var(--ink-faint); margin-right: 2px;
+}
+.mx-chip {
+  font: inherit; font-size: 12.5px; padding: 4px 9px;
+  display: inline-flex; align-items: baseline; gap: 6px;
+  border: 1px solid var(--rule-strong); border-radius: 999px;
+  background: var(--paper); color: var(--ink-soft); cursor: pointer;
+}
+.mx-chip:hover { border-color: var(--accent-line); color: var(--accent); }
+.mx-chip[aria-pressed="true"] {
+  background: var(--accent-wash); border-color: var(--accent-line);
+  color: var(--accent-on-wash); font-weight: 600;
+}
+.mx-n { font-size: 11px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.mx-chip[aria-pressed="true"] .mx-n { color: var(--accent-on-wash); }
+.mx-status { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.mx-status .ghost { font-size: 12.5px; padding: 4px 10px; }
+.mx-status .ghost[hidden] { display: none; }
+
+/* The grid is not boxed. 93 rows is about 1,900 pixels, and a scrollbox inside
+ * the page hides the one thing the figure is for: that the corpus is 93 rows
+ * long. Capped at 780 pixels it looked like whatever fitted in 780 pixels. So
+ * the page scrolls and the whole grid is on it, with the headings following --
+ * sticky to the viewport, offset by the masthead they would slide under.
+ *
+ * Narrow viewports are the exception, below. There the grid scrolls sideways
+ * under a name column that stays, which is the one arrangement where a cell keeps
+ * a label a reader can see. */
+.mx-scroll {
+  background: var(--figure-canvas);
+  border: 1px solid #e6eae9; border-radius: var(--radius-sm);
+}
+.mx-scroll:focus-visible { outline: 2px solid var(--accent-line); outline-offset: 2px; }
+
+.mx-grid {
+  border-collapse: separate; border-spacing: 0; width: 100%;
+  color: #1c2321; font-variant-numeric: tabular-nums;
+  /* The band row's height, given rather than measured. Both heading rows stick,
+   * one under the other, and the second one's offset is the first one's height:
+   * left as two independent numbers, a millimetre of disagreement is a sliver of
+   * the page showing between them as the grid scrolls past. */
+  --mx-band: 21px;
+}
+.mx-grid a { color: inherit; text-decoration: none; }
+.mx-grid a:hover { color: #0f766e; text-decoration: underline; }
+
+.mx-bands th {
+  position: sticky; top: var(--masthead-height); z-index: 3;
+  background: var(--figure-canvas);
+  font-size: 8.5px; font-weight: 500; color: #6d7a77;
+  letter-spacing: 0.05em; text-transform: uppercase; text-align: center;
+  /* 12 of line, 8 of padding, 1 of rule: the 21 above, spent. */
+  line-height: 12px; height: var(--mx-band);
+  padding: 6px 2px 2px; border-bottom: 1px solid #e6eae9;
+}
+.mx-bands td {
+  position: sticky; top: var(--masthead-height); left: 0; z-index: 5;
+  height: var(--mx-band); background: var(--figure-canvas);
+}
+.mx-heads th {
+  position: sticky; top: calc(var(--masthead-height) + var(--mx-band)); z-index: 3;
+  background: var(--figure-canvas);
+  font-size: 9px; font-weight: 500; color: #4a5654; line-height: 1.25;
+  text-align: center; vertical-align: bottom;
+  padding: 4px 3px 6px; border-bottom: 1px solid #cfd6d4;
+}
+.mx-heads .mx-corner {
+  left: 0; z-index: 5; text-align: left; padding-left: 8px;
+  font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.mx-heads th a:hover { color: #0f766e; }
+
+/* One `<tbody>` per collection, its heading spanning the grid. The heading is a
+ * link into the catalogue: a reader who has found their collection here almost
+ * always wants its rows with the numbers attached. */
+.mx-groupline[hidden] { display: none; }
+.mx-groupline th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  padding: 12px 8px 4px; border-bottom: 1px solid #e6eae9;
+  background: var(--figure-canvas);
+}
+.mx-groupline th a { border-bottom: 1px solid transparent; }
+.mx-groupline th a:hover { color: #0f766e; }
+.mx-groupline .mx-n { margin-left: 7px; }
+
+.mx-grid tr[data-collection] th.mx-name {
+  position: sticky; left: 0; z-index: 2;
+  background: var(--figure-canvas);
+  text-align: left; font-weight: 400; font-size: 10.5px; color: #2c3634;
+  padding: 0 10px 0 8px; max-width: 230px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-right: 1px solid #e6eae9;
+}
+.mx-grid tr[data-collection]:hover th.mx-name { background: #f2f6f5; }
+.mx-grid tr[data-collection]:hover .mx-cell { background: #f2f6f5; }
+
+/* The cell is the gap and the link is the mark, so the grid reads as a lattice
+ * rather than as a solid block, and a check with nothing to run on is an empty
+ * box rather than a hole in the drawing. */
+.mx-cell { padding: 1px; border-right: 1px solid #eef1f0; }
+.mx-cell a, .mx-blank {
+  display: block; min-width: 46px; height: 15px; border-radius: 2px;
+}
+.mx-cell a:focus-visible { outline: 2px solid #0f766e; outline-offset: 1px; }
+.mx-cell a:hover { outline: 2px solid #0f766e; outline-offset: 0; }
+.mx-Pass a { background: #8dbc9d; }
+.mx-Warning a { background: #f57f17; }
+.mx-Fail a { background: #c62828; }
+.mx-Unknown a { background: #ffffff; border: 1px solid #6d7a77; height: 13px; }
+
+.mx-empty[hidden] { display: none; }
+.mx-empty {
+  margin: 12px 0 0; font-size: 14px; color: var(--ink-soft);
+  background: var(--wash); border-left: 3px solid var(--rule-strong);
+  padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.mx-legend {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px;
+  margin: 10px 0 6px; padding: 0; font-size: 12.5px; color: var(--ink-faint);
+}
+.mx-legend li { display: inline-flex; align-items: center; gap: 7px; }
+.mx-swatch {
+  width: 12px; height: 12px; border-radius: 2px; flex: none;
+  border: 1px solid rgb(28 35 33 / 0.12);
+}
+.mx-swatch.mx-Pass { background: #8dbc9d; }
+.mx-swatch.mx-Warning { background: #f57f17; }
+.mx-swatch.mx-Fail { background: #c62828; }
+.mx-swatch.mx-blank { background: #ffffff; border-color: #b9c2c0; }
+
+/* Ten columns and a name column need about 700px, so below 800 the grid gets a
+ * scroll container of its own for the sideways axis. That container is also what
+ * a sticky child resolves against, so the column headings stop tracking the
+ * viewport here and the name column becomes the label that holds -- which is the
+ * one that matters at this width, a row being unreadable without its dataset. */
+@media (max-width: 800px) {
+  .mx-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+  .mx-bands th, .mx-bands td { top: 0; }
+  .mx-heads th { top: var(--mx-band); }
+}
+
+@media (max-width: 720px) {
+  .mx-grid tr[data-collection] th.mx-name { max-width: 130px; font-size: 10px; }
+  .mx-cell a, .mx-blank { min-width: 34px; }
+  .mx-status { margin-left: 0; }
+}
 
 /* ---------------------------------------------------------------- flags --- */
 
@@ -829,7 +1050,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .reports-table tbody tr[hidden], .reports li[hidden] { display: none; }
 .table-card[hidden] { display: none; }
 
-.kinds { max-width: 80ch; }
+.kinds { max-width: var(--measure); }
 .kinds dt { font-weight: 600; margin-top: 14px; color: var(--ink); }
 .kinds dd { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; }
 

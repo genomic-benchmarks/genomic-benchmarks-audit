@@ -52,7 +52,7 @@ import socketserver
 import urllib.parse
 from pathlib import Path
 
-from . import audit, catalogue, charts, reports, zenodo
+from . import audit, catalogue, charts, matrix, reports, zenodo
 
 REPO = Path(__file__).resolve().parents[2]
 SOURCE = REPO / "docs"
@@ -298,6 +298,16 @@ def counts(document: dict) -> dict[str, str]:
     complete = [d for d in heavily if d["max_leaked_test_pct"] == 100.0]
     unpacked = totals.get("n_reports_unpacked")
 
+    # The headline the organisation site leads with, counted the same way it
+    # counts it: datasets that define a training split, and how many of those had
+    # nothing flagged on any check. It is the stricter of the two numbers on
+    # purpose. `verdicts["Pass"]` is one higher, because one dataset ships a
+    # single split and so gave the leakage scan nothing to run on -- a blank,
+    # which this site does not read as a Pass.
+    with_train = [
+        d for d in datasets if any(s["split"] == "train" for s in d["splits"])
+    ]
+
     values = {
         "n_datasets": str(totals["n_datasets"]),
         "n_collections": str(totals["n_collections"]),
@@ -325,12 +335,20 @@ def counts(document: dict) -> dict[str, str]:
             sum(1 for flag in document["flags"] if flag != "Unknown")
         ),
         "n_pass": str(verdicts["Pass"]),
+        "n_with_train": str(len(with_train)),
+        "n_pass_with_train": str(
+            sum(1 for d in with_train if d["overall_verdict"] == "Pass")
+        ),
         "n_warning": str(verdicts["Warning"]),
         "n_fail": str(verdicts["Fail"]),
         "n_flagged": str(verdicts["Warning"] + verdicts["Fail"]),
         "n_no_fail": str(totals["n_datasets"] - verdicts["Fail"]),
         "n_probed": str(totals["n_probed"]),
-        "median_probe_auroc": f"{totals['median_max_probe_auroc']:.3f}",
+        # Two decimals, where every per-dataset AUROC on this site carries three.
+        # This one is a headline: it is the organisation site's number, quoted the
+        # way that site quotes it, and a third decimal on a median of 93 values
+        # implies a precision the spread behind it does not have.
+        "median_probe_auroc": f"{totals['median_max_probe_auroc']:.2f}",
         "n_probe_over_0_7": str(totals["n_probe_auroc_over_0_7"]),
         "n_leakage_scanned": str(totals["n_leakage_scanned"]),
         "n_leakage_unscanned": str(
@@ -356,7 +374,7 @@ def counts(document: dict) -> dict[str, str]:
     for name in (
         "n_checks", "n_probe_checks", "n_integrity_checks", "n_split_checks",
         "n_flags", "n_scored_flags", "n_gates", "n_collections",
-        "n_leakage_unscanned", "core_set_size",
+        "n_leakage_unscanned", "core_set_size", "n_pass", "n_pass_with_train",
     ):
         word = cardinal(int(values[name]))
         values[f"{name}_word"] = word
@@ -472,7 +490,10 @@ def check_rows(document: dict, copy: dict) -> str:
             else '<td class="right num">&mdash;</td>'
         )
         rows.append(
-            f'    <tr>\n'
+            # The id a matrix column heading lands on. `matrix.check_slug` is the
+            # one place the name is turned into an anchor, so a column that links
+            # here and the row it links to cannot come to disagree.
+            f'    <tr id="{matrix.check_slug(name)}">\n'
             f'      <th scope="row" class="wrap">{html.escape(name)}</th>\n'
             f'      <td class="wrap"><span class="kind">'
             f'{html.escape(copy["kinds"][kinds[name]])}</span></td>\n'
@@ -795,17 +816,31 @@ def render_page(
 
 
 def landing(run: audit.Run, document: dict, copy: dict) -> str:
-    corpus = charts.corpus_figures(run)
-    by_slug = {figure.slug: figure for figure in corpus}
+    """The page a reader arrives on, which is a claim before it is a map.
+
+    It continues the organisation site's audit section rather than restating it:
+    the same headline and the same four numbers, and then the thing that section
+    could not carry -- all 93 datasets against all ten checks, every mark a link.
+
+    So this page has one figure. The corpus-wide distributions live where a reader
+    goes to find out what one of them means: the probe AUROC spread and the split
+    overlap bands on the methods page, the per-check bars on the checks page. A
+    landing page that showed all four asked a first-time reader to interpret four
+    figures before it had told them what a check was.
+
+    The flag matrix is here as well as on the checks page, and on purpose. It is
+    the only surface that answers the first question anyone brings to this site --
+    "is the dataset I am about to use in here, and what did it return" -- without
+    first asking them to learn what a check is. Rendered by one function so the
+    two pages cannot come to say different things.
+    """
     return render_page(
         "index",
         document,
         {
             "title": "Overview",
-            "fig_check_bars": charts.render(by_slug["check-bars"]),
-            "fig_probe_auroc": charts.render(by_slug["probe-auroc"]),
-            "fig_leakage": charts.render(by_slug["leakage"]),
-            "fig_collection_bars": charts.render(by_slug["collection-bars"]),
+            "fig_flag_matrix": matrix.flag_matrix(run, copy),
+            "scripts": '<script src="assets/matrix.js"></script>',
         },
         nav="index",
     )
@@ -819,8 +854,9 @@ def checks_page(run: audit.Run, document: dict, copy: dict) -> str:
         {
             "title": "The checks",
             "check_rows": check_rows(document, copy),
-            "fig_flag_matrix": charts.render(by_slug["flag-matrix"]),
+            "fig_flag_matrix": matrix.flag_matrix(run, copy),
             "fig_check_bars": charts.render(by_slug["check-bars"]),
+            "scripts": '<script src="assets/matrix.js"></script>',
         },
         nav="checks",
     )
@@ -842,12 +878,14 @@ def core_set_page(run: audit.Run, document: dict, copy: dict) -> str:
     )
 
 
-def catalogue_page(document: dict) -> str:
+def catalogue_page(run: audit.Run, document: dict) -> str:
+    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
     return render_page(
         "catalogue",
         document,
         {
             "title": "The datasets",
+            "fig_collection_bars": charts.render(by_slug["collection-bars"]),
             "head_extra": (
                 '<link rel="stylesheet" '
                 'href="vendor/tabulator-6.5.2/tabulator.min.css">'
@@ -943,7 +981,8 @@ def route_note(route: str | None, unpacked: int) -> str:
     return part(ROUTE_PARTS[route], {"record_id": html.escape(zenodo.RECORD_ID)})
 
 
-def methods_page(document: dict, copy: dict) -> str:
+def methods_page(run: audit.Run, document: dict, copy: dict) -> str:
+    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
     return render_page(
         "methods",
         document,
@@ -951,6 +990,8 @@ def methods_page(document: dict, copy: dict) -> str:
             "title": "Methods",
             "exclusion_rows": exclusion_rows(document),
             "check_rows": check_rows(document, copy),
+            "fig_probe_auroc": charts.render(by_slug["probe-auroc"]),
+            "fig_leakage": charts.render(by_slug["leakage"]),
         },
         nav="methods",
     )
@@ -1281,11 +1322,11 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
 
     pages: dict[Path, str] = {
         Path("index.html"): landing(run, document, copy),
-        Path("catalogue.html"): catalogue_page(document),
+        Path("catalogue.html"): catalogue_page(run, document),
         Path("checks.html"): checks_page(run, document, copy),
         Path("core-set.html"): core_set_page(run, document, copy),
         Path("reports.html"): reports_page(document, copy, fetch_route(report_root)),
-        Path("methods.html"): methods_page(document, copy),
+        Path("methods.html"): methods_page(run, document, copy),
     }
 
     n_views = 0
