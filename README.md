@@ -12,7 +12,7 @@
 ### Read the benchmark before you beat it.
 
 [`genomic-benchmarks-qc`][qc] measured **93 genomic benchmark datasets** from seven
-collections — 234 splits, 19 species — and wrote 423 reports doing it. This
+collections — 234 splits, 17 species — and wrote 423 reports doing it. This
 repository is that one pinned run, rendered as a site you can browse dataset by
 dataset: what ten checks returned on each one, how far a single sequence feature
 gets, which sequences appear in two splits, and every report the tool produced.
@@ -50,7 +50,7 @@ one of them is computed from a committed file in [`data/`](data/README.md):
   share at least one sequence between two splits. Six have more than half of one
   split present in another, and **five have all of it**.
 - **Ten datasets clear every gate.** Of 147 curated datasets, 93 could be measured
-  — 54 were excluded, for 14 reasons the site
+  — 54 were excluded, for 12 reasons the site
   [lists](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/catalogue.html)
   rather than summarises — and ten clear all five
   [Core Set](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/core-set.html)

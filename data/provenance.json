@@ -1,5 +1,5 @@
 {
-  "audit_run": "2026-08-27_corpus-rollups",
+  "audit_run": "2026-09-04_corpus-rollups",
   "qc_run": "2026-08-27_full-corpus",
   "source_repository": "GenBench2_paper",
   "zenodo_record_id": "22288544",
@@ -29,12 +29,12 @@
       "sha256": "df82fb8204ca743cf8f1b0bbe28d47341c28685ec26359ff76aa4c6f025c22b9"
     },
     "dataset_level_summary.csv": {
-      "bytes": 36944,
-      "sha256": "060f3000428907b94c24077aa249ac93d534a1deb4ab68a9e5a4cbd8d67b5bd4"
+      "bytes": 36931,
+      "sha256": "129e41f0becb6900bdf9b719feb37b65ba9347c931d374c252c89ffadd900c2b"
     },
     "exclusion_summary.csv": {
-      "bytes": 1635,
-      "sha256": "b1a586e911b8c4fa8432fc13393fd23a8a735d7130013cbb2198e094952533d5"
+      "bytes": 1333,
+      "sha256": "324012b7cc41055b6c1debee31ba075c07a6f71cbb3f5a603fa94e0713824d32"
     },
     "reports.csv": {
       "bytes": 24109,

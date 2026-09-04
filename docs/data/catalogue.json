@@ -2,7 +2,7 @@
   "schema_version": 2,
   "provenance": {
     "package_version": "0.1.0",
-    "audit_run": "2026-08-27_corpus-rollups",
+    "audit_run": "2026-09-04_corpus-rollups",
     "qc_run": "2026-08-27_full-corpus",
     "zenodo_record_id": "22288544",
     "zenodo_concept_record_id": "22288543",
@@ -62,7 +62,7 @@
     "n_splits": 234,
     "n_reports": 423,
     "n_excluded": 54,
-    "n_exclusion_reasons": 14,
+    "n_exclusion_reasons": 12,
     "n_curated": 147,
     "verdicts": {
       "Pass": 5,
@@ -138,14 +138,14 @@
       "collections": "BEACON, GUE_v2, genomic-benchmarks, nucleotide_benchmarks"
     },
     {
-      "excluded": "Multi-class classification (nucleotide-level) data format is not supported by our framework.",
-      "n_datasets": "5",
-      "collections": "BEACON"
-    },
-    {
       "excluded": "Multi-variable regression data format is not supported by our framework.",
       "n_datasets": "5",
       "collections": "OmniGenBench"
+    },
+    {
+      "excluded": "Multi-class classification (nucleotide-level) data format is not supported by our framework.",
+      "n_datasets": "5",
+      "collections": "BEACON"
     },
     {
       "excluded": "Token classification data format is not supported by our framework.",
@@ -153,9 +153,14 @@
       "collections": "OmniGenBench"
     },
     {
-      "excluded": "Data format is not supported by our framework.",
-      "n_datasets": "2",
-      "collections": "mRNABench"
+      "excluded": "Dataset is too small to be considered; for regression tasks, the train set must yield at least 500 examples in both groups after binarizing labels at the median.",
+      "n_datasets": "3",
+      "collections": "BEACON, mRNABench"
+    },
+    {
+      "excluded": "Dataset is too small to be considered; for binary classification tasks, the train set must contain at least 500 examples in both classes.",
+      "n_datasets": "3",
+      "collections": "genomic-benchmarks, mRNABench"
     },
     {
       "excluded": "Dataset includes multiple prediction tasks, of which some contain only a single class.",
@@ -163,28 +168,13 @@
       "collections": "mRNABench"
     },
     {
-      "excluded": "Dataset is too small to be considered; for binary classification tasks, the train set must contain at least 500 examples in both classes.",
-      "n_datasets": "2",
-      "collections": "mRNABench"
-    },
-    {
-      "excluded": "Dataset is too small to be considered; for regression tasks, the train set must yield at least 500 examples in both groups after binarizing labels at the median.",
+      "excluded": "Data format is not supported by our framework.",
       "n_datasets": "2",
       "collections": "mRNABench"
     },
     {
       "excluded": "Multi-label regression data format is not supported by our framework.",
       "n_datasets": "2",
-      "collections": "BEACON"
-    },
-    {
-      "excluded": "Dataset is too small to be considered. For binary classification tasks, the train set must contain at least 500 examples in both classes.",
-      "n_datasets": "1",
-      "collections": "genomic-benchmarks"
-    },
-    {
-      "excluded": "Dataset is too small to be considered. For regression tasks, the train set must yield at least 500 examples in both groups after binarizing labels at the median.",
-      "n_datasets": "1",
       "collections": "BEACON"
     },
     {
@@ -235,13 +225,11 @@
       "Manihot esculenta",
       "Medicago truncatula",
       "Mus musculus",
-      "Oryza sativa L. ssp. japonica",
-      "Oryza sativa indica",
-      "Oryza sativa japonica",
+      "Nicotiana tabacum",
+      "Oryza sativa",
       "Saccharomyces cerevisiae",
       "Solanum lycopersicum",
       "Sorghum bicolor",
-      "Tobacco",
       "Trifolium pratense",
       "Triticum aestivum",
       "Zea mays"
@@ -9657,7 +9645,7 @@
       "task_category_grouped": "RNA Processing Prediction",
       "molecular_level": "RNA",
       "task_type": "Binary classification",
-      "species": "Oryza sativa indica",
+      "species": "Oryza sativa",
       "n_species": 1,
       "train_size": 8000,
       "total_size": 9000,
@@ -9816,7 +9804,7 @@
       "task_category_grouped": "RNA Processing Prediction",
       "molecular_level": "RNA",
       "task_type": "Binary classification",
-      "species": "Oryza sativa japonica",
+      "species": "Oryza sativa",
       "n_species": 1,
       "train_size": 8000,
       "total_size": 9000,
@@ -10293,7 +10281,7 @@
       "task_category_grouped": "Sequence Annotation",
       "molecular_level": "DNA",
       "task_type": "Regression",
-      "species": "Tobacco",
+      "species": "Nicotiana tabacum",
       "n_species": 1,
       "train_size": 8000,
       "total_size": 9000,
@@ -11145,7 +11133,7 @@
       "task_category_grouped": "Translation Efficiency Prediction",
       "molecular_level": "RNA",
       "task_type": "Binary classification",
-      "species": "Oryza sativa L. ssp. japonica",
+      "species": "Oryza sativa",
       "n_species": 1,
       "train_size": 4697,
       "total_size": 5872,
@@ -11363,7 +11351,7 @@
       "task_category_grouped": "Sequence Annotation",
       "molecular_level": "DNA",
       "task_type": "Regression",
-      "species": "Tobacco",
+      "species": "Nicotiana tabacum",
       "n_species": 1,
       "train_size": 8000,
       "total_size": 9000,
