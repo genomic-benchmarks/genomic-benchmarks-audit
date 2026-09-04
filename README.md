@@ -10,7 +10,7 @@ opens a table of the same values underneath it, every figure names the split it
 was measured on, and no page states a number that this repository did not compute
 from a committed file.
 
-[qc]: https://github.com/katarinagresova/genomic-benchmarks-qc
+[qc]: https://github.com/genomic-benchmarks/genomic-benchmarks-qc
 
 ---
 
