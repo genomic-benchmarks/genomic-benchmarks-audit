@@ -80,6 +80,83 @@
   </p>
 </section>
 
+<section id="flagging">
+  <h2>How results are flagged</h2>
+  <p>
+    {{n_probe_checks_cap}} of the {{n_checks_word}} checks ask one narrow
+    question: could a classifier that saw only this one feature tell the two
+    classes apart? Nothing is trained. The feature <em>is</em> the score, so its
+    AUROC answers directly &mdash; 0.5 is a feature that says nothing about the
+    classes, 1.0 is one that settles them on its own &mdash; and a flag is a
+    boundary drawn on that number.
+  </p>
+
+  <div class="table-card">
+    <table class="listing">
+      <caption>
+        The boundaries <code>genomic-benchmarks-qc</code> puts on a probe AUROC.
+        Every probe mark in the grid above was decided by them.
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Flag</th>
+          <th scope="col">AUROC</th>
+          <th scope="col">Read it as</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><span class="flag flag-Pass">Pass</span></th>
+          <td class="mono">&le; 0.60</td>
+          <td>The classes are not separable along this feature</td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="flag flag-Warning">Warning</span></th>
+          <td class="mono">0.60 &ndash; 0.70</td>
+          <td>A model could get some traction here</td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="flag flag-Fail">Fail</span></th>
+          <td class="mono">&gt; 0.70</td>
+          <td>Separable from this one feature alone</td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="flag flag-Unknown">Unknown</span></th>
+          <td class="mono">&mdash;</td>
+          <td>The comparison was not made, which is not a Pass</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Two guards sit in front of the scoring, and a check that trips one returns
+    <strong>Unknown</strong> rather than a number: nothing is scored on fewer
+    than 250 sequences per class, and a per-position comparison stops where
+    fewer than a quarter of the class is long enough to reach that position
+    &mdash; past there the sequences being compared are a sample of the long
+    ones rather than of the class. What a check reports is the worst of its
+    sub-checks and not their average, so a <strong>Fail</strong> on per-position
+    nucleotide content can be one base at one position out of hundreds, which is
+    what the report behind it is for.
+  </p>
+  <p>
+    Neither the {{n_integrity_checks_word}} integrity checks nor the leakage
+    scan is scored that way. Unique bases asks whether both classes use the same
+    alphabet; the two duplicate checks are thresholds on how much of a class
+    survives deduplication, and on whether any sequence appears under both
+    labels; and the leakage scan counts the sequences of one split that are also
+    present in another.
+  </p>
+  <p>
+    That is the short version.
+    <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/how-it-works/">How
+    a flag is decided</a> gives the rules in full, including the simulations the
+    0.60 boundary comes from; what this run measured, and on which split, is on
+    <a href="methods.html">the methods page</a>.
+  </p>
+</section>
+
 <section class="onward">
   <h2>Where to go next</h2>
   <ul class="cards">
