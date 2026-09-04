@@ -70,9 +70,9 @@ is drawn as a hatch rather than a fourth colour, and a blank is drawn as nothing
 
 Every separability number is a **lower bound** on what a model could recover.
 
-[VOCABULARY.md](VOCABULARY.md) states the rest, and
-[`tools/vocab_check.py`](tools/vocab_check.py) enforces the machine-checkable part
-of it over every page — including this one.
+[`tools/vocabulary.toml`](tools/vocabulary.toml) states the rest, and
+[`tools/vocab_check.py`](tools/vocab_check.py) enforces it over every page —
+including this one.
 
 ## Where the numbers come from
 
@@ -89,7 +89,7 @@ from a committed file.
 | `docs/assets/` | One stylesheet, two classic scripts. No framework, no webfont request. |
 | `docs/vendor/` | Tabulator 6.5.2, a file rather than a CDN call. |
 | `src/gb_audit/` | The renderer: `audit`, `catalogue`, `charts`, `reports`, `site`, `zenodo`. |
-| [`VOCABULARY.md`](VOCABULARY.md) | How this project is allowed to describe what was measured. |
+| [`tools/vocabulary.toml`](tools/vocabulary.toml) | How this project is allowed to describe what was measured. |
 
 Not here, and deliberately: `site/`, which holds both the render and the 450 MB of
 reports fetched into `site/qc-reports/`. Both are reproducible from what is

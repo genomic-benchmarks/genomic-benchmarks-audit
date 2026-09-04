@@ -1,4 +1,5 @@
-# The machine-checkable part of VOCABULARY.md.
+# The vocabulary this project holds its prose to, in the part a checker can
+# settle on its own.
 #
 # TOML rather than YAML so the checker needs nothing installed: tomllib is in
 # the standard library from Python 3.11. Patterns are TOML literal strings
@@ -15,7 +16,7 @@
 # never trip a rule.
 
 [settings]
-paths = ["docs", "README.md", "VOCABULARY.md", "data/README.md"]
+paths = ["docs", "README.md", "data/README.md"]
 # `site/` is a render of `docs/` plus the 423 reports fetched into it. Every hit
 # in the render is a hit already reported against the template it came from, at a
 # line number no editable file has; and the reports are written by

@@ -297,15 +297,6 @@ def test_missing_path_is_not_an_error():
     assert code == 0
 
 
-# ------------------------------------------------------------------- rules --
-
-def test_every_rule_is_documented_in_vocabulary_md():
-    prose = (vc.REPO_ROOT / "VOCABULARY.md").read_text(encoding="utf-8")
-    missing = [r.id for r in RULES
-               if not any(w in prose.lower() for w in r.id.split("-"))]
-    assert not missing, f"rules with no counterpart in VOCABULARY.md: {missing}"
-
-
 def main() -> int:
     tests = [(n, f) for n, f in sorted(globals().items())
              if n.startswith("test_") and callable(f)]
