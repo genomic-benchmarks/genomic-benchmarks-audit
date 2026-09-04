@@ -27,9 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The version the published site is rendered with. ci.yml runs the same
+      # render on 3.13 and 3.12 as well.
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Install
         run: pip install -e .

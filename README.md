@@ -5,7 +5,7 @@
 <img src="https://github.com/genomic-benchmarks/genomic-benchmarks-audit/blob/main/assets/genomic-benchmarks-text.png?raw=True" alt="Genomic Benchmarks logo" width="500" />
 
 [![CI](https://github.com/genomic-benchmarks/genomic-benchmarks-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/genomic-benchmarks/genomic-benchmarks-audit/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.12%2B-blue)](pyproject.toml)
+[![Python](https://img.shields.io/badge/python-3.14%20%7C%203.13%20%7C%203.12-blue)](pyproject.toml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Site](https://img.shields.io/badge/site-genomic--benchmarks.github.io-1f6fd0)](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/)
 

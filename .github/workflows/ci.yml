@@ -13,12 +13,22 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+
+    # 3.14 is the version the site is rendered and published with, in pages.yml.
+    # 3.13 and 3.12 are supported, and run the whole check here rather than the
+    # tests alone: a render that differs by interpreter is the thing worth
+    # catching, and 3.12 is the floor pyproject.toml declares.
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.14", "3.13", "3.12"]
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
 
       # No dependencies to cache: the package is standard library only, and dev
       # brings pytest. See pyproject.toml for why that is a property worth
