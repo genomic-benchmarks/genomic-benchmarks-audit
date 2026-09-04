@@ -1,21 +1,17 @@
 """`gb-audit` -- build the catalogue, fetch the reports, render the site.
 
-Four verbs, and the order they are meant in:
-
     gb-audit build     data/*.csv          -> docs/data/catalogue.json
-    gb-audit fetch     Zenodo or a mirror  -> docs/reports/
+    gb-audit fetch     Zenodo or a mirror  -> site/qc-reports/
     gb-audit render    the above           -> site/
-    gb-audit check     everything above, without writing anything
+    gb-audit check     all of it, writing nothing
 
-`build` and `render` are separate because what they produce are reviewed
-differently. The catalogue is committed, so a change to a published number shows
-up as a diff; the site is not, because it adds no number the catalogue does not
-already carry. `check` is what CI runs: it rebuilds the catalogue in memory and
-compares, so a pull request that changes a number without committing the
-catalogue fails rather than quietly renders something else.
+The catalogue is committed and the site is not, so they are built by separate
+verbs: a change to a published number is a diff, and `check` is the gate that
+insists on it.
 
-`fetch` is separate from both because it is the only one that needs a network,
-and everything else has to work without one.
+`fetch` is separate because it is the only one that needs a network. It downloads
+into the site directory the render serves from, and `render` leaves that directory
+alone, so the 450 MB is fetched once and rendered around many times.
 """
 
 from __future__ import annotations
@@ -58,13 +54,17 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_fetch(args: argparse.Namespace) -> int:
-    # Imported here rather than at the top: it is the one command that reaches a
-    # network, and `gb-audit render` should not so much as import the machinery.
+def fetch_module():
+    # Imported on demand: this is the one command that reaches a network, and
+    # `gb-audit render` should not so much as import the machinery.
     sys.path.insert(0, str(site.REPO / "scripts"))
     import fetch_reports
 
-    forwarded = []
+    return fetch_reports
+
+
+def cmd_fetch(args: argparse.Namespace) -> int:
+    forwarded = ["--out", str(args.out)]
     if args.check:
         forwarded.append("--check")
     if args.force:
@@ -76,20 +76,33 @@ def cmd_fetch(args: argparse.Namespace) -> int:
     for name in args.only:
         forwarded += ["--only", name]
     forwarded += ["--jobs", str(args.jobs)]
-    return fetch_reports.main(forwarded)
+    return fetch_module().main(forwarded)
 
 
 def cmd_render(args: argparse.Namespace) -> int:
+    if args.fetch:
+        failed = fetch_module().main(["--out", str(args.out), "--jobs", str(args.jobs)])
+        if failed:
+            # Not fatal. The site renders without the reports and says so on every
+            # page that would have carried one, which beats no site at all.
+            print("some reports were not fetched; rendering what is here.\n")
+
     result = site.build(args.out)
     out = result["out"]
     print(
         f"wrote {result['pages']} pages into {out}: "
         f"{result['dataset_pages']} dataset pages, "
         f"{result['report_views']} framed reports, "
-        f"{result['reports_copied']} report files copied, "
-        f"{result['bytes'] / 1048576:.1f} MB"
+        f"{result['bytes'] / 1048576:.1f} MB of site"
     )
-    if not result["reports_copied"]:
+    present = result["reports_present"]
+    if present:
+        route = result["route"]
+        print(
+            f"reports: {present} already in {out / site.reports.SITE_DIR}"
+            + (f", fetched via {route}" if route else "")
+        )
+    else:
         print(
             "no reports in this build -- every report page says so. "
             "`gb-audit fetch` brings them in."
@@ -124,7 +137,7 @@ def cmd_check(args: argparse.Namespace) -> int:
     with tempfile.TemporaryDirectory(prefix="gb-audit-check-") as scratch:
         try:
             result = site.build(Path(scratch) / "site", run=run)
-        except (site.TemplateError, site.StaleCatalogue) as exc:
+        except (site.TemplateError, site.StaleCatalogue, site.NotASite) as exc:
             failures.append(str(exc))
         else:
             print(
@@ -156,6 +169,9 @@ def main(argv: list[str] | None = None) -> int:
     build.set_defaults(func=cmd_build)
 
     fetch = sub.add_parser("fetch", help="download and unpack the report archives")
+    fetch.add_argument(
+        "--out", type=Path, default=site.DEFAULT_OUT, help="the site to fetch into"
+    )
     fetch.add_argument("--check", action="store_true", help="report what is unpacked")
     fetch.add_argument("--force", action="store_true", help="re-fetch what is present")
     fetch.add_argument("--dry-run", action="store_true", help="say what would happen")
@@ -166,6 +182,10 @@ def main(argv: list[str] | None = None) -> int:
 
     render = sub.add_parser("render", help="write the site")
     render.add_argument("--out", type=Path, default=site.DEFAULT_OUT)
+    render.add_argument(
+        "--fetch", action="store_true", help="download any missing reports first"
+    )
+    render.add_argument("--jobs", type=int, default=4)
     render.add_argument("--serve", action="store_true", help="serve the result")
     render.add_argument("--port", type=int, default=8000)
     render.set_defaults(func=cmd_render)

@@ -139,10 +139,7 @@ def test_a_template_asking_for_an_unknown_value_raises():
 def test_report_views_frame_the_raw_file(built, committed):
     """The viewer loads the report; it does not copy or re-parse it."""
     out = Path(built["out"])
-    dataset = next(
-        d for d in committed["datasets"] if d["reports"]
-        and d["reports"]["state"] == "unpacked"
-    )
+    dataset = next(d for d in committed["datasets"] if d["reports"]["files"])
     entry = dataset["reports"]
     stem = entry["archive"].removesuffix(".zip")
     for report in entry["files"]:
@@ -157,3 +154,56 @@ def test_report_views_frame_the_raw_file(built, committed):
 def test_cardinals_read_as_words_where_prose_needs_them():
     assert site.cardinal(9) == "nine"
     assert site.cardinal(93) == "93"
+
+
+def test_the_reports_live_in_the_site_and_survive_a_rebuild(built, run):
+    """One copy, at the address the pages link to, that a render does not delete."""
+    out = Path(built["out"])
+    root = site.reports.report_root(out)
+    assert built["reports_present"] == 423
+    assert (root / "BEACON-CRISPROnTarget" / "class" / "train" / "seq.html").is_file()
+
+    site.build(out, run=run)
+    assert (root / "BEACON-CRISPROnTarget" / "class" / "train" / "seq.html").is_file()
+    assert not (out / "index.html").is_dir()
+
+
+def test_a_build_with_no_reports_still_renders_every_page(built_bare):
+    """The build must work with no network, and say what it does not have."""
+    out = Path(built_bare["out"])
+    assert built_bare["reports_present"] == 0
+    assert built_bare["dataset_pages"] == 93
+    assert built_bare["report_views"] == 0
+    assert not site.reports.report_root(out).exists()
+    assert "Run" in (out / "reports.html").read_text(encoding="utf-8")
+
+
+def test_the_catalogue_says_nothing_about_this_machine(run, tmp_path):
+    """The committed bytes must not depend on whether the reports were fetched.
+
+    They are 450 MB nobody clones, so a catalogue that recorded their presence
+    would be a file a laptop and CI disagree about for the same commit, and
+    `gb-audit build --check` would fail on a clean checkout.
+    """
+    rendered = site.catalogue.render(site.catalogue.build(run))
+    assert rendered == site.CATALOGUE.read_text(encoding="utf-8")
+    assert "unpacked" not in rendered
+
+
+def test_render_refuses_a_directory_it_did_not_write(tmp_path, run):
+    """`--out` is a path a person types, and `build()` empties what is at it."""
+    theirs = tmp_path / "documents"
+    theirs.mkdir()
+    (theirs / "thesis.tex").write_text("important")
+    with pytest.raises(site.NotASite) as raised:
+        site.build(theirs, run=run)
+    assert "thesis.tex" in str(raised.value)
+    assert (theirs / "thesis.tex").is_file()
+
+
+def test_the_route_note_names_the_route_only_where_it_changes_what_they_are():
+    """Bytes from an unpublished draft are not bytes a reader can go and get."""
+    assert "unpublished draft" in site.route_note("zenodo_draft", 423)
+    assert "local copy" in site.route_note("local_mirror", 423)
+    assert site.route_note("zenodo", 423) == ""
+    assert site.route_note("zenodo_draft", 0) == ""

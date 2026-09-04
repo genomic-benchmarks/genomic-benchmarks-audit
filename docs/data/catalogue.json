@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "provenance": {
     "package_version": "0.1.0",
     "audit_run": "2026-08-27_corpus-rollups",
@@ -77,8 +77,7 @@
     "n_with_any_leakage": 75,
     "n_leakage_over_50_pct": 6,
     "median_max_leaked_test_pct": 0.8200000000000001,
-    "core_set_size": 10,
-    "n_reports_unpacked": null
+    "core_set_size": 10
   },
   "gates": [
     {
@@ -411,7 +410,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "BEACON-CRISPROnTarget.zip",
         "bytes": 755405,
         "sha256": "5e4b1743b985b4752b3a77c64d9713235237866b55df7aefd3634d1518261f36",
@@ -630,7 +628,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "BEACON-Isoform.zip",
         "bytes": 950138,
         "sha256": "f7eadcddb2356c5aa9b6a1e225b9048758d3c0efdc005dc4452f589578b87de6",
@@ -849,7 +846,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "BEACON-MeanRibosomeLoading.zip",
         "bytes": 888263,
         "sha256": "893b143375da5a2c1fe12ba50c5d9442de1d8f52b63f2a5615894e9832026970",
@@ -1068,7 +1064,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-core_promoter_detection_all.zip",
         "bytes": 1008502,
         "sha256": "6b72b9ea3e0d2f532cdbf1def5cb041ed5f86bef72429c8ddc16a7fa21f417d0",
@@ -1287,7 +1282,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-core_promoter_detection_notata.zip",
         "bytes": 959637,
         "sha256": "e13a495f0f335dbf63837bbeb971a64242b46ed2e340b8b998139eda93953a7d",
@@ -1506,7 +1500,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-core_promoter_detection_tata.zip",
         "bytes": 945908,
         "sha256": "480e890fd2da387124aa32b7db473166f6695c1fd9cb46689f9a6e9ed91eba78",
@@ -1728,7 +1721,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_GM12878.zip",
         "bytes": 3280930,
         "sha256": "4dba65f8fe86da7918b52055a39eb81319deb42caa1b066983ab23108d3be718",
@@ -2004,7 +1996,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_HUVEC.zip",
         "bytes": 3420654,
         "sha256": "40915d5330ab718f92a8620595fcd86f821fc1568bf8b031160179961a60f492",
@@ -2280,7 +2271,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_HeLa_S3.zip",
         "bytes": 3417558,
         "sha256": "8931d942db40b9816c8120c871719234718b5546e7c271deb2fa4da705eb5e1d",
@@ -2556,7 +2546,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_IMR90.zip",
         "bytes": 3491792,
         "sha256": "0748e0e9133cd52e027b8fa03b14c6dc7e97a0281b250ee80e15d42c8d9350cd",
@@ -2832,7 +2821,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_K562.zip",
         "bytes": 3378548,
         "sha256": "a17e7f584f280eb8373726cdd58578cf240cbe44da937f6fac151ca8c9bc9460",
@@ -3108,7 +3096,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-enhancer_promoter_interaction_NHEK.zip",
         "bytes": 3529367,
         "sha256": "a5c56943ce84241a21717c9d0cc8769458aa1152312f8315c93e832c968874b2",
@@ -3381,7 +3368,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3.zip",
         "bytes": 901950,
         "sha256": "3c463f3068529c5e8caacae306ae6c568ac98b69e3e64d6f030c6db9da7ca7f3",
@@ -3600,7 +3586,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K14ac.zip",
         "bytes": 897386,
         "sha256": "a633a4b631fa2453c8b7b709de8deddc8acba8f28d569015982e4df46c86fd1e",
@@ -3819,7 +3804,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K36me3.zip",
         "bytes": 893388,
         "sha256": "6e7ce7a6b5aff30170ed30c2b0a659d2e7156ff04ee5ec843863a5369330bf7c",
@@ -4038,7 +4022,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K4me1.zip",
         "bytes": 894137,
         "sha256": "fe8f22d40573da60852fdb819de296122ed09c5d562315681eb2d450bbb74db2",
@@ -4257,7 +4240,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K4me2.zip",
         "bytes": 901776,
         "sha256": "a87df5bfd978d76d19b4e0f5b2e3a2b2347641cd6a8f59f889afb0710bfd28f2",
@@ -4476,7 +4458,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K4me3.zip",
         "bytes": 884298,
         "sha256": "0a6bae8a38a16c6dfe26386bc35915dfb632621f25c35a63a1a92f321af39c6f",
@@ -4695,7 +4676,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K79me3.zip",
         "bytes": 895698,
         "sha256": "047d276a02801972e2eacf6777ff2981df6001073fc9879ef221505647886e0c",
@@ -4914,7 +4894,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H3K9ac.zip",
         "bytes": 887020,
         "sha256": "a6ae74f5f419d9914f0b33106102190a96a8fa91433a318ef09abbe156c88a7b",
@@ -5133,7 +5112,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H4.zip",
         "bytes": 894963,
         "sha256": "787f619176458546104c14c2beaa987623be27a41f74b05cf97b8d2a1a89eec5",
@@ -5352,7 +5330,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-epigenetic_marks_prediction_H4ac.zip",
         "bytes": 904459,
         "sha256": "c2db103749ed1abf1a1d612debe9a7481431bbb50f62757039206a3d9721ec03",
@@ -5571,7 +5548,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-promoter_detection_300_all.zip",
         "bytes": 1111003,
         "sha256": "f3f14562967e3268c05027887f04bc3cef52ddec057611fc77f34cec696e8493",
@@ -5790,7 +5766,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-promoter_detection_300_notata.zip",
         "bytes": 1077093,
         "sha256": "ada7ec6cdd76c280c9d9f458da6864d55c92f6b2bb4c9fa2da1e92871214ee7c",
@@ -6009,7 +5984,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-promoter_detection_300_tata.zip",
         "bytes": 1034478,
         "sha256": "8e4bf34b21b54c5512f2abb884345051c72908179749b1ce6db3552bf593ccbe",
@@ -6228,7 +6202,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_human_0.zip",
         "bytes": 953745,
         "sha256": "d7dd313dd3b57395aeb6dcc4285659f2ae7d181ca5c23f2e0c2876ec8f1d3706",
@@ -6447,7 +6420,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_human_1.zip",
         "bytes": 917923,
         "sha256": "a509c064ba3011ee88fd3629f554b2e8a83564dcbc4e47af469013d0007fb752",
@@ -6666,7 +6638,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_human_2.zip",
         "bytes": 966227,
         "sha256": "48f2013f1a788b68e659ed67df3d14b25401aa1e788b8c4fc0acbc77888cff06",
@@ -6885,7 +6856,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_human_3.zip",
         "bytes": 915192,
         "sha256": "0ee8f8c7179d4b6d45e56637f4dd5a25f71f04127a6ab2c556c9a5acb5d2d082",
@@ -7104,7 +7074,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_human_4.zip",
         "bytes": 976787,
         "sha256": "5b3c2f2a33079b084952e274305305df1230f40e93da23e676775a68a0ca7f2d",
@@ -7323,7 +7292,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_mouse_0.zip",
         "bytes": 860854,
         "sha256": "b2b977557e10665e94f2d6955ac804c727b899a0537fdb18d95921fda98134a1",
@@ -7542,7 +7510,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_mouse_1.zip",
         "bytes": 885056,
         "sha256": "a24fdd3b588daddc1ccc4ed3debcef7bed58c44a8fbc4e1688f4dc130c2f819f",
@@ -7759,7 +7726,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_mouse_2.zip",
         "bytes": 862779,
         "sha256": "7062655b1b4cc447e3c49388ccea1d0f9e4c71e88185fa74653860c4188e9c73",
@@ -7976,7 +7942,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_mouse_3.zip",
         "bytes": 867499,
         "sha256": "2ba6e8410f5d196ba7ad2f1a01a03a586864c366fd52179897d76ec1910d10c2",
@@ -8195,7 +8160,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "GUE_v2-transcription_factor_prediction_mouse_4.zip",
         "bytes": 859417,
         "sha256": "6422af6847ce56e8fa06ce582df4c655d8203fba37818acc1581730987861bd2",
@@ -8375,7 +8339,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_g_max.zip",
         "bytes": 754993,
         "sha256": "374b5623168fde068fbee6293b23b9320c0de146ee56b501f6c9cff037af6ccc",
@@ -8534,7 +8497,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_m_esculenta.zip",
         "bytes": 733541,
         "sha256": "499ea2aa1f25424b36d18365582c89bcaca9bb9ca10dfc55d5c89dbbf50e9aef",
@@ -8694,7 +8656,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_s_bicolor.zip",
         "bytes": 717096,
         "sha256": "bdf69362ba33c5cd63bfc047e507337954dd38c3c4e68c9e5b29fc5d3765b2c9",
@@ -8854,7 +8815,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_s_lycopersicum.zip",
         "bytes": 655249,
         "sha256": "17b518afc638c0868146c236b9342f82438290f175158f85e5be4affbf145e13",
@@ -9014,7 +8974,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_t_aestivum.zip",
         "bytes": 748506,
         "sha256": "ff38e153d5909467633e7f03b374e4b1150f102a1605de063301f2bc527b5cb7",
@@ -9174,7 +9133,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-lncrna_z_mays.zip",
         "bytes": 725761,
         "sha256": "cac5e12db7c90b51e26c42c616a04613f97d6d5818aa55591b00f45682f2c6a1",
@@ -9334,7 +9292,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_arabidopsis_thaliana.zip",
         "bytes": 612997,
         "sha256": "926a15fb6abe70bba489775c107f400db28cbc8fbe515dc7975d7fc69e910575",
@@ -9494,7 +9451,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_chlamydomonas_reinhardtii.zip",
         "bytes": 599177,
         "sha256": "6ad6e3d1cdc388b5d67251f4b2ee0691a4afbabd479eb86d560ad4d9a493f032",
@@ -9654,7 +9610,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_medicago_truncatula.zip",
         "bytes": 588038,
         "sha256": "0bacbf9d53a0c905abc4a61cd5216ade6236530208657f2575615e159b3cf61c",
@@ -9814,7 +9769,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_oryza_sativa_indica_group.zip",
         "bytes": 586981,
         "sha256": "683d6731eaa19cc266fde2fabfa32b99d83d80de4c5a506100caabf087c2d02f",
@@ -9974,7 +9928,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_oryza_sativa_japonica_group.zip",
         "bytes": 566506,
         "sha256": "3f7b404eff80cd7bfc32f12edb19595dd0f17b4f63a80260b35cda553b5ec2c1",
@@ -10134,7 +10087,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-poly_a_trifolium_pratense.zip",
         "bytes": 659719,
         "sha256": "e319b095c44767084e6dff26d7a0e00802d2616d9148c305a7b68d122bca70d5",
@@ -10294,7 +10246,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-pro_seq_m_esculenta.zip",
         "bytes": 568687,
         "sha256": "69bfafc8584c91e6f49f47316784482b77d16d02eb0868c92b77d9a8be3f499e",
@@ -10454,7 +10405,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-promoter_strength_leaf.zip",
         "bytes": 572199,
         "sha256": "f6acf7f57259e2c4775452c01f87981e038306f0ab09d47c843da4f0e09d3a20",
@@ -10614,7 +10564,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-promoter_strength_protoplast.zip",
         "bytes": 567469,
         "sha256": "2a81f368bfbf09dd29936f439ff83bbc349ce09e230a224e3e1d44ab04d10515",
@@ -10774,7 +10723,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-splicing_arabidopsis_thaliana_acceptor.zip",
         "bytes": 540419,
         "sha256": "d80d810d16f71fc510cad0fe04a4f747ec95cc30df91e3a96ec527297468a741",
@@ -10934,7 +10882,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-splicing_arabidopsis_thaliana_donor.zip",
         "bytes": 538966,
         "sha256": "bf3609a0d7964a89716d04ec62c6be3c92a787ad51aff610892978571b03fcc6",
@@ -11130,7 +11077,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-te_prediction_arabidopsis.zip",
         "bytes": 940414,
         "sha256": "4c1a2608fd22de87acc0e226b810d7bc43775267fee142c05dd6e53e9c6d5f5e",
@@ -11349,7 +11295,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-te_prediction_rice.zip",
         "bytes": 910122,
         "sha256": "07177f6bb48c91fa4d600e5612cf4898ef9b42c872ee07ede04e14198fa0740c",
@@ -11530,7 +11475,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-terminator_strength_leaf.zip",
         "bytes": 569818,
         "sha256": "168c34059f415884cdc9fa7da0d88ae7fcc2d721347bdd6f6d75b9340a75e3ca",
@@ -11690,7 +11634,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "OmniGenBench-terminator_strength_protoplast.zip",
         "bytes": 563459,
         "sha256": "345ddb7f0efe5aba0a4b1f4a98e16519edc035dfe2c8c283431a2d2b59d15d4d",
@@ -11850,7 +11793,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-demo_coding_vs_intergenomic_seqs.zip",
         "bytes": 672352,
         "sha256": "120b6509398fbbfd0ab45e2f08161bcacabb01fa932f98615c3df397e4621bd6",
@@ -12010,7 +11952,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-demo_human_or_worm.zip",
         "bytes": 665556,
         "sha256": "ae30e1c54d67991c571183b708efc14a5f84a704ef5021644655fba603e30692",
@@ -12170,7 +12111,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-drosophila_enhancers_stark.zip",
         "bytes": 700578,
         "sha256": "7f107ce931d923d621fb597d4ebd0d906bab52e864e8b5b37b346f1d01b54208",
@@ -12330,7 +12270,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-human_enhancers_cohn.zip",
         "bytes": 663586,
         "sha256": "842055a84162698d23e960519327d4ed01c8ec74950dd00a18149a4a134609ca",
@@ -12490,7 +12429,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-human_enhancers_ensembl.zip",
         "bytes": 724642,
         "sha256": "35d200f7a54fd31bc5936b5c9ab449e8c8b8b02940a7104eabf8379ccfa81484",
@@ -12650,7 +12588,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-human_nontata_promoters.zip",
         "bytes": 602595,
         "sha256": "8e06b4490827d883025c73732916fdbece44f26065776ef7bbfbc6f1b32114fd",
@@ -12810,7 +12747,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "genomic-benchmarks-human_ocr_ensembl.zip",
         "bytes": 697494,
         "sha256": "f77f220a9b18dbb21199097203276c5199d445c140f6692b83a798b222ddf8db",
@@ -13008,7 +12944,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-designed.zip",
         "bytes": 944783,
         "sha256": "509defd37f3a94a0ee209ef7a3fe3f40be93eedbb8ed741d89b543acf3e1fa53",
@@ -13227,7 +13162,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-egfp-m1pseudo.zip",
         "bytes": 945158,
         "sha256": "88cfd24b839f5a5219f97592d0336eeb6426428d19ebf6c58972a90f54a8578a",
@@ -13446,7 +13380,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-egfp-pseudo.zip",
         "bytes": 944403,
         "sha256": "b8ea0ddcc6cf35bc8c3f4dd4830994b48c9d9a71f76e9f2fc1275104cc2d1298",
@@ -13665,7 +13598,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-egfp-unmod.zip",
         "bytes": 944517,
         "sha256": "0ea27b74540acc3537a83677967b1cd8582dd8ccdd18b5c4798e131f4e417e90",
@@ -13884,7 +13816,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-mcherry.zip",
         "bytes": 950113,
         "sha256": "8e20b2c7918e5a4c01b13c81167d2d45cd73bbe0e327d969ca12d1a2347e5d84",
@@ -14103,7 +14034,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sample-varying.zip",
         "bytes": 1050505,
         "sha256": "6eb4e662b37c9c16f739bd8545e85753f84ff2a620c3c88c1d0042b7c7603724",
@@ -14322,7 +14252,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-mrl-sugimoto.zip",
         "bytes": 1840403,
         "sha256": "2538d3efdd67d8fc1a27a5d4f2348ff9ec329d501d013dc94ad603b16a86d5a9",
@@ -14541,7 +14470,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-rnahl-human.zip",
         "bytes": 1134081,
         "sha256": "23cdaeb018a34603b2c1fc042a704cc5e90ed28c5a1464437a8ac39907b3b8c2",
@@ -14760,7 +14688,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-rnahl-mouse.zip",
         "bytes": 1124660,
         "sha256": "261d5fec14eb368ed8aaf58f8ccb8157c0cfdd59591979d1a49df2eb4bb46ae8",
@@ -14979,7 +14906,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-translation-efficiency-human.zip",
         "bytes": 1127178,
         "sha256": "dc7a3f8e0c7997657236aa23df128f758bff684e00bcc69bf6c20654b3f1195e",
@@ -15198,7 +15124,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "mRNABench-translation-efficiency-mouse.zip",
         "bytes": 1111955,
         "sha256": "6372cd9eaa8df2e7d739c12787530966d0662214b47ff8ef5297b1b4563922d7",
@@ -15381,7 +15306,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "miRBench-AGO2_CLASH_Hejret2023.zip",
         "bytes": 1625102,
         "sha256": "deb845fbcb8c7b1da4f2eaeb6b0a94ad26055e7bb66ae4b1205e0df778f72a45",
@@ -15539,7 +15463,6 @@
       ],
       "leakage": [],
       "reports": {
-        "state": "unpacked",
         "archive": "miRBench-AGO2_eCLIP_Klimentova2022.zip",
         "bytes": 784722,
         "sha256": "52b90c43fecb90780859397c31e4466a64a935a8363e4492934e739fc758aeb1",
@@ -15737,7 +15660,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "miRBench-AGO2_eCLIP_Manakov2022.zip",
         "bytes": 2412975,
         "sha256": "aa84e4e0e3f1ac42cb1b6f1576b5e80f6ceda5029f3e2cf5cdb0a933ba1bca8c",
@@ -15972,7 +15894,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H2AFZ.zip",
         "bytes": 798857,
         "sha256": "53a3667b17c792c4036b3ccd1c36c91097f28b86dcf6eeba48c80cf6f3a3e430",
@@ -16132,7 +16053,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K27ac.zip",
         "bytes": 732617,
         "sha256": "c6799bea32d79d9c461a603e39c73e571d71d136d8480fd641721007d77c9361",
@@ -16292,7 +16212,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K27me3.zip",
         "bytes": 767207,
         "sha256": "0614c124f83ba7b8e610cd3144f5832e4192e9309485a95f40ca64972dae2310",
@@ -16452,7 +16371,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K36me3.zip",
         "bytes": 803972,
         "sha256": "059092c75631ed77f60c211c279ed9055a6587cc699ac89cddea2b899105657c",
@@ -16612,7 +16530,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K4me1.zip",
         "bytes": 798194,
         "sha256": "2e98b027a0ae6ec929fe6aae731eb23b472b33f97809c13664e72def48a8d613",
@@ -16772,7 +16689,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K4me2.zip",
         "bytes": 766439,
         "sha256": "b0e2e7dd47e908dd7dd9469205cc0709d5df8b4a4e6588b3854dd9d1c2b255f5",
@@ -16932,7 +16848,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K4me3.zip",
         "bytes": 703298,
         "sha256": "b0b9ccdcc161531b36733d579e57f8b6b785191c5e27db5661ec7354718e8ea3",
@@ -17092,7 +17007,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K9ac.zip",
         "bytes": 721564,
         "sha256": "3219de40230d8acc9c274271128fef4d4a3cbe2dd6097dabc69bfa36270c15ba",
@@ -17252,7 +17166,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H3K9me3.zip",
         "bytes": 718706,
         "sha256": "fed9a7ac79ca98e9b1d433d4b5d78994cf130ea58101103fda60fb400d06b48e",
@@ -17412,7 +17325,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-H4K20me1.zip",
         "bytes": 744283,
         "sha256": "91984ab605da869ae97b084030dc35ef5826ad8a569eda3855812815ba40bf57",
@@ -17572,7 +17484,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-enhancers.zip",
         "bytes": 728401,
         "sha256": "44a4b501785700bb53e630dad6db0e996629d6ff1e16c3f2b77fc44f9576ff39",
@@ -17732,7 +17643,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-promoter_all.zip",
         "bytes": 690346,
         "sha256": "eabfa2a42afaa6f01ccd5b4c612fb60dc9031f59eb328c3858193457dbbbe2c9",
@@ -17892,7 +17802,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-promoter_no_tata.zip",
         "bytes": 683436,
         "sha256": "4242c79d8912a0242be356129edcbf24280fe7807c11b5e74e2cf0a156e210f8",
@@ -18051,7 +17960,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-promoter_tata.zip",
         "bytes": 627770,
         "sha256": "89e69984fefd3c618b4dc73029c5088c46cd5f6f49a0afd6885c3f533dbe6bcf",
@@ -18211,7 +18119,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-splice_sites_acceptors.zip",
         "bytes": 714174,
         "sha256": "d01cfad716c5b306648ce59b16a478871ebcc8b7a55276301dac5b024d6f93bb",
@@ -18371,7 +18278,6 @@
         }
       ],
       "reports": {
-        "state": "unpacked",
         "archive": "nucleotide_benchmarks-splice_sites_donors.zip",
         "bytes": 705553,
         "sha256": "aa2bd204c9f48db513d47d2c3279853db72158a895f535324653746db152e6a6",

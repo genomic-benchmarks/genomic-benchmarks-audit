@@ -27,9 +27,9 @@ from a committed file.
 | `tools/` | The vocabulary checker, and its rules. |
 | `VOCABULARY.md` | How this project is allowed to describe what was measured. |
 
-Not here, and deliberately: `site/` (the render) and `docs/reports/` (450 MB of
-fetched HTML). Both are reproducible from what is committed; neither is reviewed
-by being diffed.
+Not here, and deliberately: `site/`, which holds both the render and the 450 MB
+of reports fetched into `site/qc-reports/`. Both are reproducible from what is
+committed; neither is reviewed by being diffed.
 
 ## Building it
 
@@ -37,14 +37,19 @@ by being diffed.
 pip install -e '.[dev]'
 
 gb-audit build      # data/*.csv        -> docs/data/catalogue.json
-gb-audit fetch      # Zenodo or mirror  -> docs/reports/
+gb-audit fetch      # Zenodo or mirror  -> site/qc-reports/
 gb-audit render     # the above         -> site/
-gb-audit render --serve
+gb-audit render --fetch --serve
 ```
 
 `build` and `render` need no network. `fetch` is the only step that does, and the
 site renders without it — every report page has an honest state for "not in this
 build" rather than a link that 404s.
+
+`fetch` downloads into the site directory the render serves from, and `render`
+leaves that directory alone. So there is one copy of those 450 MB on disk, at the
+address the pages already link to, and it is fetched once and rendered around
+many times.
 
 `gb-audit check` is what CI runs: it rebuilds the catalogue in memory, compares it
 to the committed file, and renders the whole site to a temporary directory,
@@ -64,10 +69,17 @@ downloaded, and `gb-audit fetch` verifies each archive against its digest before
 unpacking it. On the site each report is framed inside the site's own navigation,
 rendered exactly as the tool wrote it, with the raw file one click away.
 
+Whether a report can be opened is resolved while rendering, from the directory
+being rendered into. The committed catalogue does not record it: that would be a
+file recording whoever last ran the build, and CI — which fetches nothing — would
+disagree with a laptop about the same commit.
+
 ### Reaching the record
 
 The record is **staged but not published**. Three routes, and whichever one a
-fetch takes is recorded in `docs/reports/PROVENANCE.json` and printed by the site:
+fetch takes is recorded in `site/qc-reports/PROVENANCE.json` and printed on the
+reports page, because bytes from a draft or from a local checkout are not bytes a
+reader can go and get for themselves:
 
 ```sh
 # the published record, once it is published

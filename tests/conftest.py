@@ -35,10 +35,36 @@ def committed():
 
 
 @pytest.fixture(scope="session")
-def built(run, tmp_path_factory):
-    out = tmp_path_factory.mktemp("site")
-    result = site.build(out / "site", run=run)
-    return result
+def stand_in_reports(committed, tmp_path_factory):
+    """A site directory holding one empty file per report the catalogue lists.
+
+    The real ones are 450 MB downloaded from Zenodo. What the site does with them
+    is link to them, and an empty file at the right path exercises that exactly as
+    well -- on a machine that has never fetched, and in CI, which never will.
+    """
+    out = tmp_path_factory.mktemp("site") / "site"
+    root = site.reports.report_root(out)
+    for dataset in committed["datasets"]:
+        entry = dataset["reports"]
+        if not entry or not entry["archive"]:
+            continue
+        stem = entry["archive"].removesuffix(".zip")
+        for report in entry["files"]:
+            path = root / stem / report["path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("<!doctype html><title>stand-in</title>\n")
+    return out
+
+
+@pytest.fixture(scope="session")
+def built(run, stand_in_reports):
+    return site.build(stand_in_reports, run=run)
+
+
+@pytest.fixture(scope="session")
+def built_bare(run, tmp_path_factory):
+    """The same build on a machine that has fetched nothing."""
+    return site.build(tmp_path_factory.mktemp("bare") / "site", run=run)
 
 
 @pytest.fixture(scope="session")

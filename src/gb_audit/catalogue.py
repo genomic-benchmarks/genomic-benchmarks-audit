@@ -6,18 +6,19 @@ file. Nothing here reaches the network or opens a report archive, so the
 catalogue -- and the largest page on the site -- can be built and reviewed on a
 machine with no copy of the 91 MB of HTML reports.
 
-**Every entry says which split its numbers were measured on.** The rollup
-columns are the values on the dataset's reference split, not a maximum over
-splits, and an entry that carried them without `reference_split` beside them
-would invite exactly the wrong reading. The per-split figures are here too, so
-a reader who wants to know whether a flag holds across splits can see it
-without opening the report.
+**Nothing in it is a fact about the machine that built it**, which is what makes
+`gb-audit build --check` a usable gate: one commit, the same bytes on a laptop
+holding all 423 reports and in CI holding none. Whether a report can be opened is
+resolved by the site while rendering.
 
-The document has no build timestamp. Everything in it comes from a pinned run,
-so two builds of the same commit produce the same bytes and a diff of
-`docs/data/catalogue.json` is a diff of what changed rather than of when it
-ran. What replaces the timestamp is provenance: the audit run, the QC run and
-the Zenodo record the archives come from.
+**Every entry says which split its numbers were measured on.** The rollup columns
+are the values on the reference split, not a maximum over splits; the per-split
+figures are here too, so a flag can be checked across splits without opening a
+report.
+
+No build timestamp. Everything comes from a pinned run, so two builds of one
+commit produce the same bytes. What replaces the timestamp is provenance: the
+audit run, the QC run and the Zenodo record.
 """
 
 from __future__ import annotations
@@ -28,11 +29,9 @@ from typing import Mapping
 from . import __version__, audit, reports
 from .audit import Dataset, Run
 
-# Bumped when a consumer written for the previous shape would misread this one.
-# The browse page is the only consumer today and lives in this repository, so
-# this exists for the case where it stops being: a page a browser cached, or a
-# script somebody wrote against the JSON.
-SCHEMA_VERSION = 1
+# Bumped when a consumer written for the previous shape would misread this one:
+# a page a browser cached, or a script somebody wrote against the JSON.
+SCHEMA_VERSION = 2
 
 # The facets the browse page groups and filters by. Chosen because each one
 # partitions the corpus in a way a reader is likely to already have a question
@@ -51,9 +50,8 @@ FACETS = (
 def _split_entry(dataset: Dataset, split: str) -> dict:
     """One split: what it is, and what the checks said on it.
 
-    Row counts are deliberately absent. How many rows a split has is the data
-    package's fact and it is versioned there; restating it here would create a
-    second copy that nothing keeps in step with the first.
+    Row counts are absent on purpose: that is the data package's fact, versioned
+    there.
     """
     spec = next((s for s in dataset.splits if s.split == split), None)
     measurements = dataset.measurements_on(split)
@@ -93,18 +91,15 @@ def _leakage_entry(dataset: Dataset) -> list[dict]:
     ]
 
 
-def _reports_entry(dataset: Dataset, availability: reports.Availability) -> dict:
-    """Where this dataset's rendered reports are, and whether they are here yet.
+def _reports_entry(dataset: Dataset) -> dict:
+    """Which reports this dataset has, and what each one is.
 
-    `state` is the whole point. `unpacked` means the build found the HTML and
-    the page links to it; `linked` means the archive is published and the page
-    sends the reader to Zenodo; `unpublished` means neither, and the page says
-    so instead of emitting a link that will 404. A site built with no network
-    still renders every page.
+    What the run produced, and nothing about whether the files are on the machine
+    reading this -- which is what lets the reports page name a file it cannot
+    open. Whether it can be opened is `reports.state()`.
     """
     manifest = dataset.reports
     return {
-        "state": availability.state,
         "archive": manifest.archive if manifest else None,
         "bytes": manifest.n_bytes if manifest else None,
         "sha256": manifest.sha256 if manifest else None,
@@ -128,7 +123,7 @@ def _reports_entry(dataset: Dataset, availability: reports.Availability) -> dict
     }
 
 
-def entry(dataset: Dataset, availability: reports.Availability) -> dict:
+def entry(dataset: Dataset) -> dict:
     """One catalogue row: the facets, the rollup, and where to read more."""
     splits = list(dataset.split_names)
     return {
@@ -170,16 +165,15 @@ def entry(dataset: Dataset, availability: reports.Availability) -> dict:
         "split_names": splits,
         "splits": [_split_entry(dataset, split) for split in splits],
         "leakage": _leakage_entry(dataset),
-        "reports": _reports_entry(dataset, availability),
+        "reports": _reports_entry(dataset),
     }
 
 
 def slug(dataset: Dataset) -> str:
     """The dataset's page name. One entry, one file, one stable URL.
 
-    Derived from the benchmark id rather than stored, and asserted unique in
-    `build()`: a slug collision would silently overwrite one dataset's page
-    with another's, which is the kind of failure a reader cannot see.
+    Derived from the benchmark id, and asserted unique in `build()`: a collision
+    would silently overwrite one dataset's page with another's.
     """
     return (
         dataset.benchmark_id.replace(":", "--")
@@ -190,7 +184,7 @@ def slug(dataset: Dataset) -> str:
     )
 
 
-def build(run: Run | None = None, unpacked_root=None) -> dict:
+def build(run: Run | None = None) -> dict:
     """The whole document, ready to serialise."""
     run = audit.run() if run is None else run
     entries = []
@@ -204,7 +198,7 @@ def build(run: Run | None = None, unpacked_root=None) -> dict:
                 f"would overwrite the other's page. Change slug()."
             )
         seen[name] = benchmark_id
-        entries.append(entry(dataset, reports.availability(dataset, unpacked_root)))
+        entries.append(entry(dataset))
 
     gates = [
         {
@@ -255,9 +249,8 @@ def provenance(run: Run) -> dict:
 def totals(run: Run) -> dict:
     """The corpus-level counts the pages quote, computed in one place.
 
-    Every headline number on the site comes from here, so a page cannot quote a
-    figure that disagrees with the catalogue -- and a figure that changes when
-    the run is re-pinned changes on every page at once.
+    Every headline number comes from here, so no page can disagree with the
+    catalogue and a re-pinned run changes every page at once.
     """
     datasets = list(run.datasets.values())
     verdicts = {flag: 0 for flag in audit.FLAGS}
@@ -289,7 +282,6 @@ def totals(run: Run) -> dict:
         "n_leakage_over_50_pct": sum(1 for value in leaked if value > 50),
         "median_max_leaked_test_pct": _median(leaked),
         "core_set_size": gates[-1].n_out if gates else 0,
-        "n_reports_unpacked": None,  # filled by the site build, which knows
     }
 
 

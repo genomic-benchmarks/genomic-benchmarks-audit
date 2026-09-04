@@ -64,15 +64,11 @@
   </div>
 </footer>
 
-<!-- Every word this site's tables, panels and figures render, kept in a page
-     rather than in the scripts beside it, so that tools/vocab_check.py reads all
-     of them. It scans this directory for prose and a .js file is not prose to it,
-     which would make a script the one place site copy could avoid the check. It
-     is in the shared shell rather than in each page because two copies of a
-     caveat is how a site ends up making two different claims about one
-     measurement; a page uses the keys it needs and ignores the rest.
-     `gb_audit/site.py` reads this same block for the words it renders
-     server-side. -->
+<!-- Every word this site's tables, panels and figures render, kept in a page so
+     that tools/vocab_check.py reads it: a .js file is not prose to it. In the
+     shared shell rather than each page, because two copies of a caveat is how a
+     site makes two claims about one measurement; a page uses the keys it needs.
+     `gb_audit/site.py` reads this same block for what it renders server-side. -->
 <script type="application/json" id="site-copy">
 {
   "columns": {

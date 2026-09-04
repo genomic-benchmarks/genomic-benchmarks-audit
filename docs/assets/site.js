@@ -1,20 +1,17 @@
-/* What every page on this site shares: the helpers that render a measurement,
- * and the panel that shows one dataset's checks.
+/* What every page shares: the helpers that render a measurement, and the panel
+ * that shows one dataset's checks.
  *
  * The panel is here rather than in the catalogue's script because it renders in
- * two places -- the expanded body of a catalogue row, and anywhere else a
- * dataset needs summarising -- and a panel rendered by two implementations is a
- * panel that will eventually say two things about one dataset.
+ * more than one place, and two implementations of it would eventually say two
+ * things about one dataset.
  *
- * Loaded by `templates/base.html` before the page's own script, so the page
- * script can call these directly. Classic scripts, not modules: `Tabulator` is a
- * global from the vendored library, the site has two scripts in total, and a
- * module graph would add a build step to save nothing.
+ * Loaded by `templates/base.html` before the page's own script. Classic scripts,
+ * not modules: two files in total, and a module graph would add a build step to
+ * save nothing.
  *
- * Every word rendered from here comes from `copy`, read out of the `#site-copy`
- * block in the page. `tools/vocab_check.py` scans `docs/` for prose and a `.js`
- * file is not prose to it, so a label written here would be the one piece of
- * site copy that could avoid the vocabulary check.
+ * Every word comes from `copy`, read out of the `#site-copy` block in the page.
+ * `tools/vocab_check.py` scans `docs/` for prose and a `.js` file is not prose to
+ * it, so a label written here would avoid the vocabulary check.
  */
 
 const esc = (value) =>
@@ -26,18 +23,16 @@ const pct = (value) => `${value.toFixed(2)}%`;
 
 /** Offer a line break after the separators in a long identifier.
  *
- * A dataset name is one unbroken token, so a narrow column either truncates it
- * or breaks it mid-word. `<wbr>` gives the line breaker somewhere sensible to do
- * it, and the CSS keeps breaking anywhere as the last resort.
+ * A dataset name is one unbroken token; `<wbr>` gives the line breaker somewhere
+ * sensible to use, and the CSS keeps breaking anywhere as the last resort.
  */
 const breakable = (value) => esc(value).replace(/([:_|])/g, "$1<wbr>");
 
 /** How far this page sits below the site root, for links and for the fetch.
  *
- * The catalogue is at the root and a framed report is two directories down, so
- * neither a bare relative path nor a leading slash works for both -- a leading
- * slash would also break the whole site under a project page's `/repo/` prefix.
- * `site.py` knows the depth and writes it onto `<body>`.
+ * A framed report is two directories down, and a leading slash would break the
+ * site under a project page's `/repo/` prefix. `site.py` knows the depth and
+ * writes it onto `<body>`.
  */
 const siteRoot = () => document.body.dataset.root ?? "";
 
@@ -56,9 +51,8 @@ const datasetHref = (d) => `${siteRoot()}datasets/${encodeURIComponent(d.slug)}.
 
 /** One flag as a chip, with the three absences kept apart.
  *
- * `Unknown` is a check that ran and could not be scored. A `null` is a check
- * that had nothing to run on. Neither is a Pass, and rendering either as one --
- * or as each other -- turns an absence of measurement into a result.
+ * `Unknown` ran and could not be scored; `null` had nothing to run on. Neither is
+ * a Pass, and neither is the other.
  */
 function flagSpan(flag, copy) {
   if (flag === null || flag === undefined) {
@@ -79,10 +73,9 @@ function measured(value, format, copy) {
 
 /** One dataset's checks, probe and split overlaps, as the body of a table row.
  *
- * Every figure in here was measured on the dataset's reference split, and the
- * panel says which split that was rather than leaving a reader to assume. The
- * checks are listed in the order the audit reports them, not sorted by
- * severity: a stable order is what lets a reader compare two panels.
+ * Every figure was measured on the reference split, and the panel names it. The
+ * checks are in the order the audit reports them rather than sorted by severity,
+ * so two panels can be compared.
  */
 function panelHtml(d, copy, checks) {
   const probe = d.strongest_probe && d.max_probe_auroc !== null

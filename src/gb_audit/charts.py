@@ -1,27 +1,20 @@
 """Server-rendered inline SVG for the audit pages.
 
-Every figure on this site is written into the HTML at build time. There is no
-chart library, no canvas, no data fetch on load: a page that renders at all
-renders its figures, and a reader with scripting off sees the same numbers as a
-reader with scripting on. The only thing JavaScript adds is the hover readout,
-and each mark carries its own readout text in `data-tip`, so the layer that
-shows it is a convenience and never the source.
+Every figure is written into the HTML at build time. No chart library, no canvas,
+no fetch on load: a page that renders at all renders its figures. JavaScript adds
+only the hover readout, and each mark carries its own text in `data-tip`.
 
-Two rules run through the whole module and are worth stating once.
+Two rules run through the module.
 
-Colour never carries a meaning on its own. Every flag mark is drawn in a fill
-whose *lightness* orders the severity -- `Pass` lightest, `Fail` darkest -- so
-the ordering survives every kind of colour vision deficiency, and every figure
-ships with a table twin (`Figure.table`) carrying the same values as text.
-`Unknown` is deliberately not a fill: it is a hatch drawn on the surface,
-because a check that ran and could not be scored is a different kind of thing
-from a check that scored, and giving it a fourth colour on the same ramp would
-invite reading it as a mild `Pass`. A check with nothing to run on is drawn as
-nothing at all.
+Colour never carries a meaning on its own. Flag marks are drawn in a fill whose
+*lightness* orders the severity -- `Pass` lightest, `Fail` darkest -- so the
+ordering survives colour vision deficiency, and every figure ships with a table
+twin (`Figure.table`) carrying the same values as text. `Unknown` is a hatch and
+not a fill: a fourth colour on the same ramp would read as a mild `Pass`. A check
+with nothing to run on is drawn as nothing.
 
-Every figure names the split its numbers were measured on. The rollup columns
-are the values on the dataset's reference split, not a maximum over splits, and
-a figure that does not say so is inviting the reader to assume the wrong one.
+Every figure names the split its numbers were measured on, because the rollup
+columns are the reference split rather than a maximum over splits.
 
 `VOCABULARY.md` binds captions and axis labels here exactly as it binds prose.
 """
@@ -679,12 +672,9 @@ LEAKAGE_BANDS: tuple[tuple[str, float, float], ...] = (
 def leakage_bands(run: Run) -> Figure:
     """How much of the held-out data was already visible in training.
 
-    Deliberately not a histogram. Three quarters of the corpus sits under 5%
-    and a handful sits near 100%, so equal-width bins put almost every dataset
-    in one bar and spend the rest of the axis on empty space -- a picture of the
-    binning, not of the corpus. These bands are uneven and named, and the axis
-    counts datasets rather than implying a density, which is the honest way to
-    draw a distribution whose interesting structure is all at one end.
+    Not a histogram: three quarters of the corpus sits under 5% and a handful near
+    100%, so equal-width bins would picture the binning rather than the corpus.
+    These bands are uneven and named, and the axis counts datasets.
     """
     values = [
         (d.benchmark_id, d.max_leaked_test_pct)

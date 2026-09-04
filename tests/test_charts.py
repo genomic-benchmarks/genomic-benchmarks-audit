@@ -10,9 +10,8 @@ from gb_audit import charts
 
 # --- colour ------------------------------------------------------------------
 #
-# Reproduced here rather than imported from a helper, because a palette that is
-# checked by the same code that chose it is a palette that is not checked. These
-# are the Vienot (1999) simulation matrices and a plain CIELAB dE76.
+# Reproduced here rather than imported: a palette checked by the same code that
+# chose it is not checked. Vienot (1999) matrices and a plain CIELAB dE76.
 
 RGB2LMS = ((17.8824, 43.5161, 4.11935),
            (3.45565, 27.1554, 3.86714),
@@ -78,9 +77,7 @@ def test_the_flag_ramp_stays_apart_under_colour_vision_deficiency(kind):
     """Three fills, and every pair distinguishable in all three simulations.
 
     9.0 is the threshold this project uses for categorical fills. `Unknown` is
-    absent from this ramp on purpose -- it is a hatch, not a fourth colour --
-    and adding it back is what drove Pass/Unknown to a dE of 6 under deuteranopia
-    and caused the ramp to be redesigned.
+    absent from the ramp on purpose: it is a hatch, not a fourth colour.
     """
     fills = list(charts.FLAG_FILL.values())
     worst = min(

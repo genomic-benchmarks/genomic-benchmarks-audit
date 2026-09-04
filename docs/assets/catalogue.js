@@ -1,16 +1,12 @@
 /* The catalogue table: 93 datasets, sortable, filterable, one panel per row.
  *
- * Tabulator does the virtual scrolling and the sort; everything a reader is
- * meant to *believe* is computed elsewhere and fetched as JSON. This file adds
- * no number. It reads `data/catalogue.json`, which `gb-audit build` writes from
- * the committed tables and CI checks, and renders what is in it.
+ * Tabulator does the scrolling and the sort. This file adds no number: it reads
+ * `data/catalogue.json`, which `gb-audit build` writes and CI checks.
  *
- * **Every sorter here is supplied rather than inherited.** Tabulator's numeric
- * sorter places a `null` with the zeros, and a null in this table means the
- * check had nothing to run on -- so the default would file every unmeasured
- * dataset among the lowest-scoring ones and make an absence of measurement look
- * like a reassuring result. Missing values sort to the end in both directions
- * instead, which is the only ordering that does not state something.
+ * **Every sorter is supplied rather than inherited.** Tabulator's numeric sorter
+ * files `null` with the zeros, and a null here means the check had nothing to run
+ * on -- which would make an absence of measurement look like a low score. Missing
+ * values sort last in both directions instead.
  */
 
 const FACETS = [
@@ -27,11 +23,10 @@ const FACETS = [
  * end with the blanks, where an unscored thing belongs. */
 const SEVERITY = { Pass: 0, Warning: 1, Fail: 2 };
 
-/** Sort missing values to the end whichever way the column is pointing.
+/** Sort missing values last whichever way the column is pointing.
  *
- * Tabulator hands the sorter a direction; returning a constant for the missing
- * side would reverse with it and put the unmeasured rows at the top on the
- * second click. This checks the direction and keeps them last both times.
+ * A constant for the missing side would reverse with the direction and put the
+ * unmeasured rows on top at the second click.
  */
 const lastIfMissing = (compare) => (a, b, rowA, rowB, column, dir) => {
   const aMissing = a === null || a === undefined;

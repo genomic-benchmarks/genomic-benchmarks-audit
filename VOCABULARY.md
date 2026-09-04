@@ -7,11 +7,11 @@ viewers — along with the templates they are rendered from, the copy block in
 `docs/templates/base.html`, and this repository's own README and docs.
 `CONTRACT.md` §9 states the obligation; this file is how you meet it.
 
-**What it does not bind.** The 423 reports under `docs/reports/` are written by
-`genomic-benchmarks-qc`, not by this repository, and the site publishes them
+**What it does not bind.** The 423 reports under `site/qc-reports/` are written
+by `genomic-benchmarks-qc`, not by this repository, and the site publishes them
 unchanged. Rewording a tool's output to satisfy a convention would make the copy
 of a report on this site say something the report does not. `tools/vocabulary.toml`
-excludes that directory for exactly that reason.
+excludes them for exactly that reason.
 
 **Source of truth.** The convention was agreed for the manuscript on 2026-08-11
 and lives in `Manuscript_vocabulary.md` in the `GenBench2_paper` repository.

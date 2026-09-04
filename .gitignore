@@ -11,23 +11,16 @@ venv/
 .ruff_cache/
 .coverage
 
-# The rendered site. Not committed on purpose: every number it publishes lives in
-# docs/data/catalogue.json, which is committed and gated in CI, so a change to a
-# published number is already a diff. Committing the render would add a 500-page
-# diff to every template change and one more staleness gate to satisfy.
+# The rendered site, and the 450 MB of reports fetched into `site/qc-reports/`.
+# Every number the render publishes lives in docs/data/catalogue.json, which is
+# committed and gated in CI; the reports are described by data/reports.csv and
+# brought back verified by `gb-audit fetch`.
 /site/
 
-# The fetched reports. 90 MB of archives that unpack to 450 MB of HTML, produced
-# by genomic-benchmarks-qc and published on Zenodo. `data/reports.csv` carries the
-# manifest -- name, size, digest, every path inside -- so what is missing here is
-# still describable, and `gb-audit fetch` brings it back verified.
-/docs/reports/
-
-# NOT a pattern for `docs/templates/parts/`. A bare `parts/` here -- which the
-# usual Python .gitignore ships, for setuptools' build output -- has no leading
-# slash, so git applies it at every depth and silently swallows the eleven prose
-# fragments the site is assembled from. That happened once already in the
-# leaderboard repository. If setuptools' `parts/` is ever needed, anchor it.
+# Anchored, and NOT a pattern for `docs/templates/parts/`. A bare `parts/` -- what
+# the usual Python .gitignore ships for setuptools -- has no leading slash, so git
+# applies it at every depth and silently swallows the prose fragments the site is
+# assembled from.
 /parts/
 
 # Editors and platforms

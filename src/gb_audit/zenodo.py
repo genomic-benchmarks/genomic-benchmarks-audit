@@ -1,49 +1,36 @@
 """Where the QC output is published, and how to reach it before it is published.
 
-The audit's own tables are committed under `data/` and this module is not on the
-path that renders a page. What it reaches for is the half of the run that is too
-large to commit: the 93 per-dataset report archives (90 MB), and
-`combined_classes_results_full.csv` (343 MB, 2.59 M rows -- every individually
-scored feature, including every position). Those live on one Zenodo record, and
-this module is the only place in the repository that knows its address.
+What lives on the record is the half of the run too large to commit: the 93 report
+archives (90 MB) and `combined_classes_results_full.csv` (343 MB, 2.59 M rows).
+This module is the only place in the repository that knows its address, and it is
+not on the path that renders a page.
 
 **The record is staged but not published, and those are different facts.** Record
-`22288544` exists, holds all 96 files, and is in state `unsubmitted`: reachable
+`22288544` exists, holds all 96 files and is in state `unsubmitted`: reachable
 through its draft endpoint with a share token, absent from `zenodo.org/records/`
-without one. So `RECORD_ID` is a real identifier rather than a stand-in, and
-`RECORD_REGISTERED` is still False -- it answers the narrower question the site
-actually asks, which is whether a link printed on a page will resolve for a reader
-who has no token. A page that would need a published record says so in the copy
-rather than linking into a 404, and `scripts/fetch_reports.py` refuses rather than
-downloading an error page and unpacking it.
+without one. So `RECORD_ID` is a real identifier and `RECORD_REGISTERED` is False,
+which answers the narrower question a link on a public page has to answer. Pages
+that would need a published record say so rather than linking into a 404.
 
-No DOI is minted here. Zenodo reserves one on publish, and until it does, the
-record has none -- so the site prints the record ID and not a DOI it guessed from
-the accession number.
+No DOI. Zenodo reserves one on publish, so the site prints the record ID rather
+than a DOI guessed from the accession number.
 
 **Three routes to the same bytes, and a caller is told which one it got.** A local
 checkout via `$GENOMIC_BENCHMARKS_LOCAL_MIRROR`; the draft via
 `$GENOMIC_BENCHMARKS_ZENODO_TOKEN`; the published record, once there is one. The
-token is read from the environment and never written down here, because a share
-token in a public repository is a published token.
+token is read from the environment and never written down here: a share token in a
+public repository is a published token.
 
-**What the record and the checkout agree on.** The two summary tables are on the
-record *and* committed under `data/` -- `data/README.md` argues that -- so the
-committed copy and the record are two routes to the same bytes. That is a checked
-claim, not an assumption: `data/provenance.json` records a SHA-256 per file, and
-both committed tables match the record's copies exactly. `data/reports.csv` does
-the same job for the 93 archives, listing size, digest, and every path inside, so
-the site knows what exists before anything is downloaded.
+**The committed tables and the record are two routes to the same bytes**, checked
+rather than assumed -- `data/provenance.json` carries a SHA-256 per file and both
+match the record's copies. `data/reports.csv` does the same for the 93 archives.
 
-**What the mirror does not do** is make a result reproducible. It reads a tree that
-exists on one machine, so `mirror_root()` is public and returns None when fetches
-are going to the network -- the one question a caller has to ask before publishing
-anything it produced. `scripts/fetch_reports.py` records which route it took in
-`docs/reports/PROVENANCE.json`, and the site prints it.
+**The mirror does not make a result reproducible**: it reads a tree that exists on
+one machine. So `mirror_root()` is public, `fetch()` returns its route, and
+`site/qc-reports/PROVENANCE.json` records it for the reports page to print.
 
-**What deletes this module's `if` statements.** Publication. Once the draft is
-submitted, `RECORD_REGISTERED` becomes True in that same commit, the token and the
-mirror stop being set, and the branches below go with them.
+Publication deletes the branches below: `RECORD_REGISTERED` becomes True in that
+same commit, and the token and the mirror stop being set.
 """
 
 from __future__ import annotations
@@ -90,22 +77,17 @@ _ARCHIVE_DIR = "zenodo"
 class RecordUnavailable(RuntimeError):
     """The QC record cannot be reached, and the message says which reason.
 
-    Four of them, and they are not the same problem: the record is not published
-    and no token was given, the token was refused, the mirror is set to something
-    that is not a checkout, or the network refused. Collapsing them into one error
-    would send someone hunting for a proxy setting when the answer is that nothing
-    has been published and they have no token.
+    Four of them, and they are not the same problem: nothing is published and no
+    token was given, the token was refused, the mirror is not a checkout, or the
+    network refused.
     """
 
 
 def registered() -> bool:
     """Whether `RECORD_ID` resolves for a reader who has no token.
 
-    Read by the site rather than assumed by it: the pages that would link to a
-    report archive say "not published yet" while this is False, which is a
-    different page from one whose link is broken. Note what this does *not* ask --
-    the record exists; `draft_token()` can reach it. This is the question a link
-    on a public page has to answer.
+    Not whether the record exists -- it does, and `draft_token()` can reach it.
+    This is the question a link on a public page has to answer.
     """
     return RECORD_REGISTERED
 
@@ -140,10 +122,8 @@ def public_record_url() -> str:
 def file_url(name: str) -> str:
     """The address of one file on the record, by whichever route is open.
 
-    The API's `content` endpoint rather than the landing page's download link: it
-    is the one this repository has actually exercised against the record, and it
-    is the same shape published and draft, differing only by the `/draft` segment
-    and the token.
+    The API's `content` endpoint: the same shape published and draft, differing
+    only by the `/draft` segment and the token.
     """
     quoted = urllib.parse.quote(name, safe="")
     token = draft_token()
@@ -201,10 +181,8 @@ def _checked_root(root: Path) -> Path:
 def mirrored(name: str) -> Path:
     """The mirrored copy of one published file, or a message saying it is absent.
 
-    Resolved by the name the URL ends in, which is the whole mapping needed: the
-    QC run writes its combined tables at the top of the directory it publishes and
-    the 93 archives in `zenodo/` beside them, and that directory is what became
-    the record. So the local tree and the record hold the same names.
+    Resolved by name: the directory the QC run publishes is what became the
+    record, so the local tree and the record hold the same names.
     """
     root = mirror_root()
     if root is None:
@@ -240,14 +218,9 @@ def fetch(name: str, destination: Path, *, timeout: float = 60.0) -> tuple[Path,
     """One published file, from wherever it can be had, and which route that was.
 
     Returns the path and one of `"local_mirror"`, `"zenodo"`, `"zenodo_draft"`.
-    The path is returned rather than assumed to be `destination`, because a
-    mirrored file is read where it lies: the bytes are already on this disk and a
-    second copy is a thing that can go stale against the checkout it came from.
-
-    The route is returned rather than logged, for the reason `mirror_root()` is
-    public. A caller that is about to write something a reader will see has to be
-    able to say which one it got -- and `zenodo_draft` in particular says the
-    bytes came from a record the public cannot yet read.
+    The path rather than `destination`, because a mirrored file is read where it
+    lies. The route, because a caller about to write something a reader will see
+    has to be able to say which one it got.
     """
     taken = route()
     if taken == "local_mirror":

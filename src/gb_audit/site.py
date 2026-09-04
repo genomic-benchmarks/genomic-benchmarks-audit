@@ -1,10 +1,5 @@
 """Render the site from `docs/` into an output directory.
 
-Reads the committed `docs/data/catalogue.json`, fills the templates in
-`docs/templates/`, server-renders every figure with `charts.py`, copies the
-assets, the vendored table library and the unpacked reports beside them, and
-writes the result to `--out`:
-
     index.html                the corpus, in six figures
     catalogue.html            all 93 datasets, filterable
     checks.html               the ten checks, and what each returned
@@ -15,42 +10,34 @@ writes the result to `--out`:
     view/<archive>/<report>   one framed viewer per report, 423 of them
     qc-reports/<archive>/...  the reports themselves, unchanged
 
-**The output is not committed, and that is the whole design.** Every number the
-site publishes lives in `docs/data/catalogue.json`, which *is* committed and
-gated in CI, so a change to a published number is already diffable in git
-history. The HTML carries no number of its own -- it is a render of that file
-plus the copy in `docs/templates/`. Committing it would buy no review the JSON
-does not already give, and would cost a 93-page diff every time a template
-changed. So CI builds it and hands the directory to Pages; nothing here writes
-into the checkout.
+The output is not committed. Every number it publishes lives in
+`docs/data/catalogue.json`, which is, so a change to a published number is
+already a diff.
 
-**No number in the copy is typed.** The templates carry `{{placeholders}}` and
-this module computes what goes in them from the catalogue -- 93, 10, 57, 34, 75
-and the six heavily-overlapping datasets are all counted here at build time. A
-count in prose that nothing recomputes is a sentence that goes stale silently,
-and the whole argument of the site is that its numbers came from somewhere.
+The reports are not copied in either: `gb-audit fetch` downloads them into
+`qc-reports/` inside the output, which is the path the pages link to. `clear()`
+keeps that directory, so a render is cheap and the download happens once.
 
-**No word in the copy is typed here either.** The words this module renders
-server-side -- a flag's name, the sentence for an absent measurement -- come from
-the `#site-copy` block in `templates/base.html`, the same block the scripts read.
-`tools/vocab_check.py` scans `docs/` for prose and neither a `.js` nor a `.py`
-file is prose to it, so a label written in either would be site copy that avoids
-the vocabulary check.
+No number and no word is typed in this module. Templates carry `{{placeholders}}`
+filled from the catalogue by `counts()`, and reader-facing words come from the
+`#site-copy` block in `templates/base.html` -- `tools/vocab_check.py` reads
+`.html` and not `.py`, so a label written here would avoid the vocabulary check.
 
-**The catalogue is checked against the run before anything is rendered.** The
-figures are drawn from `audit.run()` and the tables are fetched from
-`catalogue.json`; if those two disagree, the site shows a figure and a number
-that contradict each other, and neither says which is right. So `build()` rebuilds
-the catalogue from the run and refuses to render if the committed bytes differ.
+`check_fresh()` refuses to render if the committed catalogue is not what the run
+produces: the figures come from the run and the tables from the catalogue, and a
+page whose picture and number disagree says neither is right.
+
+Whether a report can be opened is a fact about this machine, so `resolve()`
+answers it from the output directory rather than from a committed file.
 
 Usage:
     gb-audit render                    # into site/
     gb-audit render --out /tmp/preview
-    gb-audit render --serve
+    gb-audit render --fetch --serve    # download the reports first, then look
 
-`site/` is gitignored. Local review needs a server rather than `file://`, because
-the catalogue page fetches `data/catalogue.json` and a `file://` fetch is a
-cross-origin request every browser refuses -- hence `--serve`.
+`site/` is gitignored. Local review needs a server rather than `file://`: the
+catalogue page fetches `data/catalogue.json`, and a `file://` fetch is a
+cross-origin request every browser refuses.
 """
 
 from __future__ import annotations
@@ -73,42 +60,31 @@ PARTS = TEMPLATES / "parts"
 CATALOGUE = SOURCE / "data" / "catalogue.json"
 DEFAULT_OUT = REPO / "site"
 
-# Copied verbatim into the output. `data/` is the catalogue the pages fetch;
-# `vendor/` is the table library, which is a file in this repository rather than
-# a CDN call for the reasons docs/vendor/README.md gives.
+# Copied verbatim into the output: the stylesheet and scripts, the vendored table
+# library, and the catalogue the pages fetch.
 COPIED = ("assets", "vendor", "data")
 
 PLACEHOLDER = re.compile(r"\{\{(?P<name>[a-z0-9_]+)\}\}")
 COPY_BLOCK = re.compile(
     r'<script type="application/json" id="site-copy">(?P<json>.*?)</script>', re.S
 )
-# What a path component of the built site may contain. Checked rather than
-# slugified, because a slug is not reversible and the point of
-# `qc-reports/<archive>/<path>` is that the path inside the site is the path
-# inside the record.
+# What a path component may contain. Checked rather than slugified: a slug is not
+# reversible, and the path inside the site is meant to be the path inside the
+# record.
 URL_SAFE = re.compile(r"[A-Za-z0-9_.\-]+")
 
 
 class TemplateError(RuntimeError):
     """A placeholder the build has no value for.
 
-    Silent in a naive `str.replace` loop, which leaves the placeholder in place
-    and publishes `{{n_fail}}` to a reader. Raised instead, because the numbers
-    are the argument of the page.
-
-    The reverse is deliberately not an error: `counts()` computes every number
-    the site can state and each page uses the few it needs, so a value with no
-    placeholder is the normal case rather than a mistake.
+    Raised rather than left in place, which would publish `{{n_fail}}` to a
+    reader. The reverse is not an error: `counts()` computes every number the site
+    can state and each page uses the few it needs.
     """
 
 
 class StaleCatalogue(RuntimeError):
-    """The committed catalogue is not what the pinned tables produce.
-
-    Raised rather than worked around, because the figures come from the run and
-    the tables come from the catalogue: rendering both would publish a page whose
-    picture and whose number disagree.
-    """
+    """The committed catalogue is not what the pinned tables produce."""
 
 
 # ------------------------------------------------------------- machinery ---
@@ -137,21 +113,15 @@ def plural(n: int, one: str, many: str | None = None) -> str:
 def site_copy(values: dict[str, str] | None = None) -> dict:
     """The reader-facing words, read out of the shell template.
 
-    Parsed from `base.html` rather than kept in a `copy.json`, because
-    `vocab_check.py` reads `.html` and does not read `.json`: a copy file of its
-    own would be a copy file the vocabulary check never sees.
+    In `base.html` rather than a `copy.json`, because `vocab_check.py` reads
+    `.html` and not `.json`.
 
-    **Filled with the same values the rest of the page is filled with.** The copy
-    block carries `{{placeholders}}` too -- "the {{n_checks}} checks" rather than
-    "the ten checks" -- and `render_page` substitutes them on the way out, so the
-    browser reads finished sentences. Passing the same values here is what keeps
-    the words this module renders identical to the words the scripts render from
-    the page; without it, Python would quote a placeholder where JavaScript quoted
-    a number, and the two halves of one site would disagree in public.
+    The block carries `{{placeholders}}` of its own, filled here with the same
+    values the page is filled with, so Python and JavaScript render one site's
+    words rather than a placeholder against a number.
 
-    Values are **not** escaped by the caller. They are copy from a file this
-    repository controls, some of it carrying entities on purpose, and escaping it
-    would publish the entity rather than the character.
+    Values are not escaped: this is copy from a file this repository controls,
+    some of it carrying entities on purpose.
     """
     match = COPY_BLOCK.search((TEMPLATES / "base.html").read_text(encoding="utf-8"))
     if match is None:
@@ -191,6 +161,50 @@ def load_document() -> dict:
     return json.loads(CATALOGUE.read_text(encoding="utf-8"))
 
 
+def resolve(document: dict, root: Path) -> int:
+    """Fill in which reports this build can open. Returns how many.
+
+    Written onto the loaded document so that the page quoting the number and the
+    page linking to the file read one source. Judged file by file against the
+    manifest, not by whether the directory exists: an interrupted download leaves
+    a short directory, and calling that unpacked publishes links to what is
+    missing.
+    """
+    published = zenodo.registered()
+    unpacked = 0
+    for dataset in document["datasets"]:
+        entry = dataset["reports"]
+        if not entry or not entry["archive"] or not entry["files"]:
+            if entry is not None:
+                entry["state"] = reports.state(False, published)
+            continue
+        stem = entry["archive"].removesuffix(".zip")
+        here = reports.present(root, stem, [f["path"] for f in entry["files"]])
+        entry["state"] = reports.state(here, published)
+        if here:
+            unpacked += len(entry["files"])
+    document["totals"]["n_reports_unpacked"] = unpacked
+    return unpacked
+
+
+def fetch_route(root: Path) -> str | None:
+    """Which of the three routes served the bytes in `root`, if it says.
+
+    Written by `gb-audit fetch` beside what it fetched. Reports from a draft or a
+    local checkout are not reports a reader can go and get, and the page offering
+    them says so.
+    """
+    recorded = root / "PROVENANCE.json"
+    if not recorded.is_file():
+        return None
+    try:
+        return json.loads(recorded.read_text(encoding="utf-8")).get("route")
+    except (json.JSONDecodeError, OSError):
+        # A provenance file that cannot be read is not a reason to refuse to
+        # render 522 pages. The route note is simply omitted.
+        return None
+
+
 def check_fresh(run: audit.Run) -> None:
     """Refuse to render a catalogue that is not what the tables produce."""
     if not CATALOGUE.is_file():
@@ -228,12 +242,9 @@ def record_line(document: dict) -> str:
 def counts(document: dict) -> dict[str, str]:
     """Every number the copy states, counted from the catalogue.
 
-    `overall_verdict` in the catalogue is the worst flag the ten checks returned
-    on the dataset's reference split, so counting `Fail` over it answers "returned
-    Fail on at least one check" -- and its complement is what the Core Set's
-    integrity, leakage and separability gates then narrow. That equivalence is why
-    these numbers can be read off one column, and why this function is the only
-    place any of them is written down.
+    `overall_verdict` is the worst flag the ten checks returned on the reference
+    split, so counting `Fail` over it answers "returned Fail on at least one
+    check". This is the only place any of these numbers is written down.
     """
     totals = document["totals"]
     datasets = document["datasets"]
@@ -298,10 +309,8 @@ def counts(document: dict) -> dict[str, str]:
         "schema_version": str(document["schema_version"]),
         "record_line": record_line(document),
     }
-    # The word form of every count small enough to be spelled in a sentence.
-    # Added rather than substituted so a heading can still say "10" where a
-    # paragraph says "ten", and so no template has to choose between a computed
-    # number and a readable one.
+    # The word form of every count small enough to spell. Added rather than
+    # substituted, so a heading can say "10" where a paragraph says "ten".
     for name in (
         "n_checks", "n_probe_checks", "n_integrity_checks", "n_split_checks",
         "n_flags", "n_scored_flags", "n_gates", "n_collections",
@@ -319,11 +328,9 @@ def counts(document: dict) -> dict[str, str]:
 # ------------------------------------------------------------- fragments ---
 
 
-# How this site spells a small number in a sentence. The counts themselves are
-# computed -- nothing here is typed into the prose -- but "those 9 run per split"
-# is a sentence written by a machine, and "those nine" is one written for a
-# reader. Only the structural counts get a word form: the corpus figures are
-# large, and 93 is not improved by being spelled out.
+# How this site spells a small number in a sentence: "those nine run per split",
+# not "those 9". Only the structural counts get a word form; 93 is not improved
+# by being spelled out.
 CARDINALS = {
     0: "no", 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six",
     7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve",
@@ -351,10 +358,9 @@ def text(value: str | None) -> str:
 def flag_chip(flag: str | None, copy: dict) -> str:
     """One flag as a labelled chip, with a blank that says it is blank.
 
-    A missing flag renders as an em dash carrying the sentence for it, never as
-    an empty cell: an empty cell is read as nothing to report, and a check that
-    had nothing to run on is a different statement from a check that returned
-    Pass -- and from one that returned Unknown.
+    A missing flag is an em dash carrying the sentence for it, never an empty
+    cell: a check with nothing to run on is a different statement from Pass, and
+    from Unknown.
     """
     if flag is None:
         return (
@@ -371,10 +377,8 @@ def flag_chip(flag: str | None, copy: dict) -> str:
 def measurement(value: float | None, template: str, copy: dict) -> str:
     """One measured figure, or the word for its absence -- never a stand-in zero.
 
-    `null` here means the check had nothing to run on. Formatting it as `0.000`
-    would publish the most reassuring possible number in place of no number at
-    all, which is the failure `docs/vendor/README.md` records as the reason the
-    table supplies its own sorters.
+    `null` means the check had nothing to run on, and `0.000` would be the most
+    reassuring possible number in place of no number at all.
     """
     if value is None:
         return (
@@ -540,10 +544,7 @@ def leakage_rows(dataset: dict, copy: dict) -> str:
 def siblings(dataset: dict, document: dict) -> str:
     """The other datasets in this collection, as links.
 
-    Server-rendered rather than fetched, which is what lets a dataset page carry
-    no script at all: everything on it is already known at build time, and a page
-    that needs JavaScript to offer its own navigation is a page that loses it
-    whenever the fetch does.
+    Server-rendered, which is what lets a dataset page carry no script at all.
     """
     family = [
         d
@@ -567,9 +568,8 @@ def siblings(dataset: dict, document: dict) -> str:
 def view_path(archive_stem: str, report_path: str) -> str:
     """Where the framed viewer for one report goes.
 
-    The report's own path with its separators folded into hyphens, so the file
-    name still reads as the thing it frames and the two directories the viewer
-    sits under are the same for every report on a dataset.
+    The report's own path with separators folded into hyphens, so the name still
+    reads as the thing it frames.
     """
     return f"view/{archive_stem}/{report_path.replace('/', '-')}"
 
@@ -684,7 +684,7 @@ def catalogue_page(document: dict) -> str:
     )
 
 
-def reports_page(document: dict, copy: dict) -> str:
+def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
     entries = [d for d in document["datasets"] if d["reports"]]
     states = {"unpacked": 0, "linked": 0, "unpublished": 0}
     for dataset in entries:
@@ -716,8 +716,24 @@ def reports_page(document: dict, copy: dict) -> str:
                 "reports_present" if states["unpacked"] else "reports_absent",
                 counts(document),
             ),
+            "route_note": route_note(route, states["unpacked"]),
         },
     )
+
+
+# One part per route: what each means for a reader is different. `zenodo` gets
+# none, being the case the page already describes.
+ROUTE_PARTS = {
+    "zenodo_draft": "route_draft",
+    "local_mirror": "route_mirror",
+}
+
+
+def route_note(route: str | None, unpacked: int) -> str:
+    """Where these particular bytes came from, where that changes what they are."""
+    if not unpacked or route not in ROUTE_PARTS:
+        return ""
+    return part(ROUTE_PARTS[route], {"record_id": html.escape(zenodo.RECORD_ID)})
 
 
 def methods_page(document: dict, copy: dict) -> str:
@@ -837,9 +853,8 @@ def leakage_section(
 ) -> str:
     """The split-comparison section, or the sentence that replaces it.
 
-    A dataset with one split has no pair to scan, and rendering the table anyway
-    leaves column headers with nothing under them -- which reads as a page that
-    failed to load rather than as a measurement nobody made.
+    A dataset with one split has no pair to scan, and a table of headers with
+    nothing under them reads as a page that failed to load.
     """
     splits = len(dataset["splits"])
     values = {
@@ -864,12 +879,9 @@ def report_view(
 ) -> str:
     """One report, framed in the site's own chrome.
 
-    An iframe rather than a re-parse. `genomic-benchmarks-qc` writes a complete
-    document with its own stylesheet, and lifting its body into this page would
-    put two stylesheets in one scope and make the report's appearance depend on
-    the site's. Framing it keeps the reader inside the site's navigation while the
-    report renders exactly as the tool wrote it -- and the raw file is one click
-    away for anyone who would rather have it on its own.
+    An iframe rather than a re-parse: the report is a complete document with its
+    own stylesheet, and lifting its body in here would put two stylesheets in one
+    scope. The raw file is one click away.
     """
     stem = dataset["reports"]["archive"].removesuffix(".zip")
     raw = f"../../qc-reports/{stem}/{report['path']}"
@@ -921,28 +933,66 @@ def safe_component(value: str, what: str) -> str:
     return value
 
 
+class NotASite(RuntimeError):
+    """`--out` names a directory holding something this did not write.
+
+    `--out` is a path a person types and `build()` empties what is at it.
+    """
+
+
+# What one of these builds looks like from outside. Nothing else writes them.
+BUILT_MARKERS = (".nojekyll", "index.html")
+
+
+def clear(out: Path) -> None:
+    """Empty the output, keeping the reports downloaded into it.
+
+    Rebuilt rather than merged into: a stale file left by a renamed template is a
+    page still being served that nothing regenerates. `qc-reports/` is kept -- it
+    is 450 MB fetched and verified, not a render.
+    """
+    if not out.exists():
+        out.mkdir(parents=True)
+        return
+    if not out.is_dir():
+        raise NotASite(f"{shown(out)} is a file, not a directory to render into.")
+
+    keep = reports.SITE_DIR
+    contents = list(out.iterdir())
+    strangers = [item for item in contents if item.name != keep]
+    if strangers and not any((out / marker).exists() for marker in BUILT_MARKERS):
+        raise NotASite(
+            f"{shown(out)} is not empty and was not written by `gb-audit render` "
+            f"-- it holds {strangers[0].name!r} and none of "
+            f"{', '.join(BUILT_MARKERS)}. Refusing to empty it. Point --out at a "
+            f"new directory, or delete that one yourself."
+        )
+    for item in strangers:
+        if item.is_dir() and not item.is_symlink():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
+
+
 def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
-    """Render every page and copy every asset. Returns what was written."""
+    """Render every page around whatever reports are there. Returns what it wrote."""
     out = DEFAULT_OUT if out is None else out
     run = audit.run() if run is None else run
     check_fresh(run)
 
-    document = load_document()
-    copy = site_copy(counts(document))
+    clear(out)
+    report_root = reports.report_root(out)
 
-    if out.exists():
-        # Rebuilt from scratch rather than merged into: a stale file left behind
-        # by a renamed template is a page that is still being served and that
-        # nothing regenerates.
-        shutil.rmtree(out)
-    out.mkdir(parents=True)
+    document = load_document()
+    n_unpacked = resolve(document, report_root)
+    copy = site_copy(counts(document))
 
     pages: dict[Path, str] = {
         Path("index.html"): landing(run, document, copy),
         Path("catalogue.html"): catalogue_page(document),
         Path("checks.html"): checks_page(run, document, copy),
         Path("core-set.html"): core_set_page(run, document, copy),
-        Path("reports.html"): reports_page(document, copy),
+        Path("reports.html"): reports_page(document, copy, fetch_route(report_root)),
         Path("methods.html"): methods_page(document, copy),
     }
 
@@ -981,23 +1031,20 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
     # wants templating; it has already been rendered.
     (out / ".nojekyll").write_text("")
 
-    copied_reports = 0
-    if reports.UNPACKED.is_dir():
-        destination = out / reports.SITE_DIR
-        shutil.copytree(
-            reports.UNPACKED,
-            destination,
-            ignore=shutil.ignore_patterns("PROVENANCE.json", ".*"),
-        )
-        copied_reports = sum(1 for _ in destination.rglob("*.html"))
-
     return {
         "out": out,
         "pages": len(pages),
         "dataset_pages": len(document["datasets"]),
         "report_views": n_views,
-        "reports_copied": copied_reports,
-        "bytes": sum(p.stat().st_size for p in out.rglob("*") if p.is_file()),
+        "reports_present": n_unpacked,
+        "route": fetch_route(report_root),
+        # The pages and the assets, not the reports: what this build wrote, as
+        # against what it found already sitting in the directory.
+        "bytes": sum(
+            path.stat().st_size
+            for path in out.rglob("*")
+            if path.is_file() and reports.SITE_DIR not in path.relative_to(out).parts
+        ),
     }
 
 

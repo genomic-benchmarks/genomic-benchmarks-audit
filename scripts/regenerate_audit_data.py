@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
 """Copy one published audit run into `data/`, and record what was copied.
 
-The run this repository publishes is produced in `GenBench2_paper` by two
-workflows: `dataset_qc` measures every split of every included dataset, and
-`dataset_audit` rolls those measurements up to one row per dataset and selects the
-Core Set. Both write into a `runs/` tree that is gitignored there. So there is no
-path a site build can read that does not assume a checkout, and no call it can make
-that does not reach the network -- which is why the small tables are copied in here
-and the site renders from the copy.
+The run is produced in `GenBench2_paper` by two workflows: `dataset_qc` measures
+every split of every included dataset, and `dataset_audit` rolls those up to one row
+per dataset and selects the Core Set. Both write into a gitignored `runs/` tree, so
+the small tables are copied in here and the site renders from the copy.
 
-**Copied byte for byte, not projected.** `gb_leaderboard` keeps 30 of the rollup's
-42 columns because the registry it carries already states the other twelve, and two
-copies of `task_category` are two copies that can disagree. This repository has no
-registry: it is the audit, its facets come from the audit, and the twelve columns
-are the only place it has to get them. Keeping every byte also makes the committed
-copy diffable against the record once the deposition lands, which is the check that
-`data/provenance.json`'s digests exist to support.
+**Copied byte for byte, not projected.** This repository is the audit and its facets
+come from the audit, so it keeps all 42 rollup columns rather than the 30 a registry
+would let it drop. Keeping every byte also makes the committed copy diffable against
+the record, which is what `data/provenance.json`'s digests support.
 
-Two files are derived rather than copied, and both are derived from files that are
-themselves published:
+Two files are derived rather than copied, both from files that are themselves
+published:
 
 `splits.csv`
     The seven per-collection metadata TSVs the QC run writes, concatenated. It is
@@ -38,15 +32,12 @@ Usage:
     scripts/regenerate_audit_data.py --check         # exit 1 if it has drifted
 
 PATH is a `GenBench2_paper` checkout; `$GB_AUDIT_RUN` is used when `--source` is
-omitted. Without either it exits 2 rather than reporting no drift against nothing,
-which is the distinction `gb_leaderboard`'s regenerators make when the package they
-compare against is missing.
+omitted. Without either it exits 2 rather than reporting no drift against nothing.
 
-**This one cannot run in CI**, and that is worth being loud about. Its source is a
-private repository no runner can reach, so `--check` here is a maintainer command.
-What CI can check is everything downstream of `data/`: that the tables agree with
-each other, that the catalogue is what they build, and that the site is what the
-catalogue renders.
+**This one cannot run in CI.** Its source is a private repository no runner can
+reach, so `--check` here is a maintainer command. What CI checks is everything
+downstream of `data/`: that the tables agree, that the catalogue is what they build,
+and that the site is what the catalogue renders.
 """
 
 from __future__ import annotations
@@ -144,10 +135,8 @@ def digest_bytes(payload: bytes) -> str:
 def read_splits(root: Path) -> list[dict[str, str]]:
     """Every split of every included dataset, from the QC run's own metadata.
 
-    The seven files cover exactly the 93 included datasets and their 234 splits,
-    which is the same set the rollup covers -- `audit.read()` asserts that rather
-    than trusting it, because two files agreeing about a corpus is the thing that
-    stops being true first when a dataset is added.
+    The seven files cover the same 93 datasets and 234 splits the rollup covers,
+    which `audit.read()` asserts rather than trusts.
     """
     rows: list[dict[str, str]] = []
     directory = root / METADATA_DIR
@@ -179,12 +168,10 @@ def read_splits(root: Path) -> list[dict[str, str]]:
 def read_reports(root: Path, known: dict[str, tuple[str, str]]) -> list[dict[str, str]]:
     """The 93 report archives, listed rather than predicted.
 
-    An archive is matched to a dataset by looking its whole stem up in `known`,
-    not by splitting on the first hyphen. `<collection>-<dataset>.zip` is not a
-    decodable name: `genomic-benchmarks-human_ocr_ensembl.zip` splits into
-    collection `genomic` on the obvious rule, and did, silently, until seven
-    datasets went missing from the manifest. The record is flat and the join is
-    one-way, so the rollup's own pairs are what the name is resolved against.
+    An archive is matched by looking its whole stem up in `known`, not by splitting
+    on the first hyphen: `<collection>-<dataset>.zip` is not a decodable name, and
+    `genomic-benchmarks-human_ocr_ensembl.zip` splits into collection `genomic` on
+    the obvious rule. The join runs one way, against the rollup's own pairs.
     """
     directory = root / ARCHIVE_DIR
     rows = []

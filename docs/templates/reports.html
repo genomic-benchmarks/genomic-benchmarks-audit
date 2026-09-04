@@ -8,13 +8,20 @@
     are {{n_reports}} of them across {{n_datasets}} datasets.
   </p>
   {{report_state}}
+  {{route_note}}
   <p>
-    They are fetched rather than committed. The archives are 90 MB and the
-    reports unpack to far more, so a clone does not carry them; instead
+    They are downloaded, not committed, and there is one copy of them. The
+    archives are 90 MB and unpack to far more, so a clone does not carry them;
+    <code>gb-audit fetch</code> brings them from Zenodo straight into the built
+    site, at the address this page links to. Nothing stages or copies them
+    anywhere else, so the record is the only place they come from.
+  </p>
+  <p>
     <code>data/reports.csv</code> records each archive's size, digest and every
-    path inside it, which is how this page can list what exists whether or not it
-    was downloaded, and how <code>gb-audit fetch</code> can verify each archive
-    before unpacking it.
+    path inside it. That is how this page can list what exists whether or not it
+    was downloaded, and how each archive is checked before it is unpacked: an
+    archive whose bytes are not the bytes the manifest describes is refused
+    rather than published.
   </p>
 </section>
 

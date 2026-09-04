@@ -15,40 +15,37 @@ combined tables:
     sequences of `<b>` that were found in `<a>`. This is the report that makes a
     leaked held-out sequence identifiable rather than merely countable.
 
-**They are fetched, not committed.** 91 MB of archives holding 423 files; a
-repository that carried them would be one where every clone pays for the whole
-audit to read one page, and where the reports could drift from the tables that
-summarise them without a diff saying so. `data/reports.csv` carries the manifest --
-name, size, digest and every path inside -- so the site knows exactly what exists
-before anything is downloaded, and `scripts/fetch_reports.py` verifies each archive
-against its digest before unpacking it.
+**Fetched, not committed, and fetched exactly once.** 91 MB of archives holding
+423 files, downloaded straight into the built site at `site/qc-reports/` -- the URL
+the pages link to -- so there is one copy on disk and one place it came from.
+`data/reports.csv` is the manifest, and `scripts/fetch_reports.py` verifies each
+archive against its digest before unpacking it.
 
 **A page renders whether or not they are there, and says which.** The build must
-work with no network: CI has none, and a contributor should be able to see the site
-before spending 91 MB. So `Availability` is resolved per dataset at render time and
-the report page has two honest states -- the reader is either given the report or
-told where it is and why it is not here. What it is never given is a link that
-404s, which is also why `zenodo.registered()` is consulted rather than assumed.
+work with no network. `state()` is resolved per dataset at render time, and the
+reader is either given the report or told where it is and why it is not here --
+never a link that 404s.
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import audit, zenodo
+from . import audit
 
-REPO = Path(__file__).resolve().parents[2]
-
-# Where `fetch_reports.py` unpacks, and what `build_site.py` copies from. Inside
-# `docs/` because that is the site's source directory, and gitignored because it
-# is 91 MB of fetched bytes rather than anything this repository authored.
-UNPACKED = REPO / "docs" / "reports"
-
-# Where they land in the built site. One directory per archive, named the way the
-# archive names itself, so a reader can read the dataset off the URL and the path
-# inside the site is the path inside the record.
+# Where they live in the built site, which is the only place they live. One
+# directory per archive, named the way the archive names itself, so a reader can
+# read the dataset off the URL and the path inside the site is the path inside the
+# record. `fetch_reports.py` unpacks here and `site.build()` renders around what it
+# finds; neither copies the other's bytes.
 SITE_DIR = "qc-reports"
+
+
+def report_root(site: Path) -> Path:
+    """The reports directory of a built site, given the site's root."""
+    return site / SITE_DIR
 
 
 @dataclass(frozen=True)
@@ -86,10 +83,8 @@ class Report:
 def reports_for(dataset: audit.Dataset) -> tuple[Report, ...]:
     """Every report the run rendered for one dataset, class reports first.
 
-    Built from the manifest rather than from the split list, because the manifest
-    was read off the archives: a dataset whose second sequence column was measured
-    and whose report was not written would otherwise be linked to a file that does
-    not exist.
+    From the manifest rather than the split list: the manifest was read off the
+    archives, so it lists reports that exist rather than reports that should.
     """
     if dataset.reports is None:
         return ()
@@ -113,10 +108,8 @@ def reports_for(dataset: audit.Dataset) -> tuple[Report, ...]:
 def _pair(stem: str, dataset: audit.Dataset) -> tuple[str, str]:
     """`train_test_leftout` -> `("train", "test_leftout")`.
 
-    Split names contain underscores, so the filename is ambiguous on its own and
-    is resolved against the splits this dataset actually has. Longest match first,
-    so `train_test_leftout` does not resolve to `train` + `test` and leave
-    `_leftout` behind.
+    Split names contain underscores, so the stem is ambiguous alone and is
+    resolved against this dataset's splits, longest match first.
     """
     names = sorted(dataset.split_names, key=len, reverse=True)
     for first in names:
@@ -130,41 +123,29 @@ def _pair(stem: str, dataset: audit.Dataset) -> tuple[str, str]:
     return (stem, "")
 
 
-@dataclass(frozen=True)
-class Availability:
-    """Whether one dataset's reports can actually be read from this build."""
+def present(root: Path, stem: str, paths: Iterable[str]) -> bool:
+    """Whether every report this archive lists is on disk under `root`.
 
-    unpacked: bool
-    archive_url: str | None
-    record_url: str | None
-
-    @property
-    def state(self) -> str:
-        """`unpacked`, `linked` or `unpublished` -- three pages, not two.
-
-        `linked` is a build that did not fetch the reports but can send a reader
-        to the record. `unpublished` is a build that cannot do even that, because
-        the record does not exist yet. Collapsing them would either promise a
-        download that is not there or hide one that is.
-        """
-        if self.unpacked:
-            return "unpacked"
-        return "linked" if self.archive_url else "unpublished"
+    Every file, not the directory: an interrupted unpack leaves a directory that
+    exists and is short.
+    """
+    directory = root / stem
+    return all((directory / path).is_file() for path in paths)
 
 
-def availability(dataset: audit.Dataset, root: Path | None = None) -> Availability:
-    """Where this dataset's reports can be read from, for this build."""
-    root = UNPACKED if root is None else root
-    if dataset.reports is None:
-        return Availability(unpacked=False, archive_url=None, record_url=None)
-    directory = root / archive_stem(dataset)
-    present = directory.is_dir() and any(directory.rglob("*.html"))
-    published = zenodo.registered()
-    return Availability(
-        unpacked=present,
-        archive_url=zenodo.file_url(dataset.reports.archive) if published else None,
-        record_url=zenodo.public_record_url() if published else None,
-    )
+def state(unpacked: bool, published: bool) -> str:
+    """`unpacked`, `linked` or `unpublished` -- three pages, not two.
+
+    `linked` did not fetch the reports but can send a reader to the record;
+    `unpublished` cannot do even that. Collapsing them would either promise a
+    download that is not there or hide one that is.
+
+    A fact about the machine that rendered, not about the run, which is why it is
+    computed here and is not a field of the committed catalogue.
+    """
+    if unpacked:
+        return "unpacked"
+    return "linked" if published else "unpublished"
 
 
 def archive_stem(dataset: audit.Dataset) -> str:
@@ -177,20 +158,3 @@ def archive_stem(dataset: audit.Dataset) -> str:
 def site_path(dataset: audit.Dataset, report: Report) -> str:
     """Where one report sits in the built site, relative to its root."""
     return f"{SITE_DIR}/{archive_stem(dataset)}/{report.path}"
-
-
-def unpacked_datasets(root: Path | None = None) -> set[str]:
-    """Which archives have been unpacked, by directory name.
-
-    Cheap enough to call once per build and answer 93 questions from, which is
-    what `build_site.py` does -- `availability()` per dataset would stat the same
-    tree 93 times.
-    """
-    root = UNPACKED if root is None else root
-    if not root.is_dir():
-        return set()
-    return {
-        directory.name
-        for directory in root.iterdir()
-        if directory.is_dir() and any(directory.rglob("*.html"))
-    }

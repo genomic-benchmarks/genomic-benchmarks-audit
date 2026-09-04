@@ -12,16 +12,12 @@ authors = [{ name = "Katarina Gresova" }]
 
 # The standard library, and nothing else.
 #
-# That is a property worth protecting rather than an accident of being early. This
-# repository renders one archived measurement run: every input is a committed file
-# under `data/`, every output is text, and the whole build has to still produce the
-# same bytes years after the run it describes. A dependency is a thing that can
-# stop resolving, and there is no chart, table or page here that needs one --
+# This repository renders one archived measurement run and has to still produce
+# the same bytes years from now; a dependency is a thing that can stop resolving.
 # `charts.py` writes SVG with arithmetic, `catalogue.py` writes JSON with `json`,
-# and `site.py` fills templates with `re.sub`.
-#
-# The one thing that does reach the network is `zenodo.py`, and it uses
-# `urllib.request`. It is never on the path that renders a page.
+# `site.py` fills templates with `re.sub`, and `zenodo.py` -- the one thing that
+# reaches a network, never on the path that renders a page -- uses
+# `urllib.request`.
 dependencies = []
 
 [project.optional-dependencies]
@@ -33,12 +29,10 @@ gb-audit = "gb_audit.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-# No package data, deliberately. `data/` is a site build input rather than
-# something the wheel carries, for the reason `gb_leaderboard.qc` gives about its
-# own snapshot: every module here takes a path and defaults to the checkout's
-# `data/`, because the only thing this package does is render a repository into a
-# site. Shipping the archived run inside a wheel would create a second copy that
-# nothing compares against the first.
+# No package data. `data/` is a build input rather than something the wheel
+# carries: every module takes a path and defaults to the checkout's `data/`, and
+# shipping the archived run inside a wheel would be a second copy nothing compares
+# against the first.
 [tool.setuptools.package-data]
 gb_audit = []
 

@@ -1,14 +1,10 @@
 /* The site's styling. One file, no framework, no webfont request.
  *
- * Inter is named first because the organisation site uses it, but it is asked
- * for by name rather than fetched: a Google Fonts link would be a render-time
- * request to a third party, which is the one thing docs/vendor/README.md says
- * this site does not do. A reader with Inter installed sees Inter; everyone else
- * sees their system's interface font, which is what that stack is for.
+ * Inter is named first, matching the organisation site, but asked for by name
+ * rather than fetched: a Google Fonts link is a render-time request to a third
+ * party. Everyone without it sees their system's interface font.
  *
- * The accent is the teal the organisation site uses. Flags carry colour, but
- * never colour alone -- every flag is also its own word, because a flag is the
- * tool's output and a reader has to be able to say which one it was.
+ * Flags carry colour, but never colour alone -- every flag is also its own word.
  */
 
 :root {

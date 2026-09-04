@@ -11,45 +11,39 @@ say the same things at three grains:
 `combined_splits_results.csv`
     141 result rows. One per ordered pair of a dataset's splits, carrying the
     percentage of each side found in the other. Plus 92 rollup rows the QC run
-    wrote for its own report, which are skipped here: reading them in would file a
-    flag under a missing check and count each dataset's worst flag a second time in
-    every tally that walks the results.
+    wrote for its own report, skipped here: reading them in would count each
+    dataset's worst flag a second time.
 
 `dataset_level_summary.csv`
     93 rows, one per dataset. The two tables above, rolled up.
 
-**The rollup is a statement about the reference split, and the site has to say
-so.** `max_probe_auroc` is the strongest probe's AUROC *on that dataset's reference
-split* -- `train` for 92 datasets and `test` for the one that ships no train split
--- and each `flag: <check>` is that check's flag on the same split. It is not a
-maximum over splits, and the difference is not decorative: `BEACON:Isoform` rolls
-up 0.749 while its `val` split reaches 0.757. A page that printed the rollup's
-figure under a heading naming a different split would be reporting a measurement
-that was never made there. So `Dataset` carries the per-split measurements as well,
-and every rendered figure names the split it was measured on.
+**The rollup is a statement about the reference split**, `train` for 92 datasets
+and `test` for the one that ships no train split -- not a maximum over splits.
+`BEACON:Isoform` rolls up 0.749 while its `val` split reaches 0.757, so a page
+printing the rollup under a heading naming another split would report a measurement
+never made there. `Dataset` carries the per-split values too, and every figure
+names its split.
 
 **Nothing here is trusted that can be recomputed.** `read()` derives all ten flags,
 `max_probe_auroc`, `strongest_probe` and the leakage summary from the two combined
-tables and compares them against the rollup, row by row. On the published run all
-93 agree exactly. That check is worth its cost because the three tables are copied
-in from a run this repository cannot re-execute: a copy that lost a column, or a
-hand edit that moved a flag and left the summary beside it alone, is otherwise a
-page that disagrees with itself and says nothing about it.
+tables and compares them against the rollup row by row; on the published run all 93
+agree exactly. The tables are copied in from a run this repository cannot
+re-execute, and a copy that lost a column is otherwise a page that disagrees with
+itself in silence.
 
 Two distinctions the reader has to keep:
 
 `Unknown` is not a blank.
-    `Unknown` is the tool's fourth flag -- a check that ran and could not be scored,
-    because a class fell under its sequence floor. It occurs 66 times. A blank is a
-    check that had nothing to run on at all: `miRBench:AGO2_eCLIP_Klimentova2022`
-    ships one split, so the leakage scan had no pair to compare and its cell is
-    empty. Read as `Pass`, either would claim a screening that did not happen.
+    `Unknown` is the tool's fourth flag: a check that ran and could not be scored,
+    because a class fell under its sequence floor. It occurs 66 times. A blank had
+    nothing to run on at all -- `miRBench:AGO2_eCLIP_Klimentova2022` ships one
+    split, so the leakage scan had no pair. Read as `Pass`, either would claim a
+    screening that did not happen.
 
 Worst-of over four values has no honest single answer.
-    So `rollup()` returns the worst flag over the checks that *scored*, plus how
-    many did not, and `Unknown` survives as a value only when nothing scored.
-    Ranking it above `Fail` overstates, below `Pass` understates, and dropping it
-    hides that a check did not run.
+    `rollup()` returns the worst flag over the checks that *scored*, plus how many
+    did not. Ranking `Unknown` above `Fail` overstates, below `Pass` understates,
+    and dropping it hides that a check did not run.
 """
 
 from __future__ import annotations
@@ -142,12 +136,9 @@ ROLLUP_COLUMNS = (
 class RunInvalid(ValueError):
     """The archived run does not say what a run of this instrument can say.
 
-    Raised on read rather than tolerated. Every failure it catches is either a
-    file that was edited by hand or a copy that lost something on the way in --
-    a flag outside the tool's four, a rollup that disagrees with the table it
-    summarises, a dataset in one file and not another. The panel is the strongest
-    claim these pages make, and a number that reached one without an origin is
-    worse than a build that stops.
+    A flag outside the tool's four, a rollup that disagrees with the table it
+    summarises, a dataset in one file and not another. Raised on read: a number
+    that reached a page without an origin is worse than a build that stops.
     """
 
 
@@ -169,12 +160,9 @@ def worst_flag(flags: Iterable[str | None]) -> str | None:
 def rollup(flags: Sequence[str | None]) -> dict:
     """The worst flag over the checks that scored, and how many did not.
 
-    `Unknown` never competes with a verdict: one `Fail` and five `Unknown`s is a
-    `Fail`, exactly as it would be with five checks that never ran. `Unknown`
-    survives only when there is nothing else to roll up. `flag` is None when no
-    result was recorded at all, which is a different statement from "recorded,
-    but unscorable" -- and the two must not be collapsed, because one means the
-    check had nothing to run on and the other means it ran.
+    One `Fail` and five `Unknown`s is a `Fail`; `Unknown` survives only when there
+    is nothing else to roll up. `flag` is None when nothing was recorded at all,
+    which means the check had nothing to run on rather than that it ran.
     """
     scored = [flag for flag in flags if flag in SEVERITY]
     unknown = [flag for flag in flags if flag == UNKNOWN]
@@ -204,10 +192,8 @@ class Measurement:
     """One class-distribution check, on one split of one dataset.
 
     `au_roc`, `au_pr` and `accuracy` are `None` on the three integrity checks,
-    which return a flag and no number: "these two classes share 14 sequences" is
-    a count, not a separability. Absent is rendered as absent -- formatting it as
-    `0.000` would publish the most reassuring possible figure in place of no
-    figure at all.
+    which return a flag and no number. Absent is rendered as absent: `0.000` would
+    be the most reassuring possible figure in place of no figure at all.
     """
 
     check: str
@@ -226,17 +212,11 @@ class Measurement:
 class LeakageComparison:
     """One ordered pair of splits, scanned for shared sequences.
 
-    The tool's own words, kept: it searches the held-out split (`query_split`)
-    against the split the model trained on (`target_split`) with MMseqs2, so
-    `leaked_queries_pct` is *the percentage of the held-out rows that are also in
-    train* -- the number that decides whether a score means anything -- and
-    `leaked_targets_pct` is the same overlap counted the other way, which is
-    smaller whenever train is the larger split.
-
-    Naming both sides matters more than it looks. The query side is `val` rather
-    than `test` on 25 of the 93 datasets, so a page that said "the test split"
-    above a rollup figure would describe the wrong split on a quarter of the
-    corpus.
+    The tool searches the held-out split (`query_split`) against the trained-on
+    split (`target_split`), so `leaked_queries_pct` is the percentage of held-out
+    rows also in train, and `leaked_targets_pct` the same overlap counted the other
+    way. Both sides are named because the query side is `val` rather than `test` on
+    25 of the 93 datasets.
     """
 
     query_split: str
@@ -510,11 +490,8 @@ def _read_measurements(path: Path) -> dict[tuple[str, str], list[Measurement]]:
 def _read_leakage(path: Path) -> dict[tuple[str, str], list[LeakageComparison]]:
     """The 141 result rows, without the 92 rollup rows beside them.
 
-    The two are told apart by what they carry: a result has a check and a split
-    pair, a rollup has a `statistic` and neither. A row that is neither shape is
-    raised on rather than skipped -- a third kind, or a result row that lost its
-    check column, would otherwise vanish without a word, which is the one outcome
-    worse than either.
+    A result has a check and a split pair; a rollup has a `statistic` and neither.
+    A row of a third shape is raised on rather than skipped.
     """
     found: dict[tuple[str, str], list[LeakageComparison]] = {}
     for row in _rows(path):
@@ -583,13 +560,9 @@ def _read_reports(path: Path) -> dict[tuple[str, str], Reports]:
 def _verify(dataset: Dataset) -> None:
     """Recompute the rollup from the tables it summarises, and compare.
 
-    Nine class flags, the leakage flag, the two summary flags, the strongest probe
-    and its AUROC, and the two leaked percentages -- all of them are functions of
-    the two combined tables plus the reference split, and all thirteen are stated
-    in the rollup as well. Checking them costs one pass over 2,106 rows and buys
-    the only guarantee available here: the tables were copied whole, and nothing
-    between the run and this repository moved a number without moving the ones
-    that follow from it.
+    Thirteen values that are functions of the two combined tables plus the
+    reference split, and are stated in the rollup as well. One pass over 2,106
+    rows, buying the only guarantee available here: the tables were copied whole.
     """
     where = dataset.benchmark_id
     reference = dataset.reference_split
@@ -799,15 +772,13 @@ def _cover(
 ) -> None:
     """Both files describe the same corpus, or the build stops naming the gap.
 
-    A dataset in the rollup and not in a table beside it renders an entry with an
-    empty section; one in a table and not in the rollup is a row nobody ever sees
-    and nobody notices is stale. Both are silent, so neither is tolerated.
+    A dataset in the rollup and not in a table renders an empty section; one in a
+    table and not in the rollup is a row nobody sees and nobody notices is stale.
 
     `allow_missing` is the leakage table's one exception:
-    `miRBench:AGO2_eCLIP_Klimentova2022` ships a `test` split and nothing to
-    compare it against, so the scan produced no row for it. That is a fact about
-    the corpus rather than a gap in the copy, and it is bounded at one so a second
-    dataset losing its comparisons is still a failure.
+    `miRBench:AGO2_eCLIP_Klimentova2022` has one split and nothing to compare it
+    against. Bounded at one, so a second dataset losing its comparisons still
+    fails.
     """
     ours = {(d.collection, d.dataset_name) for d in datasets.values()}
     theirs = set(other)

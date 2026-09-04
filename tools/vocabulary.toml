@@ -16,16 +16,12 @@
 
 [settings]
 paths = ["docs", "README.md", "VOCABULARY.md", "data/README.md"]
-# `docs/reports/` is deliberately reachable only through this exclude. It holds
-# 423 documents written by genomic-benchmarks-qc, not by this repository, and
-# they are published unchanged -- rendering the tool's own words through a filter
-# would make the site's copy of a report differ from the report. The site frames
-# them; it does not speak for them.
-#
-# `site/` is excluded for a duller reason: it is a render of `docs/`, so every
-# hit in it is a hit already reported against the template it came from, at a
-# line number that does not exist in any file a person can edit.
-exclude = ["docs/reports", "site"]
+# `site/` is a render of `docs/` plus the 423 reports fetched into it. Every hit
+# in the render is a hit already reported against the template it came from, at a
+# line number no editable file has; and the reports are written by
+# genomic-benchmarks-qc, not here, and are published unchanged. Rewording a tool's
+# output would make the site's copy of a report differ from the report.
+exclude = ["site"]
 
 # ---------------------------------------------------------------- errors ---
 
