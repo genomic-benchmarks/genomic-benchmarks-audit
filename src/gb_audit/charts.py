@@ -81,9 +81,9 @@ CHECK_SHORT = {
 }
 
 KIND_BANDS = (
-    ("probe checks", 0, len(audit.PROBE_CHECKS)),
-    ("integrity checks", len(audit.PROBE_CHECKS), len(audit.CLASS_CHECKS)),
-    ("leakage scan", len(audit.CLASS_CHECKS), len(audit.CHECKS)),
+    ("probe checks", 0, len(audit.DISPLAY_PROBE_CHECKS)),
+    ("integrity checks", len(audit.DISPLAY_PROBE_CHECKS), len(audit.DISPLAY_CLASS_CHECKS)),
+    ("leakage scan", len(audit.DISPLAY_CLASS_CHECKS), len(audit.DISPLAY_CHECKS)),
 )
 
 
@@ -304,15 +304,6 @@ def _wrap(text: str, width: int, lines: int = 2) -> list[str]:
     return out
 
 
-def severity_key(dataset: Dataset) -> tuple:
-    rank = {"Fail": 0, "Warning": 1, "Pass": 2, audit.UNKNOWN: 3, None: 4}
-    return (
-        rank.get(dataset.overall_verdict, 4),
-        -(dataset.max_probe_auroc or 0.0),
-        dataset.dataset_name.lower(),
-    )
-
-
 # ------------------------------------------------------- corpus-wide figures ---
 
 
@@ -324,7 +315,7 @@ def check_bars(run: Run) -> Figure:
     """
     datasets = list(run.datasets.values())
     counts = []
-    for check in audit.CHECKS:
+    for check in audit.DISPLAY_CHECKS:
         flags = [d.flags[check] for d in datasets]
         counts.append(
             {
@@ -870,7 +861,7 @@ def dataset_check_grid(dataset: Dataset) -> Figure:
     row_h, pitch = 22, 28
     band_h, header_h = 14, 26
     top = 8 + band_h + header_h
-    width = label_w + col_w * len(audit.CLASS_CHECKS) + 8
+    width = label_w + col_w * len(audit.DISPLAY_CLASS_CHECKS) + 8
     height = top + len(splits) * pitch + 40
 
     body = []
@@ -879,7 +870,7 @@ def dataset_check_grid(dataset: Dataset) -> Figure:
         x1 = label_w + stop * col_w - (col_w - cell_w)
         body.append(f'<line x1="{x0:.1f}" y1="14" x2="{x1:.1f}" y2="14" stroke="{MUTED}" stroke-width="1"/>')
         body.append(_text((x0 + x1) / 2, 10, name, "band", "middle"))
-    for index, check in enumerate(audit.CLASS_CHECKS):
+    for index, check in enumerate(audit.DISPLAY_CLASS_CHECKS):
         x = label_w + index * col_w + cell_w / 2
         line1, line2 = CHECK_SHORT[check]
         body.append(_text(x, 8 + band_h + 11, line1, "colhead", "middle"))
@@ -891,7 +882,7 @@ def dataset_check_grid(dataset: Dataset) -> Figure:
         mark = "  ◂ reference" if split == dataset.reference_split else ""
         body.append(_text(label_w - 10, y + row_h - 6, f"{split}{mark}", "rowlab", "end"))
         cells = []
-        for index, check in enumerate(audit.CLASS_CHECKS):
+        for index, check in enumerate(audit.DISPLAY_CLASS_CHECKS):
             found = scored.get((split, check), [])
             flag = audit.worst_flag([m.flag for m in found])
             if flag is None and any(m.flag == audit.UNKNOWN for m in found):
@@ -913,7 +904,7 @@ def dataset_check_grid(dataset: Dataset) -> Figure:
         width,
         height,
         f"Checks by split — {dataset.benchmark_id}",
-        f"A grid of {len(splits)} split rows by {len(audit.CLASS_CHECKS)} check "
+        f"A grid of {len(splits)} split rows by {len(audit.DISPLAY_CLASS_CHECKS)} check "
         f"columns for {dataset.benchmark_id}.",
         "".join(body),
         _hatch_def(),
@@ -935,7 +926,7 @@ def dataset_check_grid(dataset: Dataset) -> Figure:
         ),
         svg=svg,
         table=_table(
-            ["Split"] + [CHECK_SHORT[c][0] + " " + CHECK_SHORT[c][1] for c in audit.CLASS_CHECKS],
+            ["Split"] + [CHECK_SHORT[c][0] + " " + CHECK_SHORT[c][1] for c in audit.DISPLAY_CLASS_CHECKS],
             rows_out,
             "Flag and, where measured, the strongest probe AUROC per check per split.",
         ),
@@ -969,7 +960,7 @@ def dataset_probe_bars(dataset: Dataset) -> Figure:
     left, right, top, bottom = 52, 16, 34, 92
     plot_w, plot_h = 700, 200
     width, height = left + plot_w + right, top + plot_h + bottom
-    group = plot_w / len(audit.PROBE_CHECKS)
+    group = plot_w / len(audit.DISPLAY_PROBE_CHECKS)
     bar_w = min(24.0, (group - 12) / max(len(splits), 1) - 2)
 
     body = []
@@ -982,7 +973,7 @@ def dataset_probe_bars(dataset: Dataset) -> Figure:
     body.append(_text(6, top - 16, "AUROC", "axis"))
 
     rows_out = []
-    for index, check in enumerate(audit.PROBE_CHECKS):
+    for index, check in enumerate(audit.DISPLAY_PROBE_CHECKS):
         base = left + index * group
         span = len(splits) * (bar_w + 2) - 2
         start = base + (group - span) / 2

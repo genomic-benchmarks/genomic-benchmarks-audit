@@ -87,8 +87,29 @@ def _cell(dataset: Dataset, check: str, prefix: str) -> str:
     )
 
 
+def _row_key(dataset: Dataset) -> tuple:
+    """Where a dataset sits inside its collection: worst-first, the paper's way.
+
+    How many of the ten checks flagged at all, then how many of those flagged
+    Fail, then the name. It is the sort the manuscript's supplementary matrix
+    uses, so a dataset is in the same place in both -- and the name is compared
+    as it is written, because that figure sorts in pandas and pandas orders
+    capitals before lower case.
+
+    Counting Warning and Fail together first, rather than ranking by the rollup
+    flag, is what makes the gradient inside a block visible: a rollup of Fail is
+    56 of the 93 datasets, so it sorts more than half the corpus into one tie.
+    """
+    flags = [dataset.flags[check] for check in audit.CHECKS]
+    return (
+        -sum(1 for flag in flags if flag in ("Warning", "Fail")),
+        -sum(1 for flag in flags if flag == "Fail"),
+        dataset.dataset_name,
+    )
+
+
 def _row(dataset: Dataset, prefix: str) -> str:
-    cells = "".join(_cell(dataset, check, prefix) for check in audit.CHECKS)
+    cells = "".join(_cell(dataset, check, prefix) for check in audit.DISPLAY_CHECKS)
     href = f"{prefix}datasets/{_esc(catalogue.slug(dataset))}.html"
     return (
         f'<tr data-collection="{_esc(dataset.collection)}" '
@@ -115,7 +136,7 @@ def _head(prefix: str) -> str:
     bands.append("</tr>")
 
     cols = ['<tr class="mx-heads"><th scope="col" class="mx-corner">Dataset</th>']
-    for check in audit.CHECKS:
+    for check in audit.DISPLAY_CHECKS:
         line1, line2 = charts.CHECK_SHORT[check]
         cols.append(
             f'<th scope="col" class="mx-head">'
@@ -183,7 +204,10 @@ def flag_matrix(run: Run, copy: dict, prefix: str = "") -> str:
 
     Grouped by collection and ordered worst-first inside a group, so the shape of
     the audit -- which checks flag broadly, which collections flag together -- is
-    there before a single number is read.
+    there before a single number is read. Both orderings are the manuscript's:
+    collections alphabetically, rows by `_row_key`, columns in
+    `audit.DISPLAY_CHECKS`. This grid and Supplementary Figure 2 are the same
+    figure, and they are laid out the same way on purpose.
 
     `prefix` is how far the page sits below the site root, the same value
     `base.html` writes onto `<body data-root>`: this figure renders on more than
@@ -200,10 +224,10 @@ def flag_matrix(run: Run, copy: dict, prefix: str = "") -> str:
     sizes = {c: len(by_collection[c]) for c in order}
 
     words = copy["matrix"]
-    span = len(audit.CHECKS) + 1
+    span = len(audit.DISPLAY_CHECKS) + 1
     bodies = []
     for collection in order:
-        members = sorted(by_collection[collection], key=charts.severity_key)
+        members = sorted(by_collection[collection], key=_row_key)
         query = urllib.parse.urlencode({"collection": collection})
         href = _esc(f"{prefix}catalogue.html?{query}")
         rows = "".join(_row(dataset, prefix) for dataset in members)

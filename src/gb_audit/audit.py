@@ -84,6 +84,49 @@ CLASS_CHECKS = PROBE_CHECKS + INTEGRITY_CHECKS
 LEAKAGE_SCAN = "Split leakage"
 CHECKS = CLASS_CHECKS + (LEAKAGE_SCAN,)
 
+# The order the ten are *read* in, which is not the order they arrive in.
+#
+# `CHECKS` above is a statement about the rollup file: those columns, in that
+# order, or the build stops. This is a statement about a reader, and it is the
+# manuscript's -- Supplementary Figure 2 sets the three composition probes first,
+# then length, then the two positional ones; the two duplicate checks before the
+# alphabet check; the leakage scan last. The grid on this site is that figure in
+# HTML, so a reader with one open beside the other should not have to find a
+# column twice.
+DISPLAY_PROBE_CHECKS = (
+    "Per sequence GC content",
+    "Per sequence nucleotide content",
+    "Per sequence dinucleotide content",
+    "Sequence lengths",
+    "Per position nucleotide content",
+    "Per position reversed nucleotide content",
+)
+DISPLAY_INTEGRITY_CHECKS = (
+    "Sequence Duplications within Labels",
+    "Duplicate Sequences between Labels",
+    "Unique bases",
+)
+DISPLAY_CLASS_CHECKS = DISPLAY_PROBE_CHECKS + DISPLAY_INTEGRITY_CHECKS
+DISPLAY_CHECKS = DISPLAY_CLASS_CHECKS + (LEAKAGE_SCAN,)
+
+# Both orders are written out by hand, so they are checked against each other on
+# import rather than trusted. Two things have to hold: the same ten names, and
+# each family in one unbroken run, because the grid's band row spans its columns
+# by position -- a check that moved between families would put "integrity checks"
+# over a probe rather than fail.
+if sorted(DISPLAY_CHECKS) != sorted(CHECKS):
+    raise RuntimeError(
+        "DISPLAY_CHECKS must be a reordering of CHECKS; they differ at "
+        f"{sorted(set(DISPLAY_CHECKS) ^ set(CHECKS))}"
+    )
+if sorted(DISPLAY_PROBE_CHECKS) != sorted(PROBE_CHECKS) or sorted(
+    DISPLAY_INTEGRITY_CHECKS
+) != sorted(INTEGRITY_CHECKS):
+    raise RuntimeError(
+        "DISPLAY_CHECKS must keep each family in one run: the band row spans "
+        "columns by position and cannot label a family that is split"
+    )
+
 FLAGS = ("Pass", "Warning", "Fail", "Unknown")
 UNKNOWN = "Unknown"
 

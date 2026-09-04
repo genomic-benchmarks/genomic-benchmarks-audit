@@ -216,8 +216,13 @@ def build(run: Run | None = None) -> dict:
     return {
         "schema_version": SCHEMA_VERSION,
         "provenance": provenance(run),
+        # In reading order, not file order: this list is what the checks table and
+        # the catalogue's row panel iterate, and the grid is laid out from
+        # `audit.DISPLAY_CHECKS` in Python. One order for the ten checks
+        # everywhere a reader meets them, whichever end renders them.
         "checks": [
-            {"name": name, "kind": audit.check_kind(name)} for name in audit.CHECKS
+            {"name": name, "kind": audit.check_kind(name)}
+            for name in audit.DISPLAY_CHECKS
         ],
         "flags": list(audit.FLAGS),
         "totals": totals(run),

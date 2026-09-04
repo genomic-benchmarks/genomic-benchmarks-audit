@@ -10,10 +10,6 @@
   },
   "checks": [
     {
-      "name": "Sequence lengths",
-      "kind": "probe"
-    },
-    {
       "name": "Per sequence GC content",
       "kind": "probe"
     },
@@ -26,6 +22,10 @@
       "kind": "probe"
     },
     {
+      "name": "Sequence lengths",
+      "kind": "probe"
+    },
+    {
       "name": "Per position nucleotide content",
       "kind": "probe"
     },
@@ -34,15 +34,15 @@
       "kind": "probe"
     },
     {
-      "name": "Unique bases",
-      "kind": "integrity"
-    },
-    {
       "name": "Sequence Duplications within Labels",
       "kind": "integrity"
     },
     {
       "name": "Duplicate Sequences between Labels",
+      "kind": "integrity"
+    },
+    {
+      "name": "Unique bases",
       "kind": "integrity"
     },
     {
