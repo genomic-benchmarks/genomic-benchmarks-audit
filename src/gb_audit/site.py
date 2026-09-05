@@ -925,6 +925,109 @@ def n_dataset_reports(dataset: dict) -> int:
     return len(entry["files"]) if entry else 0
 
 
+# ------------------------------------------------------- licence and credit ---
+
+
+def _doi_shown(doi: str) -> str:
+    """A DOI as it is written in a bibliography, not as it is resolved."""
+    for prefix in ("https://doi.org/", "http://doi.org/", "https://dx.doi.org/"):
+        if doi.startswith(prefix):
+            return doi[len(prefix):]
+    return doi
+
+
+def licence_glance(dataset: dict) -> str:
+    """The licence in the head facts, pointing at the section that qualifies it.
+
+    Named this high because it is a fact about the data rather than about the
+    measurements, and a reader deciding whether they may use a dataset should not
+    have to reach the foot of the page to find out.
+    """
+    source = dataset["source"]
+    if source is None:
+        return "&mdash;"
+    name = source["licence"] or "None stated"
+    return f'<a href="#source">{html.escape(name)}</a>'
+
+
+def licence_line(dataset: dict) -> str:
+    """The licence, linked to where its terms were read.
+
+    `None stated` rather than a blank or a dash: the absence is the fact, and it
+    is not the same fact as permissive.
+    """
+    source = dataset["source"]
+    if source is None:
+        return "&mdash;"
+    name = source["licence"]
+    if not name:
+        return "None stated"
+    if not source["licence_url"]:
+        return html.escape(name)
+    return (
+        f'<a href="{html.escape(source["licence_url"], quote=True)}">'
+        f"{html.escape(name)}</a>"
+    )
+
+
+def doi_link(dataset: dict) -> str:
+    """The DOI attribution is owed to, saying which of the two it is.
+
+    Two thirds of the corpus has no DOI of its own and inherits its collection's,
+    and a page that printed the inherited one unlabelled would read as though the
+    dataset had been published separately.
+    """
+    source = dataset["source"]
+    if source is None or not source["doi"]:
+        return "&mdash;"
+    whose = "the collection's" if source["inherits_doi"] else "this dataset's"
+    return (
+        f'<a href="{html.escape(source["doi"], quote=True)}">'
+        f'{html.escape(_doi_shown(source["doi"]))}</a> '
+        f'<span class="fine">&mdash; {whose}</span>'
+    )
+
+
+def source_files(dataset: dict) -> str:
+    """Each split's file, and the host serving it.
+
+    Per split because that is the grain the URL varies at -- 81 of the 93 datasets
+    are one file per split -- and it is the whole of the answer to "where do I get
+    this": the file, not the collection it belongs to.
+    """
+    items = []
+    for split in dataset["splits"]:
+        url = split.get("source_url")
+        if not url:
+            continue
+        parts = urllib.parse.urlsplit(url)
+        name = urllib.parse.unquote(parts.path.rsplit("/", 1)[-1]) or parts.netloc
+        items.append(
+            f'    <li><code>{html.escape(split["split"])}</code> &mdash; '
+            f'<a href="{html.escape(url, quote=True)}">{html.escape(name)}</a>'
+            f'<span class="fine">{html.escape(parts.netloc)}</span></li>'
+        )
+    if not items:
+        return part("source_files_absent", {})
+    return '<ul class="reports">\n' + "\n".join(items) + "\n  </ul>"
+
+
+def licence_terms(dataset: dict) -> str:
+    """Whether the files above are ours to serve, and the evidence for it.
+
+    One part per answer rather than one part with the answer substituted in: the
+    three say different things, and `unknown` says the one most easily lost --
+    that nobody has refused, only that nobody was asked.
+    """
+    source = dataset["source"]
+    if source is None:
+        return ""
+    return part(
+        f'source_{source["redistribution"]}',
+        {"note": html.escape(source["licence_note"])},
+    )
+
+
 def reports_cta(dataset: dict) -> str:
     """The offer of this dataset's reports, made at the top of its page.
 
@@ -1280,6 +1383,11 @@ def dataset_page(
             "split_rows": split_rows(dataset, copy),
             "report_items": report_items(dataset, copy, prefix="../"),
             "reports_cta": reports_cta(dataset),
+            "licence_glance": licence_glance(dataset),
+            "licence": licence_line(dataset),
+            "doi_link": doi_link(dataset),
+            "source_files": source_files(dataset),
+            "licence_terms": licence_terms(dataset),
             "pager": pager(dataset, document, copy),
             "nearby": nearby(dataset, document, copy),
             "collection_href": catalogue_href(

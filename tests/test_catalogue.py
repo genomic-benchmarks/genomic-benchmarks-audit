@@ -109,11 +109,31 @@ def test_a_blank_flag_is_a_none_not_a_zero(document):
 
 
 def test_no_timestamp_anywhere_in_the_document(document):
-    """Two builds of one commit must produce the same bytes."""
-    text = catalogue.render(document)
-    assert "generated" not in text.lower()
-    for key in document["provenance"]:
-        assert "time" not in key and "date" not in key
+    """Two builds of one commit must produce the same bytes.
+
+    Scanned over the document's keys rather than over its rendered text. The text
+    scan was the same check until the entries began carrying licence notes, which
+    are prose quoted from the sources: one of them says that the group who
+    *generated* these measurements published them without restriction. The word is
+    the source's and not this build's, and a build that stamped itself would do it
+    in a key.
+    """
+
+    def keys(node):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                yield key
+                yield from keys(value)
+        elif isinstance(node, list):
+            for value in node:
+                yield from keys(value)
+
+    for key in keys(document):
+        lowered = key.lower()
+        assert "generated" not in lowered, key
+        assert "time" not in lowered and "date" not in lowered, key
+
+    assert catalogue.render(catalogue.build()) == catalogue.render(document)
 
 
 def test_totals_agree_with_the_rows_they_summarise(document):
@@ -131,3 +151,61 @@ def test_totals_agree_with_the_rows_they_summarise(document):
 
 def test_render_is_stable(document):
     assert catalogue.render(document) == catalogue.render(document)
+
+
+# ------------------------------------------------------- licence and credit ---
+
+
+def test_every_dataset_says_what_it_may_be_used_for(document):
+    """The promise the Data availability statement makes, checked per dataset.
+
+    A page that names a collection and nothing else about it cannot republish it
+    "with the attribution they require", because it never says what that is.
+    """
+    for entry in document["datasets"]:
+        source = entry["source"]
+        assert source is not None, entry["benchmark_id"]
+        assert source["licence"], entry["benchmark_id"]
+        assert source["doi"].startswith("https://doi.org/"), entry["benchmark_id"]
+        assert source["collection_doi"].startswith("https://doi.org/")
+
+
+def test_redistribution_is_one_of_the_three_answers(document):
+    """`unknown` is not `denied`, and a fourth value would be published unread."""
+    for entry in document["datasets"]:
+        assert entry["source"]["redistribution"] in audit.REDISTRIBUTION
+
+
+def test_a_dataset_that_may_not_be_republished_says_why(document):
+    """A denial names who declined; without that it reads as this project's."""
+    withheld = [
+        d for d in document["datasets"] if d["source"]["redistribution"] != "permitted"
+    ]
+    assert len(withheld) == 16
+    for entry in withheld:
+        assert entry["source"]["licence_note"], entry["benchmark_id"]
+
+
+def test_the_inherited_doi_is_labelled_as_inherited(document):
+    """Two thirds of the corpus has no DOI of its own, and must not look as if
+    it does."""
+    inheriting = 0
+    for entry in document["datasets"]:
+        source = entry["source"]
+        assert source["inherits_doi"] == (source["doi"] == source["collection_doi"])
+        inheriting += source["inherits_doi"]
+    assert inheriting == 67
+
+
+def test_every_split_carries_a_route_back_to_its_file(document):
+    """Per split, because that is the grain it varies at.
+
+    For the sixteen datasets this project may not republish it is not a
+    convenience: it is the only copy of the data there is.
+    """
+    seen = 0
+    for entry in document["datasets"]:
+        for split in entry["splits"]:
+            assert split["source_url"].startswith("https://"), entry["benchmark_id"]
+            seen += 1
+    assert seen == 234

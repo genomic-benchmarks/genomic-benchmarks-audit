@@ -1,6 +1,6 @@
 # The archived run
 
-Thirteen CSVs and a `provenance.json`. This is the only input the site has: every
+Fourteen CSVs and a `provenance.json`. This is the only input the site has: every
 number on every page is computed from these files, and nothing here is written by
 hand.
 
@@ -10,9 +10,15 @@ rollup plus a joint model of the same features. `provenance.json` names all thre
 runs, because a page quoting a Core Set figure and a page quoting a flag are
 quoting two different pieces of work.
 
+One of the fourteen comes from none of them. `sources.csv` is read out of the
+corpus metadata records — the curation's own files, upstream of the first pipeline
+— because the licence a dataset is published under, the DOI its credit is owed to
+and the URL its files are served from are facts about the data rather than
+measurements of it, and no run computes any of the three.
+
 ## Why these are committed and the reports are not
 
-They are small — 340 KB in total, against 90 MB of report archives — and they are
+They are small — 520 KB in total, against 90 MB of report archives — and they are
 the files a change to a published number shows up in. A diff of
 `dataset_level_summary.csv` is a reviewable statement that a flag moved. A diff of
 423 rendered HTML documents is not.
@@ -34,7 +40,8 @@ alone, and `gb_audit/zenodo.py` is where its name is written down.
 | File | What it holds |
 |---|---|
 | `dataset_level_summary.csv` | One row per dataset: the rollup on its reference split. |
-| `splits.csv` | One row per split: its flags, its strongest probe. |
+| `splits.csv` | One row per split: its sequence columns, its label column, and the URL its file is served from. |
+| `sources.csv` | One row per dataset: its licence, whether that licence permits republication, and the DOI its credit is owed to. |
 | `combined_classes_results.csv` | The class-distribution checks, per split and feature. |
 | `combined_splits_results.csv` | The leakage scan, per split pair and direction. |
 | `reports.csv` | The manifest of the 93 archives: size, digest, every path inside. |
@@ -52,6 +59,34 @@ dataset whose reference split is `test`. The site's own per-check figures are
 computed from all 93 datasets' flags instead, so that the checks page and the
 dataset pages agree with each other, and the leakage row is shown as 92 scored
 plus one blank rather than as a smaller denominator nothing on the page explains.
+
+## The one table here no pipeline produced
+
+`sources.csv` is derived from `datasets/<collection>/<collection>_metadata.json`
+in the source checkout, and it is the only file in this directory whose source is
+not a run. Two things follow from that.
+
+The first is that its licence and its DOI are **resolved** here, not inherited at
+read time. Both are stated per collection and overridden per dataset, and the
+override is not the rare case it looks like: eleven datasets carry their own
+licence, and mRNABench's collection-level one grants nothing at all — the
+collection was published with no licence stated — so every one of its retained
+datasets overrides it at its true upstream. A fallback applied in two places is a
+fallback that will one day be applied in one, so it is applied in `read_sources`
+and nowhere else. `doi` and `collection_doi` are both carried, and are equal for
+the 67 datasets that inherit.
+
+The second is that `redistribution` is the field the site branches on, and its
+three values say three different things. `permitted` means the split files may be
+republished. `denied` means they may not, and the URL in `splits.csv` is then the
+only copy there is — sixteen splits are in that position, because InstaDeep were
+asked and declined. `unknown` is deliberately not `denied`: an unanswered licence
+is not a refusal, and answering one moves a collection in a single edit.
+
+`licence_note` carries why each value is what it is — the evidence, not a
+restatement. It is repeated on every row of a collection that shares a licence,
+which is 47 KB of repetition and worth it: a reader looking up one dataset should
+not have to join two files to find out whether they may use it.
 
 ## The one number here the audit did not compute
 

@@ -350,6 +350,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/CRISPROnTarget/CRISPROnTarget_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -378,6 +379,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/CRISPROnTarget/CRISPROnTarget_val.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -406,6 +408,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/CRISPROnTarget/CRISPROnTarget_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -502,6 +505,15 @@
             "href": "qc-reports/BEACON-CRISPROnTarget/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s13059-018-1459-4",
+        "collection_doi": "https://doi.org/10.52202/079017-2949",
+        "inherits_doi": false,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/terry-r123/RNABenchmark/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "The paper states that the datasets and the source code of the benchmark are available at github.com/terry-r123/RNABenchmark, and that repository is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the files themselves are served from the Google Drive folder the repository links (19ddrwI8ycvIxkgSV3gDo_VunLofYd4-6), which carries no terms of its own; neither the paper nor its NeurIPS datasheet states a licence for the data separately. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -593,6 +605,7 @@
           "label_col": "proximal_isoform_proportion",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/Isoform/Isoform_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -621,6 +634,7 @@
           "label_col": "proximal_isoform_proportion",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/Isoform/Isoform_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -649,6 +663,7 @@
           "label_col": "proximal_isoform_proportion",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/Isoform/Isoform_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -745,6 +760,15 @@
             "href": "qc-reports/BEACON-Isoform/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1016/j.cell.2019.04.046",
+        "collection_doi": "https://doi.org/10.52202/079017-2949",
+        "inherits_doi": false,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/terry-r123/RNABenchmark/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "The paper states that the datasets and the source code of the benchmark are available at github.com/terry-r123/RNABenchmark, and that repository is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the files themselves are served from the Google Drive folder the repository links (19ddrwI8ycvIxkgSV3gDo_VunLofYd4-6), which carries no terms of its own; neither the paper nor its NeurIPS datasheet states a licence for the data separately. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -836,6 +860,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/MeanRibosomeLoading/MeanRibosomeLoading_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -864,6 +889,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/MeanRibosomeLoading/MeanRibosomeLoading_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -892,6 +918,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/BEACON/resolve/8a8c3d078538e3c4c489cff07d2c951b1716c72f/MeanRibosomeLoading/MeanRibosomeLoading_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -988,6 +1015,15 @@
             "href": "qc-reports/BEACON-MeanRibosomeLoading/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41587-019-0164-5",
+        "collection_doi": "https://doi.org/10.52202/079017-2949",
+        "inherits_doi": false,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/terry-r123/RNABenchmark/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "The paper states that the datasets and the source code of the benchmark are available at github.com/terry-r123/RNABenchmark, and that repository is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the files themselves are served from the Google Drive folder the repository links (19ddrwI8ycvIxkgSV3gDo_VunLofYd4-6), which carries no terms of its own; neither the paper nor its NeurIPS datasheet states a licence for the data separately. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -1079,6 +1115,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_all/prom_core_all_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1107,6 +1144,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_all/prom_core_all_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1135,6 +1173,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_all/prom_core_all_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1231,6 +1270,15 @@
             "href": "qc-reports/GUE_v2-core_promoter_detection_all/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -1322,6 +1370,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_notata/prom_core_notata_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1350,6 +1399,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_notata/prom_core_notata_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1378,6 +1428,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_notata/prom_core_notata_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1474,6 +1525,15 @@
             "href": "qc-reports/GUE_v2-core_promoter_detection_notata/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -1565,6 +1625,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_tata/prom_core_tata_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1593,6 +1654,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_tata/prom_core_tata_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1621,6 +1683,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_core_tata/prom_core_tata_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -1717,6 +1780,15 @@
             "href": "qc-reports/GUE_v2-core_promoter_detection_tata/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -1809,6 +1881,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_GM12878/EPI_GM12878_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -1838,6 +1911,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_GM12878/EPI_GM12878_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -1867,6 +1941,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_GM12878/EPI_GM12878_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2017,6 +2092,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_GM12878/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -2109,6 +2193,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HUVEC/EPI_HUVEC_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2138,6 +2223,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HUVEC/EPI_HUVEC_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -2167,6 +2253,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HUVEC/EPI_HUVEC_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2317,6 +2404,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_HUVEC/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -2409,6 +2505,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HeLa-S3/EPI_HeLa-S3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2438,6 +2535,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HeLa-S3/EPI_HeLa-S3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2467,6 +2565,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_HeLa-S3/EPI_HeLa-S3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2617,6 +2716,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_HeLa_S3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -2709,6 +2817,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_IMR90/EPI_IMR90_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2738,6 +2847,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_IMR90/EPI_IMR90_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2767,6 +2877,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_IMR90/EPI_IMR90_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -2917,6 +3028,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_IMR90/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -3009,6 +3129,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_K562/EPI_K562_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3038,6 +3159,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_K562/EPI_K562_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3067,6 +3189,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_K562/EPI_K562_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3217,6 +3340,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_K562/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -3309,6 +3441,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_NHEK/EPI_NHEK_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3338,6 +3471,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_NHEK/EPI_NHEK_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3367,6 +3501,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EPI_NHEK/EPI_NHEK_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3517,6 +3652,15 @@
             "href": "qc-reports/GUE_v2-enhancer_promoter_interaction_NHEK/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -3608,6 +3752,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3/EMP_H3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -3636,6 +3781,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3/EMP_H3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -3664,6 +3810,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3/EMP_H3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -3760,6 +3907,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -3851,6 +4007,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K14ac/EMP_H3K14ac_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3879,6 +4036,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K14ac/EMP_H3K14ac_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -3907,6 +4065,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K14ac/EMP_H3K14ac_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4003,6 +4162,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K14ac/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -4094,6 +4262,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K36me3/EMP_H3K36me3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4122,6 +4291,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K36me3/EMP_H3K36me3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4150,6 +4320,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K36me3/EMP_H3K36me3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4246,6 +4417,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K36me3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -4337,6 +4517,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me1/EMP_H3K4me1_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4365,6 +4546,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me1/EMP_H3K4me1_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4393,6 +4575,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me1/EMP_H3K4me1_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4489,6 +4672,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K4me1/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -4580,6 +4772,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me2/EMP_H3K4me2_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -4608,6 +4801,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me2/EMP_H3K4me2_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -4636,6 +4830,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me2/EMP_H3K4me2_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -4732,6 +4927,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K4me2/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -4823,6 +5027,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me3/EMP_H3K4me3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4851,6 +5056,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me3/EMP_H3K4me3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4879,6 +5085,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K4me3/EMP_H3K4me3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -4975,6 +5182,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K4me3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -5066,6 +5282,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K79me3/EMP_H3K79me3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -5094,6 +5311,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K79me3/EMP_H3K79me3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -5122,6 +5340,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K79me3/EMP_H3K79me3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -5218,6 +5437,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K79me3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -5309,6 +5537,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K9ac/EMP_H3K9ac_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5337,6 +5566,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K9ac/EMP_H3K9ac_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5365,6 +5595,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H3K9ac/EMP_H3K9ac_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5461,6 +5692,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H3K9ac/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -5552,6 +5792,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4/EMP_H4_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5580,6 +5821,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4/EMP_H4_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -5608,6 +5850,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4/EMP_H4_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -5704,6 +5947,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H4/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -5795,6 +6047,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4ac/EMP_H4ac_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5823,6 +6076,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4ac/EMP_H4ac_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5851,6 +6105,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/EMP_H4ac/EMP_H4ac_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -5947,6 +6202,15 @@
             "href": "qc-reports/GUE_v2-epigenetic_marks_prediction_H4ac/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -6038,6 +6302,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_all/prom_300_all_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -6066,6 +6331,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_all/prom_300_all_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -6094,6 +6360,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_all/prom_300_all_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -6190,6 +6457,15 @@
             "href": "qc-reports/GUE_v2-promoter_detection_300_all/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -6281,6 +6557,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_notata/prom_300_notata_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -6309,6 +6586,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_notata/prom_300_notata_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -6337,6 +6615,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_notata/prom_300_notata_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -6433,6 +6712,15 @@
             "href": "qc-reports/GUE_v2-promoter_detection_300_notata/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -6524,6 +6812,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_tata/prom_300_tata_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -6552,6 +6841,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_tata/prom_300_tata_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -6580,6 +6870,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/prom_300_tata/prom_300_tata_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -6676,6 +6967,15 @@
             "href": "qc-reports/GUE_v2-promoter_detection_300_tata/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -6767,6 +7067,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_0/tf_0_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -6795,6 +7096,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_0/tf_0_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -6823,6 +7125,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_0/tf_0_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -6919,6 +7222,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_human_0/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -7010,6 +7322,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_1/tf_1_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7038,6 +7351,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_1/tf_1_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7066,6 +7380,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_1/tf_1_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7162,6 +7477,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_human_1/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -7253,6 +7577,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_2/tf_2_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7281,6 +7606,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_2/tf_2_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7309,6 +7635,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_2/tf_2_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7405,6 +7732,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_human_2/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -7496,6 +7832,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_3/tf_3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7524,6 +7861,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_3/tf_3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7552,6 +7890,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_3/tf_3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7648,6 +7987,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_human_3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -7739,6 +8087,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_4/tf_4_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7767,6 +8116,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_4/tf_4_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7795,6 +8145,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/tf_4/tf_4_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -7891,6 +8242,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_human_4/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -7982,6 +8342,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_0/mouse_0_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8010,6 +8371,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_0/mouse_0_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8038,6 +8400,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_0/mouse_0_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8134,6 +8497,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_mouse_0/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -8225,6 +8597,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_1/mouse_1_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8253,6 +8626,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_1/mouse_1_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8281,6 +8655,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_1/mouse_1_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8377,6 +8752,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_mouse_1/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -8466,6 +8850,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_2/mouse_2_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8494,6 +8879,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_2/mouse_2_val.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -8522,6 +8908,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_2/mouse_2_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -8618,6 +9005,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_mouse_2/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -8707,6 +9103,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_3/mouse_3_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8735,6 +9132,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_3/mouse_3_val.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -8763,6 +9161,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_3/mouse_3_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -8859,6 +9258,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_mouse_3/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -8950,6 +9358,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_4/mouse_4_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -8978,6 +9387,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_4/mouse_4_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9006,6 +9416,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/GUE_v2/resolve/f1290ccd49d4c7f8014cac47c93779aed06a294b/mouse_4/mouse_4_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9102,6 +9513,15 @@
             "href": "qc-reports/GUE_v2-transcription_factor_prediction_mouse_4/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2306.15006",
+        "inherits_doi": true,
+        "licence": "Apache-2.0",
+        "licence_url": "https://github.com/MAGICS-LAB/DNABERT_2/blob/main/LICENSE",
+        "redistribution": "permitted",
+        "licence_note": "DNABERT-2 releases the code, the data and the models at github.com/MAGICS-LAB/DNABERT_2, which is Apache-2.0, so the release the authors point at is the licensed one. Recorded with the qualification that the GUE_2 archive itself is served from the Google Drive file the README links (1uOrwlf07qGQuruXqGXWMpPn8avBoW7T-) and carries no terms of its own. GUE is assembled from public sources - EPDnew, ENCODE ChIP-seq via UCSC, Ensembl GRCh38 and a published yeast histone-mark set. The one GUE task with a redistribution problem of its own is covid_variant_classification, whose sequences come from GISAID EpiCoV, whose access agreement forbids redistribution; it is excluded on task format and so is not published here. Apache-2.0 permits redistribution provided the licence and the attribution notices are kept."
       }
     },
     {
@@ -9190,6 +9610,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_g_max/lncrna_g_max_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9218,6 +9639,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_g_max/lncrna_g_max_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -9285,6 +9707,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_g_max/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -9373,6 +9804,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_m_esculenta/lncrna_m_esculenta_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9401,6 +9833,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_m_esculenta/lncrna_m_esculenta_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -9468,6 +9901,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_m_esculenta/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -9557,6 +9999,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_s_bicolor/lncrna_s_bicolor_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9585,6 +10028,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_s_bicolor/lncrna_s_bicolor_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9652,6 +10096,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_s_bicolor/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -9741,6 +10194,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_s_lycopersicum/lncrna_s_lycopersicum_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9769,6 +10223,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_s_lycopersicum/lncrna_s_lycopersicum_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9836,6 +10291,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_s_lycopersicum/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -9925,6 +10389,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_t_aestivum/lncrna_t_aestivum_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -9953,6 +10418,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_t_aestivum/lncrna_t_aestivum_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10020,6 +10486,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_t_aestivum/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -10109,6 +10584,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_z_mays/lncrna_z_mays_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10137,6 +10613,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/lncrna_z_mays/lncrna_z_mays_test.csv.gz",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -10204,6 +10681,15 @@
             "href": "qc-reports/OmniGenBench-lncrna_z_mays/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -10293,6 +10779,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_arabidopsis_thaliana/poly_a_arabidopsis_thaliana_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10321,6 +10808,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_arabidopsis_thaliana/poly_a_arabidopsis_thaliana_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10388,6 +10876,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_arabidopsis_thaliana/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -10477,6 +10974,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_chlamydomonas_reinhardtii/poly_a_chlamydomonas_reinhardtii_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10505,6 +11003,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_chlamydomonas_reinhardtii/poly_a_chlamydomonas_reinhardtii_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10572,6 +11071,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_chlamydomonas_reinhardtii/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -10661,6 +11169,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_medicago_truncatula/poly_a_medicago_truncatula_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10689,6 +11198,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_medicago_truncatula/poly_a_medicago_truncatula_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10756,6 +11266,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_medicago_truncatula/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -10845,6 +11364,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_oryza_sativa_indica_group/poly_a_oryza_sativa_indica_group_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10873,6 +11393,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_oryza_sativa_indica_group/poly_a_oryza_sativa_indica_group_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -10940,6 +11461,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_oryza_sativa_indica_group/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11029,6 +11559,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_oryza_sativa_japonica_group/poly_a_oryza_sativa_japonica_group_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11057,6 +11588,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_oryza_sativa_japonica_group/poly_a_oryza_sativa_japonica_group_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11124,6 +11656,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_oryza_sativa_japonica_group/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11213,6 +11754,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_trifolium_pratense/poly_a_trifolium_pratense_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11241,6 +11783,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/poly_a_trifolium_pratense/poly_a_trifolium_pratense_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11308,6 +11851,15 @@
             "href": "qc-reports/OmniGenBench-poly_a_trifolium_pratense/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11397,6 +11949,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/pro_seq_m_esculenta/pro_seq_m_esculenta_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11425,6 +11978,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/pro_seq_m_esculenta/pro_seq_m_esculenta_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11492,6 +12046,15 @@
             "href": "qc-reports/OmniGenBench-pro_seq_m_esculenta/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11581,6 +12144,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/promoter_strength_leaf/promoter_strength_leaf_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -11609,6 +12173,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/promoter_strength_leaf/promoter_strength_leaf_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -11676,6 +12241,15 @@
             "href": "qc-reports/OmniGenBench-promoter_strength_leaf/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11765,6 +12339,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/promoter_strength_protoplast/promoter_strength_protoplast_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11793,6 +12368,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/promoter_strength_protoplast/promoter_strength_protoplast_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11860,6 +12436,15 @@
             "href": "qc-reports/OmniGenBench-promoter_strength_protoplast/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -11949,6 +12534,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/splicing_arabidopsis_thaliana_acceptor/splicing_arabidopsis_thaliana_acceptor_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -11977,6 +12563,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/splicing_arabidopsis_thaliana_acceptor/splicing_arabidopsis_thaliana_acceptor_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -12044,6 +12631,15 @@
             "href": "qc-reports/OmniGenBench-splicing_arabidopsis_thaliana_acceptor/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -12133,6 +12729,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/splicing_arabidopsis_thaliana_donor/splicing_arabidopsis_thaliana_donor_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -12161,6 +12758,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/splicing_arabidopsis_thaliana_donor/splicing_arabidopsis_thaliana_donor_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -12228,6 +12826,15 @@
             "href": "qc-reports/OmniGenBench-splicing_arabidopsis_thaliana_donor/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -12317,6 +12924,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_arabidopsis/te_prediction_arabidopsis_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -12345,6 +12953,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_arabidopsis/te_prediction_arabidopsis_val.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -12373,6 +12982,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_arabidopsis/te_prediction_arabidopsis_test.csv.gz",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -12469,6 +13079,15 @@
             "href": "qc-reports/OmniGenBench-te_prediction_arabidopsis/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s42256-024-00946-z",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -12560,6 +13179,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_rice/te_prediction_rice_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -12588,6 +13208,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_rice/te_prediction_rice_val.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -12616,6 +13237,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/te_prediction_rice/te_prediction_rice_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -12712,6 +13334,15 @@
             "href": "qc-reports/OmniGenBench-te_prediction_rice/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s42256-024-00946-z",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -12801,6 +13432,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/terminator_strength_leaf/terminator_strength_leaf_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -12829,6 +13461,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/terminator_strength_leaf/terminator_strength_leaf_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -12896,6 +13529,15 @@
             "href": "qc-reports/OmniGenBench-terminator_strength_leaf/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -12985,6 +13627,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/terminator_strength_protoplast/terminator_strength_protoplast_train.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -13013,6 +13656,7 @@
           "label_col": "label",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/genomic-benchmarks/OmniGenBench/resolve/6d1d0b8de53d47d9b576dc9ce69c6ce5e6b233f9/terminator_strength_protoplast/terminator_strength_protoplast_test.csv.gz",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -13080,6 +13724,15 @@
             "href": "qc-reports/OmniGenBench-terminator_strength_protoplast/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1126/science.ado9336",
+        "collection_doi": "https://doi.org/10.48550/arXiv.2505.14402",
+        "inherits_doi": false,
+        "licence": "MIT",
+        "licence_url": "https://huggingface.co/spaces/yangheng/OmniGenBenchLeaderboard/blob/main/README.md",
+        "redistribution": "permitted",
+        "licence_note": "The PGB and RGB files were downloaded from the Hugging Face Space yangheng/OmniGenBenchLeaderboard, whose card metadata declares license: mit. The COLA-Laboratory/OmniGenBench code repository is Apache-2.0 separately; the Space is the artifact the data came from. MIT permits redistribution provided the licence notice is kept."
       }
     },
     {
@@ -13169,6 +13822,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_demo_coding_vs_intergenomic_seqs/resolve/85458172cab6cffad46cb172e64ca94780506ed6/data/train-00000-of-00001-f67d678b4bed3eaa.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -13197,6 +13851,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_demo_coding_vs_intergenomic_seqs/resolve/85458172cab6cffad46cb172e64ca94780506ed6/data/test-00000-of-00001-6fccc31405110e30.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -13264,6 +13919,15 @@
             "href": "qc-reports/genomic-benchmarks-demo_coding_vs_intergenomic_seqs/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -13353,6 +14017,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_demo_human_or_worm/resolve/a4f7f76b18a38f43ff3a7d5e8299408c3c121df2/data/train-00000-of-00001-0d5a5f4de37ce201.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -13381,6 +14046,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_demo_human_or_worm/resolve/a4f7f76b18a38f43ff3a7d5e8299408c3c121df2/data/test-00000-of-00001-1033586105338bbd.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -13448,6 +14114,15 @@
             "href": "qc-reports/genomic-benchmarks-demo_human_or_worm/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -13537,6 +14212,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_drosophila_enhancers_stark/resolve/b5fdfb2d398ebf80491832760a4c1b88ed551b42/data/train-00000-of-00001-83f95ffa4729e152.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -13565,6 +14241,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_drosophila_enhancers_stark/resolve/b5fdfb2d398ebf80491832760a4c1b88ed551b42/data/test-00000-of-00001-4f8143ca7162a96d.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -13632,6 +14309,15 @@
             "href": "qc-reports/genomic-benchmarks-drosophila_enhancers_stark/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -13721,6 +14407,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_enhancers_cohn/resolve/49ef8d0d80087ece7441096afcef0123b0781ce0/data/train-00000-of-00001-308a8a054210be5f.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -13749,6 +14436,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_enhancers_cohn/resolve/49ef8d0d80087ece7441096afcef0123b0781ce0/data/test-00000-of-00001-b9d4d53093c06044.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -13816,6 +14504,15 @@
             "href": "qc-reports/genomic-benchmarks-human_enhancers_cohn/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/264200",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": false,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -13905,6 +14602,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_enhancers_ensembl/resolve/1e4a3993d89263e6496b64824cad9716c5f6643b/data/train-00000-of-00001-cb81734ed6488aa3.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -13933,6 +14631,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_enhancers_ensembl/resolve/1e4a3993d89263e6496b64824cad9716c5f6643b/data/test-00000-of-00001-21964d4fd7a45ed3.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -14000,6 +14699,15 @@
             "href": "qc-reports/genomic-benchmarks-human_enhancers_ensembl/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -14089,6 +14797,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_nontata_promoters/resolve/e0003669df0a180c8570ebe091ed91f20fa080ec/data/train-00000-of-00001-aeb55728756a44ae.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -14117,6 +14826,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_nontata_promoters/resolve/e0003669df0a180c8570ebe091ed91f20fa080ec/data/test-00000-of-00001-d7614d9116c62f44.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -14184,6 +14894,15 @@
             "href": "qc-reports/genomic-benchmarks-human_nontata_promoters/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1371/journal.pone.0171410",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": false,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -14273,6 +14992,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_ocr_ensembl/resolve/3c07e4be6425be11073baa2daacf6c143c64e4ff/data/train-00000-of-00001-3ce5711c171d3e15.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14301,6 +15021,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/katarinagresova/Genomic_Benchmarks_human_ocr_ensembl/resolve/3c07e4be6425be11073baa2daacf6c143c64e4ff/data/test-00000-of-00001-dcaf3e2a1561c12e.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14368,6 +15089,15 @@
             "href": "qc-reports/genomic-benchmarks-human_ocr_ensembl/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "collection_doi": "https://doi.org/10.1186/s12863-023-01123-8",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 15324459 (doi:10.5281/zenodo.15324459), this project's own release of the collection, records cc-by-4.0. The ML-Bioinfo-CEITEC/genomic_benchmarks repository is Apache-2.0, but that covers the code; the Zenodo record is the release the data was published under. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -14459,6 +15189,7 @@
           "label_col": "target_mrl_designed",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-designed.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -14487,6 +15218,7 @@
           "label_col": "target_mrl_designed",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-designed.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -14515,6 +15247,7 @@
           "label_col": "target_mrl_designed",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-designed.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -14611,6 +15344,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-designed/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -14702,6 +15444,7 @@
           "label_col": "target_mrl_egfp_m1pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14730,6 +15473,7 @@
           "label_col": "target_mrl_egfp_m1pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14758,6 +15502,7 @@
           "label_col": "target_mrl_egfp_m1pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14854,6 +15599,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-egfp-m1pseudo/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -14945,6 +15699,7 @@
           "label_col": "target_mrl_egfp_pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -14973,6 +15728,7 @@
           "label_col": "target_mrl_egfp_pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15001,6 +15757,7 @@
           "label_col": "target_mrl_egfp_pseudo",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15097,6 +15854,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-egfp-pseudo/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -15188,6 +15954,7 @@
           "label_col": "target_mrl_egfp_unmod",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15216,6 +15983,7 @@
           "label_col": "target_mrl_egfp_unmod",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15244,6 +16012,7 @@
           "label_col": "target_mrl_egfp_unmod",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-egfp.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15340,6 +16109,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-egfp-unmod/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -15431,6 +16209,7 @@
           "label_col": "target_mrl_mcherry",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-mcherry.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15459,6 +16238,7 @@
           "label_col": "target_mrl_mcherry",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-mcherry.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15487,6 +16267,7 @@
           "label_col": "target_mrl_mcherry",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-mcherry.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15583,6 +16364,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-mcherry/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -15674,6 +16464,7 @@
           "label_col": "target_mrl_varying_length",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-varying.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15702,6 +16493,7 @@
           "label_col": "target_mrl_varying_length",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-varying.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15730,6 +16522,7 @@
           "label_col": "target_mrl_varying_length",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sample/resolve/ef67f7cf8a999bb1c412ad6551aa7d9f901cbb95/mrl-sample-varying.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15826,6 +16619,15 @@
             "href": "qc-reports/mRNABench-mrl-sample-varying/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (GEO deposition)",
+        "licence_url": "https://www.ncbi.nlm.nih.gov/home/about/policies/",
+        "redistribution": "permitted",
+        "licence_note": "mRNABench collected this data from GEO, series GSE114002 (Sample et al. 2019), which is public. NCBI's data usage policy states: \"NCBI itself places no restrictions on the use or distribution of the data contained therein. Nor do we accept data when the submitter has requested restrictions on reuse or redistribution.\" Deposition is therefore evidence that no redistribution restriction was requested. Recorded with the qualification that this is an inference from the repository's intake policy rather than a grant from the authors: the same policy notes submitters may still hold copyright, and NCBI cannot give permission on their behalf. The paper states no data availability terms of its own."
       }
     },
     {
@@ -15917,6 +16719,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sugimoto/resolve/4d7404895e8ca1143d769e7f445972bf7ef4b51d/mrl-sugimoto.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15945,6 +16748,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sugimoto/resolve/4d7404895e8ca1143d769e7f445972bf7ef4b51d/mrl-sugimoto.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -15973,6 +16777,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/mrl-sugimoto/resolve/4d7404895e8ca1143d769e7f445972bf7ef4b51d/mrl-sugimoto.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -16069,6 +16874,15 @@
             "href": "qc-reports/mRNABench-mrl-sugimoto/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Hugging Face morrislab/mrl-sugimoto is tagged cc-by-4.0."
       }
     },
     {
@@ -16160,6 +16974,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-human/resolve/b2ed8742f21349b293759db554534bf170759251/rnahl-saluki-human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16188,6 +17003,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-human/resolve/b2ed8742f21349b293759db554534bf170759251/rnahl-saluki-human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16216,6 +17032,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-human/resolve/b2ed8742f21349b293759db554534bf170759251/rnahl-saluki-human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16312,6 +17129,15 @@
             "href": "qc-reports/mRNABench-rnahl-human/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Hugging Face morrislab/rnahl-saluki-human is tagged cc-by-4.0."
       }
     },
     {
@@ -16403,6 +17229,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-mouse/resolve/032d07a948794118bdacf282a1d9e075c530f40f/rnahl-saluki-mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16431,6 +17258,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-mouse/resolve/032d07a948794118bdacf282a1d9e075c530f40f/rnahl-saluki-mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16459,6 +17287,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/rnahl-saluki-mouse/resolve/032d07a948794118bdacf282a1d9e075c530f40f/rnahl-saluki-mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16555,6 +17384,15 @@
             "href": "qc-reports/mRNABench-rnahl-mouse/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Hugging Face morrislab/rnahl-saluki-mouse is tagged cc-by-4.0."
       }
     },
     {
@@ -16646,6 +17484,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-human/resolve/55a142a823b140393506b8d50e33b4cc02f2b23c/te_human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16674,6 +17513,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-human/resolve/55a142a823b140393506b8d50e33b4cc02f2b23c/te_human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16702,6 +17542,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-human/resolve/55a142a823b140393506b8d50e33b4cc02f2b23c/te_human.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16798,6 +17639,15 @@
             "href": "qc-reports/mRNABench-translation-efficiency-human/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (author statement)",
+        "licence_url": "https://doi.org/10.1038/s41587-025-02712-x",
+        "redistribution": "permitted",
+        "licence_note": "Zheng et al., the group that generated these measurements, state in the paper's Data availability section: \"We provide the processed data without restriction in supplementary tables herein.\" That is a grant from the rights holder over the processed data, which is what is redistributed here. It outranks the license: unknown tag on the Hugging Face mirror morrislab/translation-efficiency-*, which is a redistributor rather than the source. No named licence was invoked, so the card publishes as `other` with these terms in its body."
       }
     },
     {
@@ -16889,6 +17739,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-mouse/resolve/06cba806cb2b46d3f4d14487bba730660195aea1/te_mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16917,6 +17768,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-mouse/resolve/06cba806cb2b46d3f4d14487bba730660195aea1/te_mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -16945,6 +17797,7 @@
           "label_col": "target",
           "regression": true,
           "num_labels": 3,
+          "source_url": "https://huggingface.co/datasets/morrislab/translation-efficiency-mouse/resolve/06cba806cb2b46d3f4d14487bba730660195aea1/te_mouse.parquet",
           "flags": {
             "Sequence lengths": "Warning",
             "Per sequence GC content": "Pass",
@@ -17041,6 +17894,15 @@
             "href": "qc-reports/mRNABench-translation-efficiency-mouse/split/train_val.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "collection_doi": "https://doi.org/10.1101/2025.07.05.662870",
+        "inherits_doi": true,
+        "licence": "No restrictions (author statement)",
+        "licence_url": "https://doi.org/10.1038/s41587-025-02712-x",
+        "redistribution": "permitted",
+        "licence_note": "Zheng et al., the group that generated these measurements, state in the paper's Data availability section: \"We provide the processed data without restriction in supplementary tables herein.\" That is a grant from the rights holder over the processed data, which is what is redistributed here. It outranks the license: unknown tag on the Hugging Face mirror morrislab/translation-efficiency-*, which is a redistributor rather than the source. No named licence was invoked, so the card publishes as `other` with these terms in its body."
       }
     },
     {
@@ -17131,6 +17993,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_CLASH_Hejret2023_train.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17160,6 +18023,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_CLASH_Hejret2023_test.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17263,6 +18127,15 @@
             "href": "qc-reports/miRBench-AGO2_CLASH_Hejret2023/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "collection_doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 20540907 records cc-by-4.0. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -17343,6 +18216,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_eCLIP_Klimentova2022_test.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17398,6 +18272,15 @@
             "href": "qc-reports/miRBench-AGO2_eCLIP_Klimentova2022/class/test/noncodingRNA.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "collection_doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 20540907 records cc-by-4.0. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -17490,6 +18373,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_eCLIP_Manakov2022_train.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17519,6 +18403,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_eCLIP_Manakov2022_test.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17548,6 +18433,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://zenodo.org/records/20540907/files/AGO2_eCLIP_Manakov2022_leftout.tsv.gz?download=1",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -17698,6 +18584,15 @@
             "href": "qc-reports/miRBench-AGO2_eCLIP_Manakov2022/split/train_test_leftout.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "collection_doi": "https://doi.org/10.1093/bioinformatics/btaf233",
+        "inherits_doi": true,
+        "licence": "CC BY 4.0",
+        "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "redistribution": "permitted",
+        "licence_note": "Zenodo record 20540907 records cc-by-4.0. Attribution is required; the collection DOI carries it."
       }
     },
     {
@@ -17787,6 +18682,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H2AFZ/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -17815,6 +18711,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H2AFZ/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -17882,6 +18779,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H2AFZ/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -17971,6 +18877,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K27ac/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -17999,6 +18906,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K27ac/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -18066,6 +18974,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K27ac/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -18155,6 +19072,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K27me3/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18183,6 +19101,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K27me3/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18250,6 +19169,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K27me3/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -18339,6 +19267,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K36me3/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18367,6 +19296,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K36me3/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18434,6 +19364,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K36me3/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -18523,6 +19462,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me1/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18551,6 +19491,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me1/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -18618,6 +19559,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K4me1/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -18707,6 +19657,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me2/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18735,6 +19686,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me2/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18802,6 +19754,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K4me2/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -18891,6 +19852,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me3/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18919,6 +19881,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K4me3/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -18986,6 +19949,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K4me3/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19075,6 +20047,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K9ac/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19103,6 +20076,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K9ac/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19170,6 +20144,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K9ac/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19259,6 +20242,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K9me3/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -19287,6 +20271,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H3K9me3/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -19354,6 +20339,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H3K9me3/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19443,6 +20437,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H4K20me1/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19471,6 +20466,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/H4K20me1/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19538,6 +20534,15 @@
             "href": "qc-reports/nucleotide_benchmarks-H4K20me1/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19627,6 +20632,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/enhancers/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -19655,6 +20661,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/enhancers/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19722,6 +20729,15 @@
             "href": "qc-reports/nucleotide_benchmarks-enhancers/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19811,6 +20827,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_all/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19839,6 +20856,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_all/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -19906,6 +20924,15 @@
             "href": "qc-reports/nucleotide_benchmarks-promoter_all/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -19995,6 +21022,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_no_tata/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -20023,6 +21051,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_no_tata/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -20090,6 +21119,15 @@
             "href": "qc-reports/nucleotide_benchmarks-promoter_no_tata/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -20178,6 +21216,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_tata/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Fail",
@@ -20206,6 +21245,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/promoter_tata/test.parquet",
           "flags": {
             "Sequence lengths": "Unknown",
             "Per sequence GC content": "Unknown",
@@ -20273,6 +21313,15 @@
             "href": "qc-reports/nucleotide_benchmarks-promoter_tata/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -20362,6 +21411,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/splice_sites_acceptors/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Pass",
@@ -20390,6 +21440,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/splice_sites_acceptors/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -20457,6 +21508,15 @@
             "href": "qc-reports/nucleotide_benchmarks-splice_sites_acceptors/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     },
     {
@@ -20546,6 +21606,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/splice_sites_donors/train.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -20574,6 +21635,7 @@
           "label_col": "label",
           "regression": false,
           "num_labels": 2,
+          "source_url": "https://huggingface.co/datasets/InstaDeepAI/nucleotide_transformer_downstream_tasks_revised/resolve/851f9946252e90c665cdb3cc3eedb78f1f26197c/splice_sites_donors/test.parquet",
           "flags": {
             "Sequence lengths": "Pass",
             "Per sequence GC content": "Warning",
@@ -20641,6 +21703,15 @@
             "href": "qc-reports/nucleotide_benchmarks-splice_sites_donors/split/train_test.html"
           }
         ]
+      },
+      "source": {
+        "doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "collection_doi": "https://doi.org/10.1038/s41592-024-02523-z",
+        "inherits_doi": true,
+        "licence": "CC BY-NC-SA 4.0",
+        "licence_url": "https://github.com/instadeepai/nucleotide-transformer/blob/main/LICENSE.md",
+        "redistribution": "denied",
+        "licence_note": "The dataset card states no licence; the Nucleotide Transformer project repository is CC BY-NC-SA 4.0. InstaDeep were asked and declined permission to re-upload (September 2026). Only split_hash is published for these 32 splits; the files stay at InstaDeepAI/nucleotide_transformer_downstream_tasks_revised."
       }
     }
   ]

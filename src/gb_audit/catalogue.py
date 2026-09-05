@@ -80,6 +80,10 @@ def _split_entry(dataset: Dataset, split: str) -> dict:
         "label_col": spec.label_col if spec else None,
         "regression": spec.regression if spec else None,
         "num_labels": spec.num_labels if spec else None,
+        # Where this split's file is served from. Per split because that is where
+        # it varies, and on the entry because a reader who wants the data wants
+        # the file rather than the collection it belongs to.
+        "source_url": spec.source_url if spec else None,
         "flags": flags,
         "rollup": audit.rollup([flags[c] for c in audit.CLASS_CHECKS]),
         "strongest_probe": strongest.check if strongest else None,
@@ -119,6 +123,27 @@ def _leakage_entry(dataset: Dataset) -> list[dict]:
         }
         for comparison in dataset.leakage
     ]
+
+
+def _source_entry(dataset: Dataset) -> dict | None:
+    """The licence, the DOI, and whether the split files here are ours to serve.
+
+    `inherits_doi` is stated rather than left to be inferred from the two DOIs
+    being equal, so a page can write "the collection's DOI" without recomputing
+    the comparison and getting the direction wrong.
+    """
+    source = dataset.source
+    if source is None:
+        return None
+    return {
+        "doi": source.doi,
+        "collection_doi": source.collection_doi,
+        "inherits_doi": source.inherits_doi,
+        "licence": source.licence,
+        "licence_url": source.licence_url,
+        "redistribution": source.redistribution,
+        "licence_note": source.licence_note,
+    }
 
 
 def _reports_entry(dataset: Dataset) -> dict:
@@ -233,6 +258,12 @@ def entry(dataset: Dataset) -> dict:
         "splits": [_split_entry(dataset, split) for split in splits],
         "leakage": _leakage_entry(dataset),
         "reports": _reports_entry(dataset),
+        # Not a measurement, and the only block here the audit did not produce:
+        # read out of the corpus metadata record, which is where the curation
+        # wrote down what each collection may be republished under and who it
+        # credits. Carried per dataset because the licence is resolved per dataset
+        # -- eleven override their collection's.
+        "source": _source_entry(dataset),
     }
 
 

@@ -12,14 +12,24 @@ come from the audit, so it keeps all 42 rollup columns rather than the 30 a regi
 would let it drop. Keeping every byte also makes the committed copy diffable against
 the record, which is what `data/provenance.json`'s digests support.
 
-Two files are derived rather than copied, both from files that are themselves
+Three files are derived rather than copied, all from files that are themselves
 published:
 
 `splits.csv`
-    The seven per-collection metadata TSVs the QC run writes, concatenated. It is
-    what says which splits a dataset has and which sequence columns were measured
-    on it -- and therefore which reports exist, since a class report is written per
-    split per sequence column.
+    The seven per-collection metadata TSVs the QC run writes, concatenated, plus
+    the URL each split's file is served from. It is what says which splits a
+    dataset has and which sequence columns were measured on it -- and therefore
+    which reports exist, since a class report is written per split per sequence
+    column.
+
+`sources.csv`
+    One row per dataset: the licence its splits are published under, whether that
+    licence permits this project to republish them, and the DOI attribution is
+    owed to. Derived from the corpus metadata records rather than from a run,
+    because no run table carries any of the three -- and this repository states in
+    its own Data availability that the collections are republished with the
+    attribution they require, which is a promise nothing here could keep while the
+    values stayed upstream.
 
 `reports.csv`
     Read out of the 93 archives by listing them: name, size, digest, and every HTML
@@ -97,6 +107,15 @@ COPIED = {
 METADATA_DIR = QC_RUN / "metadata"
 ARCHIVE_DIR = QC_RUN / "zenodo"
 
+# The corpus metadata records, `datasets/<collection>/<collection>_metadata.json`,
+# one per collection. The only source read here that is not a run output: it is the
+# corpus definition the QC workflow reads, and what the run keeps of it is a verdict
+# -- `validation/<collection>_metadata_validation.flag` -- rather than a copy. So a
+# working tree that has moved on since the run would describe a different corpus
+# from the one the tables were measured on, and `read_splits` requires every split
+# in the run's own metadata to be present here rather than trusting that it is.
+CORPUS_DIR = Path("datasets")
+
 SPLITS_COLUMNS = (
     "collection",
     "dataset",
@@ -105,6 +124,20 @@ SPLITS_COLUMNS = (
     "label_col",
     "regression",
     "num_labels",
+    "source_url",
+)
+SOURCES_COLUMNS = (
+    "collection",
+    "dataset",
+    # The DOI attribution is owed to, resolved: the dataset's own where it has one,
+    # the collection's where it does not. Both are carried, so a page can say which
+    # of the two it is quoting -- they are equal where the dataset inherits.
+    "doi",
+    "collection_doi",
+    "licence",
+    "licence_url",
+    "redistribution",
+    "licence_note",
 )
 REPORTS_COLUMNS = ("collection", "dataset", "archive", "bytes", "sha256", "reports")
 
@@ -128,6 +161,12 @@ def locate(source: str | None) -> Path:
                 f"{root} has no {required}. That is a published run directory -- "
                 f"normally a symlink to the dated run that was uploaded."
             )
+    if not (root / CORPUS_DIR).is_dir():
+        raise SourceUnreachable(
+            f"{root} has no {CORPUS_DIR}. That is the curated corpus itself, and "
+            f"its per-collection metadata records are where the licence, the DOI "
+            f"and the download URL are written down. No run carries them."
+        )
     return root
 
 
@@ -144,36 +183,136 @@ def digest_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def read_splits(root: Path) -> list[dict[str, str]]:
+def read_corpus(root: Path) -> dict[tuple[str, str], dict]:
+    """The seven corpus metadata records, each dataset's licence and DOI resolved.
+
+    Both are stated per collection and overridden per dataset, and the override is
+    not the rare case it looks like: eleven datasets carry their own licence, and
+    mRNABench's collection-level one grants nothing at all -- `redistribution:
+    unknown`, because the collection was published with no licence stated -- so
+    every one of its retained datasets overrides it at its true upstream. A reader
+    of this table wants the answer for the dataset in front of them, so the
+    fallback is applied once, here, for the same reason the join key is renamed
+    once: a fallback applied in two places is a fallback that will one day be
+    applied in one.
+
+    `dataset_doi` carries the literal string `collection_doi` where the dataset has
+    no DOI of its own, which is a sentinel and not a DOI; 67 of the 93 use it.
+    """
+    found: dict[tuple[str, str], dict] = {}
+    directory = root / CORPUS_DIR
+    for path in sorted(directory.glob("*/*_metadata.json")):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        collection = record["collection"]
+        for entry in record["datasets"]:
+            licence = entry.get("licence") or record["licence"]
+            doi = entry.get("dataset_doi") or ""
+            found[(collection, entry["dataset_name"])] = {
+                "collection": collection,
+                "dataset": entry["dataset_name"],
+                "doi": record["collection_doi"] if doi == "collection_doi" else doi,
+                "collection_doi": record["collection_doi"],
+                # Null where the source states none, which is not the same as
+                # permissive and is written through as empty rather than as a
+                # word that would read like one.
+                "licence": licence.get("name") or "",
+                "licence_url": licence.get("url") or "",
+                "redistribution": licence["redistribution"],
+                # Why the answer is what it is -- the evidence, not a restatement.
+                # It travels with the value because `denied` without the reason
+                # reads as this project's decision rather than the source's.
+                "licence_note": licence.get("note") or "",
+                "urls": {
+                    split: entry_split["dataset_url"]
+                    for split, entry_split in (entry.get("split_metadata") or {}).items()
+                },
+            }
+    if not found:
+        raise SourceUnreachable(
+            f"{directory} holds no <collection>/<collection>_metadata.json "
+            f"records. They are where the licence, the DOI and the download URL "
+            f"are written down; no run table carries any of the three."
+        )
+    return found
+
+
+def read_splits(root: Path, corpus: dict[tuple[str, str], dict]) -> list[dict[str, str]]:
     """Every split of every included dataset, from the QC run's own metadata.
 
     The seven files cover the same 93 datasets and 234 splits the rollup covers,
     which `audit.read()` asserts rather than trusts.
+
+    `source_url` is the one column not in them, and it is joined on per split
+    rather than per dataset because that is the grain it varies at: 81 of the 93
+    datasets are served as one file per split. It is the route back to the data
+    itself, which for the sixteen splits this project may not republish is the only
+    route there is.
     """
     rows: list[dict[str, str]] = []
     directory = root / METADATA_DIR
     for path in sorted(directory.glob("*_metadata.tsv")):
         with path.open(encoding="utf-8", newline="") as handle:
             for row in csv.DictReader(handle, delimiter="\t"):
+                # Renamed once, here, to the audit tables' own spelling.
+                # `genomic-benchmarks-qc` writes `dataset` and the corpus metadata
+                # writes `dataset_name`; the run publishes both, and a join key
+                # spelled two ways inside one directory is a join that silently
+                # returns nothing.
+                key = (row["collection"], row["dataset_name"])
+                where = f"{key[0]}:{key[1]} {row['split']}"
+                record = corpus.get(key)
+                if record is None:
+                    raise SourceUnreachable(
+                        f"{where} is in the run's metadata and in no record under "
+                        f"{CORPUS_DIR}, so nothing says what licence it is "
+                        f"published under or where its file is served from."
+                    )
+                if row["split"] not in record["urls"]:
+                    raise SourceUnreachable(
+                        f"{where} is in the run's metadata and not in that "
+                        f"dataset's record under {CORPUS_DIR}, which carries "
+                        f"{sorted(record['urls'])}. The corpus has moved since "
+                        f"this run was measured; the two no longer describe one "
+                        f"corpus and joining them would attribute a split to the "
+                        f"wrong file."
+                    )
                 rows.append(
                     {
-                        "collection": row["collection"],
-                        # Renamed once, here, to the audit tables' own spelling.
-                        # `genomic-benchmarks-qc` writes `dataset` and the corpus
-                        # metadata writes `dataset_name`; the run publishes both,
-                        # and a join key spelled two ways inside one directory is
-                        # a join that silently returns nothing.
-                        "dataset": row["dataset_name"],
+                        "collection": key[0],
+                        "dataset": key[1],
                         "split": row["split"],
                         "seq_cols": row["seq_cols"],
                         "label_col": row["label_col"],
                         "regression": row["regression"],
                         "num_labels": row["num_labels"],
+                        "source_url": record["urls"][row["split"]],
                     }
                 )
     if not rows:
         raise SourceUnreachable(f"{directory} holds no *_metadata.tsv files")
     rows.sort(key=lambda row: (row["collection"], row["dataset"], row["split"]))
+    return rows
+
+
+def read_sources(
+    corpus: dict[tuple[str, str], dict], known: dict[str, tuple[str, str]]
+) -> list[dict[str, str]]:
+    """One row per dataset: who it credits, and what it may be republished under.
+
+    Driven by the rollup's own pairs rather than by the corpus record, which also
+    carries the 54 datasets that were curated and not measured. The two files then
+    describe one corpus, which is what `audit.read()` checks on the way back in.
+    """
+    rows = []
+    for key in sorted(known.values()):
+        record = corpus.get(key)
+        if record is None:
+            raise SourceUnreachable(
+                f"{key[0]}:{key[1]} is in the rollup and in no record under "
+                f"{CORPUS_DIR}. Every dataset the audit covers has a licence, "
+                f"whether or not that licence permits republication."
+            )
+        rows.append({column: record[column] for column in SOURCES_COLUMNS})
     return rows
 
 
@@ -259,11 +398,11 @@ def known_datasets(rollup: bytes) -> dict[str, tuple[str, str]]:
 def assemble(root: Path) -> dict[str, bytes]:
     """Everything `data/` should hold, as bytes, before anything is written."""
     files = {name: (root / source).read_bytes() for name, source in COPIED.items()}
-    files["splits.csv"] = render_table(SPLITS_COLUMNS, read_splits(root))
-    files["reports.csv"] = render_table(
-        REPORTS_COLUMNS,
-        read_reports(root, known_datasets(files["dataset_level_summary.csv"])),
-    )
+    corpus = read_corpus(root)
+    known = known_datasets(files["dataset_level_summary.csv"])
+    files["splits.csv"] = render_table(SPLITS_COLUMNS, read_splits(root, corpus))
+    files["sources.csv"] = render_table(SOURCES_COLUMNS, read_sources(corpus, known))
+    files["reports.csv"] = render_table(REPORTS_COLUMNS, read_reports(root, known))
     return files
 
 

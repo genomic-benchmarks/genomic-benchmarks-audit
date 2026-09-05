@@ -294,3 +294,45 @@ def test_the_checks_page_carries_the_two_scales_its_flags_are_drawn_on(built):
             and f'id="{slug}"' in page.read_text(encoding="utf-8")
         ]
         assert drawn == ["checks.html"], slug
+
+
+# ------------------------------------------------------- licence and credit ---
+
+
+def test_every_dataset_page_names_its_licence_and_its_credit(built, committed):
+    """The content gap this section closed, checked on the rendered page.
+
+    Not on the catalogue: the values reaching the document is half the promise,
+    and a reader is owed the other half.
+    """
+    out = Path(built["out"]) / "datasets"
+    for entry in committed["datasets"]:
+        page = (out / f'{entry["slug"]}.html').read_text(encoding="utf-8")
+        head, section = page.split('<section id="source">', 1)
+        source = entry["source"]
+        assert source["licence"] in section, entry["benchmark_id"]
+        assert source["doi"] in section, entry["benchmark_id"]
+        # Stated once above the fold as well, pointing at the section that
+        # qualifies it.
+        assert '<a href="#source">' in head, entry["benchmark_id"]
+
+
+def test_every_dataset_page_links_each_split_to_its_file(built, committed):
+    out = Path(built["out"]) / "datasets"
+    for entry in committed["datasets"]:
+        page = (out / f'{entry["slug"]}.html').read_text(encoding="utf-8")
+        section = page.split('<section id="source">', 1)[1]
+        for split in entry["splits"]:
+            assert split["source_url"] in section, entry["benchmark_id"]
+
+
+def test_a_withheld_dataset_says_so_where_a_reader_will_look(built, committed):
+    """Sixteen splits are served by their source alone, and the page says which."""
+    out = Path(built["out"]) / "datasets"
+    for entry in committed["datasets"]:
+        page = (out / f'{entry["slug"]}.html').read_text(encoding="utf-8")
+        section = page.split('<section id="source">', 1)[1]
+        withheld = entry["source"]["redistribution"] != "permitted"
+        assert ("may not republish these files" in section) == withheld, (
+            entry["benchmark_id"]
+        )

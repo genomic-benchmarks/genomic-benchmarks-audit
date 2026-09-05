@@ -146,6 +146,11 @@ SEVERITY = {"Pass": 0, "Warning": 1, "Fail": 2}
 # what the model saw, what it was tuned on, what it is scored on.
 SPLIT_ORDER = ("train", "val", "test", "test_leftout")
 
+# Whether this project may republish a collection's split files. A closed set,
+# checked on read, because the site turns each value into a different sentence and
+# `unknown` is deliberately not `denied`: an unanswered licence is not a refusal.
+REDISTRIBUTION = ("permitted", "denied", "unknown")
+
 # The 42 columns of the rollup, in file order. Stated so that a run whose output
 # moved stops the build here, naming the columns, rather than three calls deeper
 # with a `KeyError`.
@@ -289,6 +294,11 @@ class Split:
     per split per sequence column, so it is what says which reports exist. Most
     datasets have one column; `GUE_v2`'s enhancer-promoter pairs have two, as do
     miRBench's, and those get a report per column plus a `merged` one.
+
+    `source_url` is where this split's file is served from, and it is held per
+    split because that is where it varies: 81 of the 93 datasets are one file per
+    split. For a collection whose licence bars republication it is not a mirror of
+    anything here -- it is the only copy.
     """
 
     split: str
@@ -296,6 +306,50 @@ class Split:
     label_col: str
     regression: bool
     num_labels: int | None
+    source_url: str
+
+
+@dataclass(frozen=True)
+class Source:
+    """Who a dataset credits, and what it may be republished under.
+
+    Neither figure is a measurement, and neither could be recomputed from one:
+    they are read out of the corpus metadata record, which is where the curation
+    wrote them down. They are here because this project states in its own Data
+    availability that the collections are republished with the attribution they
+    require, and a page that names a collection without naming its licence or its
+    DOI does not keep that.
+
+    `doi` is resolved -- the dataset's own where it has one, the collection's
+    where it does not -- and `collection_doi` is carried beside it so a page can
+    say which of the two it is quoting. They are equal for the 67 datasets that
+    inherit.
+
+    `licence` is empty where the source states none, which is not the same as
+    permissive: an absent licence grants nothing, and `redistribution` is the
+    field that says so.
+    """
+
+    doi: str
+    collection_doi: str
+    licence: str
+    licence_url: str
+    # `permitted`, `denied` or `unknown`. `unknown` is kept distinct from `denied`
+    # on purpose: an unanswered licence is not a refusal.
+    redistribution: str
+    # Why `redistribution` is what it is -- the evidence, not a restatement. A
+    # denial names who declined and when.
+    licence_note: str
+
+    @property
+    def inherits_doi(self) -> bool:
+        """Whether the DOI quoted is the collection's rather than its own."""
+        return self.doi == self.collection_doi
+
+    @property
+    def republished(self) -> bool:
+        """Whether this project may republish the split files themselves."""
+        return self.redistribution == "permitted"
 
 
 @dataclass(frozen=True)
@@ -416,6 +470,7 @@ class Dataset:
     measurements: tuple[Measurement, ...]
     leakage: tuple[LeakageComparison, ...]
     splits: tuple[Split, ...]
+    source: Source | None
     reports: Reports | None
     core_set_rank: int | None
 
@@ -682,10 +737,32 @@ def _read_splits(path: Path) -> dict[tuple[str, str], list[Split]]:
                 label_col=row["label_col"],
                 regression=row["regression"].strip().lower() == "true",
                 num_labels=_optional_int(row["num_labels"], where, "num_labels"),
+                source_url=row["source_url"],
             )
         )
     for splits in found.values():
         splits.sort(key=lambda s: _split_rank(s.split))
+    return found
+
+
+def _read_sources(path: Path) -> dict[tuple[str, str], Source]:
+    found = {}
+    for row in _rows(path):
+        where = f"{row['collection']}:{row['dataset']}"
+        if row["redistribution"] not in REDISTRIBUTION:
+            raise RunInvalid(
+                f"{where}.redistribution: {row['redistribution']!r} is not one of "
+                f"{sorted(REDISTRIBUTION)}. The site says in words what this value "
+                f"says in one, so a fourth value would be published unread."
+            )
+        found[(row["collection"], row["dataset"])] = Source(
+            doi=row["doi"],
+            collection_doi=row["collection_doi"],
+            licence=row["licence"],
+            licence_url=row["licence_url"],
+            redistribution=row["redistribution"],
+            licence_note=row["licence_note"],
+        )
     return found
 
 
@@ -806,6 +883,7 @@ def read(root: Path | str = DATA) -> Run:
     measurements = _read_measurements(root / "combined_classes_results.csv")
     leakage = _read_leakage(root / "combined_splits_results.csv")
     splits = _read_splits(root / "splits.csv")
+    sources = _read_sources(root / "sources.csv")
     reports = _read_reports(root / "reports.csv")
     core_set = {
         (row["collection"], row["dataset"]): int(row["selection_rank"])
@@ -870,6 +948,7 @@ def read(root: Path | str = DATA) -> Run:
             ),
             leakage=tuple(leakage.get(key, ())),
             splits=tuple(splits.get(key, ())),
+            source=sources.get(key),
             reports=reports.get(key),
             core_set_rank=core_set.get(key),
             joint=joint,
@@ -882,6 +961,7 @@ def read(root: Path | str = DATA) -> Run:
     _cover(datasets, measurements, "combined_classes_results.csv")
     _cover(datasets, leakage, "combined_splits_results.csv", allow_missing=1)
     _cover(datasets, splits, "splits.csv")
+    _cover(datasets, sources, "sources.csv")
     _cover(datasets, reports, "reports.csv")
     _cover(datasets, candidates, "core_set_candidates.csv")
 

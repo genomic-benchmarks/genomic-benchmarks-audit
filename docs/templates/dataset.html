@@ -26,6 +26,7 @@
     <dt>Species</dt><dd>{{species}}</dd>
     <dt>Sequences</dt><dd>{{total_size}} across {{n_dataset_splits}} {{split_word}}</dd>
     <dt>Sequence length</dt><dd>{{min_seq_length}} to {{max_seq_length}}</dd>
+    <dt>Licence</dt><dd>{{licence_glance}}</dd>
   </dl>
   {{reports_cta}}
 </section>
@@ -184,6 +185,32 @@
 </section>
 
 {{leakage_section}}
+
+<!-- This page is a measurement of someone else's data. Until this section it
+     named the collection and nothing else about it: not what the files may be
+     used for, not who is owed the credit, not where to get them. All three are
+     in `data/sources.csv`, one row per dataset, resolved there rather than here
+     because eleven datasets override their collection's licence. -->
+<section id="source">
+  <h2>Licence, credit, and the data itself</h2>
+  <p>
+    What this data may be used for is its source's decision and not this
+    project's. It is set down here as the curation read it, with the evidence, so
+    that a reader can check the reading rather than take it.
+  </p>
+  <dl class="facts">
+    <dt>Licence</dt><dd>{{licence}}</dd>
+    <dt>Credit</dt><dd>{{doi_link}}</dd>
+  </dl>
+  <p>
+    Each split's file, and where it is served from:
+  </p>
+  {{source_files}}
+  {{licence_terms}}
+  <p class="fine">
+    <a href="../cite.html">How to cite the run these numbers come from</a>
+  </p>
+</section>
 
 <section class="onward">
   <h2>Nearby</h2>
