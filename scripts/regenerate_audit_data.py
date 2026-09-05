@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Copy one published audit run into `data/`, and record what was copied.
 
-The run is produced in `GenBench2_paper` by two workflows: `dataset_qc` measures
-every split of every included dataset, and `dataset_audit` rolls those up to one row
-per dataset and selects the Core Set. Both write into a gitignored `runs/` tree, so
-the small tables are copied in here and the site renders from the copy.
+The run is produced in `GenBench2_paper` by three workflows: `dataset_qc` measures
+every split of every included dataset, `dataset_audit` rolls those up to one row per
+dataset, and `core_set` applies the six gates over that rollup and a joint model of
+the same features. All three write into a gitignored `runs/` tree, so the small
+tables are copied in here and the site renders from the copy.
 
 **Copied byte for byte, not projected.** This repository is the audit and its facets
 come from the audit, so it keeps all 42 rollup columns rather than the 30 a registry
@@ -64,6 +65,12 @@ ENV_VAR = "GB_AUDIT_RUN"
 
 AUDIT_RUN = Path("runs") / "dataset_audit" / "published"
 QC_RUN = Path("runs") / "dataset_qc" / "published"
+# The Core Set is selected by a pipeline of its own, downstream of both. It has to
+# be: its last gate reads a score the audit cannot compute -- what the ten checks'
+# features recover jointly -- and a selection made inside the audit would put the
+# two pipelines each behind the other. So the chain runs one way, dataset_qc ->
+# dataset_audit -> qc_baseline -> core_set, and this is the fourth link's output.
+CORE_RUN = Path("runs") / "core_set" / "published"
 
 # Copied unchanged. The left column is the name in `data/`; the right is where it
 # sits in the checkout. Flat here because `data/` is one archived run and a reader
@@ -75,9 +82,14 @@ COPIED = {
     "summary_by_collection.csv": AUDIT_RUN / "audit" / "summary_by_collection.csv",
     "summary_by_task_category.csv": AUDIT_RUN / "audit" / "summary_by_task_category.csv",
     "exclusion_summary.csv": AUDIT_RUN / "audit" / "exclusion_summary.csv",
-    "core_set.csv": AUDIT_RUN / "core_set" / "core_set.csv",
-    "core_set_criteria.csv": AUDIT_RUN / "core_set" / "core_set_criteria.csv",
-    "core_set_selection_trace.csv": AUDIT_RUN / "core_set" / "core_set_selection_trace.csv",
+    "core_set.csv": CORE_RUN / "core_set" / "core_set.csv",
+    "core_set_criteria.csv": CORE_RUN / "core_set" / "core_set_criteria.csv",
+    "core_set_selection_trace.csv": CORE_RUN / "core_set" / "core_set_selection_trace.csv",
+    # Every dataset the selection considered, not only the ten it returned -- and
+    # the only table in `data/` carrying what the checks recover *jointly*. The
+    # site needs it per dataset rather than per member: a reader on a page for a
+    # dataset that did not make the Core Set is owed the number it was judged on.
+    "core_set_candidates.csv": CORE_RUN / "core_set" / "core_set_candidates.csv",
     "combined_classes_results.csv": QC_RUN / "combined_classes_results.csv",
     "combined_splits_results.csv": QC_RUN / "combined_splits_results.csv",
 }
@@ -110,7 +122,7 @@ def locate(source: str | None) -> Path:
             f"not the audit's rollup, which this repository is the publisher of."
         )
     root = Path(source).expanduser().resolve()
-    for required in (AUDIT_RUN, QC_RUN):
+    for required in (AUDIT_RUN, QC_RUN, CORE_RUN):
         if not (root / required).is_dir():
             raise SourceUnreachable(
                 f"{root} has no {required}. That is a published run directory -- "
@@ -259,6 +271,7 @@ def provenance(root: Path, files: dict[str, bytes]) -> dict:
     return {
         "audit_run": run_label(root, AUDIT_RUN),
         "qc_run": run_label(root, QC_RUN),
+        "core_set_run": run_label(root, CORE_RUN),
         "source_repository": "GenBench2_paper",
         "zenodo_record_id": zenodo.RECORD_ID,
         "zenodo_concept_record_id": zenodo.CONCEPT_RECORD_ID,
@@ -294,7 +307,7 @@ def drift(files: dict[str, bytes], recorded: dict) -> list[str]:
         if stray.name not in files:
             problems.append(f"{stray.name}: in data/ and not in the run")
     stated = json.loads((DATA / "provenance.json").read_text(encoding="utf-8"))
-    for field in ("audit_run", "qc_run"):
+    for field in ("audit_run", "qc_run", "core_set_run"):
         if stated.get(field) != recorded[field]:
             problems.append(
                 f"provenance.{field}: the copy says {stated.get(field)!r}, the run "
@@ -332,6 +345,7 @@ def main() -> int:
             print(
                 f"regenerate_audit_data: data/ states audit run "
                 f"{recorded['audit_run']}, QC run {recorded['qc_run']}, "
+                f"Core Set run {recorded['core_set_run']}, "
                 f"{len(files)} files, clear"
             )
             return 0

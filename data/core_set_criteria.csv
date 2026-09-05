@@ -1,6 +1,7 @@
-step,criterion,requirement,threshold,n_in,n_removed,n_out
-1,evaluable,Defines the reference split and was scanned for leakage,"reference split = 'train', leakage scan present",93,1,92
-2,integrity,"No Fail on unique bases, duplicate sequences between or within labels",flag != Fail in any split,92,27,65
-3,leakage,No Fail on the train-test leakage scan,flag != Fail in any split pair (< 2% of held-out sequences),65,11,54
-4,separability,No Fail on any single-feature probe,strongest-probe AUROC <= 0.7 in every split,54,23,31
-5,diversity selection,"greedy facet coverage, at most 2 per collection",target size 10,31,21,10
+step,criterion,requirement,threshold,n_in,n_removed,n_out,note
+1,evaluable,Defines the reference split and was scanned for leakage,"reference split = 'train', leakage scan present",93,1,92,
+2,integrity,"No Fail on unique bases, duplicate sequences between or within labels",flag != Fail in any split,92,27,65,
+3,leakage,No Fail on the train-test leakage scan,flag != Fail in any split pair (< 2% of held-out sequences),65,11,54,
+4,separability,No Fail on any single-feature probe,strongest-probe AUROC <= 0.7 in every split,54,23,31,
+5,joint,The QC features jointly do not recover the label,joint QC-feature AUROC < 0.8 on every held-out split,31,6,25,"9 of the 25 admitted joint values are lower bounds (position window capped or training pool subsampled), which for admission is the anticonservative direction; 21 of the 92 modelled datasets carry one."
+6,diversity selection,"greedy facet coverage, at most 2 per collection",target size 10,25,15,10,

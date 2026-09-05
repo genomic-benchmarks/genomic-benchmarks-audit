@@ -18,10 +18,12 @@ dataset: what ten checks returned on each one, how far a single sequence feature
 gets, which sequences appear in two splits, and every report the tool produced.
 
 **→ [Open the site](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/).**
-A README has no room for what it holds: a sortable [catalogue](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/catalogue.html)
-of all 93, a page per dataset with its ten flags and its probe curve, [each check](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/checks.html)
-taken in turn across the corpus, and the 423 reports themselves, framed and
-readable.
+A README has no room for what it holds: a sortable, filterable table of all 93 on
+the page you land on, a page per dataset with its ten flags and its probe curve,
+[each check](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/checks.html)
+taken in turn across the corpus — with the flag boundaries on a slider, so which
+flags depend on them is something you can see — and the 423 reports themselves,
+framed and readable at the top of the dataset each one belongs to.
 
 If you are about to train on one of these datasets, its page is the thing to read
 first — not because a flag disqualifies it, but because the number a new method is
@@ -49,12 +51,20 @@ one of them is computed from a committed file in [`data/`](data/README.md):
 - **Sequences turn up in more than one split.** **75 of the 92** scanned datasets
   share at least one sequence between two splits. Six have more than half of one
   split present in another, and **five have all of it**.
-- **Ten datasets clear every gate.** Of 147 curated datasets, 93 could be measured
-  — 54 were excluded, for 12 reasons the site
-  [lists](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/catalogue.html)
-  rather than summarises — and ten clear all five
+- **Read together, the same checks recover far more than any one of them.** Handed
+  all ten checks' features at once instead of one at a time, a model reaches a
+  median **AUROC 0.798** on a held-out split, and 46 of 92 datasets reach 0.80 or
+  more. **Six** of those returned `Fail` on no check at all —
+  [`nucleotide_benchmarks:splice_sites_donors`](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/datasets/nucleotide-benchmarks--splice-sites-donors.html)
+  is separated at **0.997** by features whose strongest single member reaches
+  0.685. No individual flag can show that, which is why the site
+  [carries it](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/core-set.html#joint).
+- **Ten datasets come through the Core Set.** Of 147 curated datasets, 93 could be
+  measured — 54 were excluded, for 12 reasons recorded at curation time and listed
+  one per row in [`data/exclusion_summary.csv`](data/exclusion_summary.csv). Five
   [Core Set](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/core-set.html)
-  gates.
+  criteria leave 25 eligible, and a selection spreading those over task, molecule
+  and collection returns ten.
 
 ## What the site does not claim
 
@@ -83,10 +93,10 @@ from a committed file.
 
 | | |
 |---|---|
-| [`data/`](data/README.md) | The archived run: twelve CSVs and a digest for each. The only input. |
+| [`data/`](data/README.md) | The archived run: thirteen CSVs and a digest for each. The only input. |
 | `docs/data/catalogue.json` | Built from `data/`. Committed, gated in CI, fetched by the table. |
 | `docs/templates/` | The pages, with `{{placeholders}}` where numbers go. |
-| `docs/assets/` | One stylesheet, two classic scripts. No framework, no webfont request. |
+| `docs/assets/` | One stylesheet and a handful of classic scripts. No framework, no webfont request. |
 | `docs/vendor/` | Tabulator 6.5.2, a file rather than a CDN call. |
 | `src/gb_audit/` | The renderer: `audit`, `catalogue`, `charts`, `reports`, `site`, `zenodo`. |
 | [`tools/vocabulary.toml`](tools/vocabulary.toml) | How this project is allowed to describe what was measured. |

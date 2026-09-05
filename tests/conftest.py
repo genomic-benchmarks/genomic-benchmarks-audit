@@ -70,3 +70,9 @@ def built_bare(run, tmp_path_factory):
 @pytest.fixture(scope="session")
 def copy(committed):
     return site.site_copy(site.counts(committed))
+
+
+@pytest.fixture(scope="session")
+def pages(built):
+    """Every page the build wrote, including the 423 framed reports."""
+    return sorted(Path(built["out"]).rglob("*.html"))

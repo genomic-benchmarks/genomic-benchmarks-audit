@@ -14,11 +14,13 @@
  * tables, so text links take `brand-700` (5.5:1) and 600 is kept for borders,
  * marks and hover, where 3:1 is the bar. Same ramp, one step down.
  *
- * **Flag colours.** The organisation site's flag words are red-600, amber-600 and
- * emerald-600; the last two are under 4.5:1 on white. A flag is the most load
- * bearing word on any page here and is often 13px, so this site uses the 700
- * steps of the same three hues. Every token in both themes clears 4.5:1 on every
- * surface it is used on.
+ * **Flag colours.** The organisation site sets a flag as a coloured word. Here a
+ * flag is a chip carrying the same fill the grid on the landing page draws that
+ * flag in, so the key a reader learns on the grid is the key on every table
+ * beside it. The word is inked in whichever of two neutrals the fill can carry
+ * at 4.5:1 or better; the fills themselves were picked in `charts.py` against
+ * three colour-vision-deficiency simulations, and are ordered by lightness so
+ * the severity survives greyscale.
  *
  * Flags carry colour, but never colour alone -- every flag is also its own word.
  */
@@ -76,6 +78,8 @@
   --accent-wash-strong: var(--brand-100);
   --accent-on-wash: var(--brand-900);
 
+  /* Two of these are still in use -- `--warning` rules a caution note, `--pass`
+   * confirms a copy -- and the flag words they used to ink are chips now. */
   --fail: #b91c1c;
   --warning: #b45309;
   --pass: #047857;
@@ -99,6 +103,28 @@
   --flag-fill-warning: #fd8c35;
   --flag-fill-fail: #b91c1c;
   --flag-fill-unknown: #616a7a;
+
+  /* What a word set *on* one of those fills is inked in. Two values rather than
+   * one, because the ramp is ordered by lightness: the two light fills take the
+   * page's own ink at 8.6:1 and 7.6:1, and Fail -- the dark end -- takes white at
+   * 6.5:1. Set beside the fills so a change to one is a change made next to the
+   * contrast it has to keep. */
+  --flag-ink-on-light: #111827;
+  --flag-ink-on-dark: #ffffff;
+
+  /* Every other row of the catalogue table. A step from --paper rather than
+   * --wash, which is what a hovered row takes: a zebra the width of the hover
+   * would make the pointer's row indistinguishable from the one above it. */
+  --row-alt: #f7f8f9;
+
+  /* A hovered column heading. A step further from --paper than either the zebra
+   * or a hovered row, because a heading is a control and the other two are not:
+   * the pointer over a row says "this row", the pointer over a heading says
+   * "this sorts". Never a step *towards* the page's paper -- the vendor's own
+   * value is #cdcdcd, which in the dark theme is a near-white slab under
+   * --ink-faint text, and a heading that lights up is a heading you cannot
+   * read. */
+  --header-hover: #eaecef;
 
   /* A figure keeps a light canvas in both themes. The flag ramp in charts.py was
    * chosen for distinguishability under three colour-vision-deficiency
@@ -167,6 +193,9 @@
   --warning: #fbbf24;
   --pass: #34d399;
   --unknown: #94a3b8;
+
+  --row-alt: #131d33;
+  --header-hover: #263449;
 
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-lift: 0 4px 14px rgb(0 0 0 / 0.5);
@@ -321,8 +350,8 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
 
 /* ------------------------------------------------------------- controls --- */
 
-/* The reports page ships its controls hidden and `assets/reports.js` unhides
- * them, so the attribute has to beat the display below rather than lose to it. */
+/* The table ships its controls hidden and `assets/catalogue.js` unhides them, so
+ * the attribute has to beat the display below rather than lose to it. */
 .controls[hidden] { display: none; }
 .controls {
   display: flex; flex-direction: column; gap: 14px; margin: 22px 0 14px;
@@ -335,21 +364,141 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-faint);
   font-weight: 600;
 }
-/* Species has nineteen values. A fieldset that grows to fit them pushes the
- * table off the screen, so the long ones scroll inside their own box. */
-.controls fieldset { max-height: 188px; overflow-y: auto; }
-.controls fieldset {
-  border: 1px solid var(--rule); border-radius: var(--radius-sm); margin: 0;
-  padding: 8px 14px 12px; background: var(--canvas);
+/* The drawer these open into.
+ *
+ * The six groups of checkboxes are the tallest thing in this panel and the
+ * least often reached for -- most readers sort a column, type into the search,
+ * or take a quick view -- and at full height they pushed the table itself below
+ * the fold. So they ship closed. What stays on show is the state: the quick
+ * views, a chip per condition, and the count of rows.
+ *
+ * The button says how many boxes are ticked, because a closed drawer can be
+ * narrowing the table and the reader is owed that from outside it. The caret
+ * turns rather than swapping glyph, so nothing beside it shifts. */
+.drawer-toggle .drawer-caret {
+  width: 0; height: 0;
+  border-left: 4.5px solid transparent; border-right: 4.5px solid transparent;
+  border-top: 5.5px solid currentColor;
+  transition: transform 0.15s ease;
 }
-.controls legend {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600;
-  color: var(--ink-faint); padding: 0 4px;
+.drawer-toggle[aria-expanded="true"] .drawer-caret { transform: rotate(180deg); }
+.drawer-toggle[aria-expanded="true"] {
+  border-color: var(--accent-line); color: var(--accent);
 }
-.controls label { display: block; font-size: 14px; color: var(--ink-soft); cursor: pointer; }
-.controls label input { margin-right: 6px; accent-color: var(--accent-line); }
-#facets { display: flex; gap: 16px; flex-wrap: wrap; }
-#facets label { white-space: nowrap; }
+.drawer-toggle[hidden] { display: none; }
+.drawer-count {
+  font-size: 11px; font-weight: 700; line-height: 1.65; padding: 0 7px;
+  border-radius: 999px; font-variant-numeric: tabular-nums;
+  background: var(--accent-wash-strong); color: var(--accent-on-wash);
+}
+/* `#facets` is a grid, and a grid beats the `display: none` that `hidden` is. */
+#facets[hidden] { display: none; }
+
+/* The facets: one group of checkboxes per column the table can be narrowed by,
+ * six of them.
+ *
+ * They were bordered `fieldset`s in a flex row, which is the browser's own look
+ * and the reason they read as awkward: sunken boxes of six different heights,
+ * ragged along the bottom, each one a box drawn inside a card that is already a
+ * box and filled a step darker than it, so a group read as a hole in the panel
+ * rather than as a heading over a list. What is wanted is a rail -- a small
+ * heading, a rule, a column of options -- laid on a grid, so the six headings
+ * line up and the options under them share a left edge. The border around a
+ * group was doing a job the heading and the space between groups already do.
+ *
+ * The `fieldset` and the `legend` stay. A set of related checkboxes is what they
+ * are for, and they are why a screen reader says "Species, group" before reading
+ * the first option. What changes is only that they stop looking like a form. */
+#facets {
+  display: grid; gap: 18px 22px; align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+}
+
+/* The tick, as an image rather than as generated content: Firefox draws no
+ * `::before` or `::after` on an `<input>`, and a checkbox whose mark is missing
+ * in one browser is a checkbox that browser cannot state its own condition in.
+ * Two of them rather than one, because a mark on a fill has to clear 3:1 to be a
+ * mark, and no single lightness does that on both the accent and the Fail red.
+ *
+ * On both boxes that use them: the facets, which choose rows, and the column
+ * picker, which chooses columns. */
+#facets, .picker-list {
+  --tick-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23111827' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' d='M3.6 8.4l2.9 2.9 5.9-6'/%3E%3C/svg%3E");
+  --tick-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' d='M3.6 8.4l2.9 2.9 5.9-6'/%3E%3C/svg%3E");
+}
+.controls fieldset.facet {
+  border: none; margin: 0; padding: 0; background: none; min-width: 0;
+}
+.controls .facet legend {
+  padding: 0 9px; margin: 0;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  font-weight: 600; color: var(--ink-faint);
+}
+/* Species has seventeen values, and a group that grows to fit them pushes the
+ * table off the screen, so the long ones scroll. The cap is eight options, which
+ * is one more than the longest facet that is not species: a list that scrolls by
+ * half a row is worse than one that does not scroll at all, so the number is set
+ * where it clears the six groups that fit and stops only the one that does not.
+ *
+ * The cap is on this box rather than on the fieldset so that the heading sits
+ * outside what moves. A scrolled list whose own heading has scrolled away is a
+ * column of species names with nothing left on screen saying they are species. */
+.controls .facet-list {
+  max-height: 224px; overflow-y: auto;
+  margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--rule);
+  scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent;
+}
+
+.controls .facet-list label {
+  display: flex; align-items: center; gap: 9px;
+  padding: 4px 9px; margin-bottom: 1px; border-radius: var(--radius-sm);
+  font-size: 13.5px; line-height: 1.35; color: var(--ink-soft); cursor: pointer;
+}
+/* The whole row answers the pointer, not just the fifteen pixels of the box. */
+.controls .facet-list label:hover { background: var(--wash); color: var(--ink); }
+/* A ticked option also takes the page's full ink, so which filters are on reads
+ * down the column rather than box by box. `:has()` because the value has no
+ * element of its own to hang it on; where it is unsupported the tick still says
+ * so, and no weight changes, so nothing reflows either way. */
+.controls .facet-list label:has(input:checked) { color: var(--ink); }
+
+/* The box itself, drawn rather than the platform's. Its border is --ink-faint
+ * and not --rule-strong: a rule divides two things that are both still there,
+ * but this outline *is* the control when the control is empty, and an empty
+ * checkbox at 1.5:1 is one a reader has to hunt for. */
+.controls .facet-list input[type="checkbox"],
+.picker-list input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  flex: none; width: 15px; height: 15px; margin: 0;
+  border: 1.5px solid var(--ink-faint); border-radius: 4px;
+  background: var(--paper) no-repeat center / 100% 100%;
+  cursor: pointer;
+}
+.controls .facet-list input[type="checkbox"]:checked,
+.picker-list input[type="checkbox"]:checked {
+  background-color: var(--accent-line); border-color: var(--accent-line);
+  background-image: var(--tick-dark);
+}
+.controls .facet-list input[type="checkbox"]:focus-visible,
+.picker-list input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--accent-line); outline-offset: 2px;
+}
+
+/* The rollup flag filters take the ramp the rest of the site draws that flag in,
+ * so the control and the column it narrows read as one key rather than as two.
+ * Fail is the dark end of the ramp and takes the light tick, the other two are
+ * light fills and take the dark one -- the pairing `--flag-ink-on-light` and
+ * `--flag-ink-on-dark` already name for the chips. */
+#facets input[data-field="overall_verdict"][value="Pass"]:checked {
+  background-color: var(--flag-fill-pass); border-color: var(--flag-fill-pass);
+}
+#facets input[data-field="overall_verdict"][value="Warning"]:checked {
+  background-color: var(--flag-fill-warning); border-color: var(--flag-fill-warning);
+}
+#facets input[data-field="overall_verdict"][value="Fail"]:checked {
+  background-color: var(--flag-fill-fail); border-color: var(--flag-fill-fail);
+  background-image: var(--tick-light);
+}
 #search {
   font: inherit; font-size: 14px; padding: 7px 11px; width: 260px;
   border: 1px solid var(--rule-strong); border-radius: var(--radius-sm);
@@ -396,6 +545,62 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
 }
 .chip button:hover { background: var(--accent-wash-strong); }
 
+/* ----------------------------------------------------------- table tools --- */
+
+/* Above the table and outside `.controls`, because neither of these narrows it.
+ * The picker chooses what is on screen and the arrows move along it, and a
+ * reader looking for why a row went missing should not find them among the
+ * things that could have removed it. */
+.table-tools {
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  justify-content: space-between; gap: 10px 24px; margin: 0 0 10px;
+}
+.picker[hidden], .scroller[hidden] { display: none; }
+
+.picker { border: none; margin: 0; padding: 0; min-width: 0; }
+.picker legend {
+  padding: 0; margin: 0 0 4px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  font-weight: 600; color: var(--ink-faint);
+}
+.picker-body { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; }
+/* The list is not a box of its own. Its labels are flex items of the row above,
+ * so they and the reset button wrap as one line of controls rather than as a
+ * block with a button set beside it. */
+.picker-list { display: contents; }
+.picker-list label {
+  display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+  padding: 4px 9px; border-radius: var(--radius-sm);
+  font-size: 13px; line-height: 1.35; color: var(--ink-soft); cursor: pointer;
+}
+.picker-list label:hover { background: var(--wash); color: var(--ink); }
+/* A column that is on takes the page's full ink, so which of the thirteen are
+ * on the table reads across the row rather than box by box. */
+.picker-list label:has(input:checked) { color: var(--ink); }
+#picker-reset { font-size: 12.5px; padding: 4px 10px; margin-left: 6px; }
+#picker-reset[hidden] { display: none; }
+
+/* The way sideways. Held to the right-hand end of the tools row, which is the
+ * end of the table it is pointing at. */
+.scroller { display: flex; align-items: center; gap: 2px; }
+.scroller-label { font-size: 13px; color: var(--ink-soft); margin-right: 8px; }
+.scroller button {
+  font: inherit; width: 30px; height: 30px; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: none; color: var(--ink-soft);
+}
+.scroller button:hover:not(:disabled) { background: var(--accent-wash); color: var(--accent); }
+.scroller button:focus-visible { outline: 2px solid var(--accent-line); outline-offset: 1px; }
+/* At either end the button stays where it is and stops answering, rather than
+ * leaving: a control that disappears at the moment it is being aimed at moves
+ * the one next to it under the pointer. */
+.scroller button:disabled { color: var(--rule); cursor: default; }
+.scroller button svg {
+  width: 18px; height: 18px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+
 /* ---------------------------------------------------------------- table --- */
 
 .catalogue-table {
@@ -423,13 +628,135 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
    * wrap at, so permission to wrap alone leaves it overflowing. */
   overflow-wrap: anywhere;
 }
-.tabulator-row { border-bottom: 1px solid var(--rule); color: var(--ink); }
-.tabulator-row.tabulator-row-even { background: var(--paper); }
+/* Every surface the vendored stylesheet paints, repainted.
+ *
+ * Tabulator ships a light theme in hard-coded hexes -- `#fff` on the row and on
+ * the table holder, `#333` on its text -- and this file used to re-colour only
+ * the *even* rows. In the light theme that reads as intended, because white on
+ * white is white. In the dark theme it was half a table: the even rows took
+ * `--paper`, the odd rows kept the vendor's white, and `--ink` on white is
+ * unreadable. So each of these surfaces is claimed explicitly, and none of them
+ * is left to whichever rule the vendor happens to have written for it. */
+.tabulator .tabulator-tableholder { background: var(--paper); }
+.tabulator .tabulator-tableholder .tabulator-table { background: var(--paper); color: var(--ink); }
+.tabulator-row { background: var(--paper); border-bottom: 1px solid var(--rule); color: var(--ink); }
+/* The zebra is a step from the row's own colour, not from the hover colour, so
+ * the three states stay ordered: row, alternate row, hovered row. */
+.tabulator-row.tabulator-row-even { background: var(--row-alt); }
 .tabulator-row:hover { background: var(--wash) !important; }
 .tabulator-row .tabulator-cell { border-right: none; padding: 8px 10px; }
 .tabulator .tabulator-row.tabulator-selectable:hover { cursor: pointer; }
 .tabulator .tabulator-placeholder { background: var(--paper); }
 .tabulator .tabulator-placeholder .tabulator-placeholder-contents { color: var(--ink-faint); }
+
+/* The header's own hover and its sort arrows, for the same reason: `#cdcdcd`
+ * behind a column title and `#666` on an arrow are a light theme's values, and
+ * in the dark theme they were a grey slab and an invisible arrow. */
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
+  background: var(--header-hover);
+}
+/* And the title sharpens rather than washing out. A heading sits at --ink-faint
+ * so the values below it read first; under the pointer it is the thing being
+ * pointed at, so it takes the page's full ink. */
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover
+  .tabulator-col-content .tabulator-col-title {
+  color: var(--ink);
+}
+.tabulator .tabulator-header .tabulator-col .tabulator-col-sorter .tabulator-arrow {
+  border-bottom-color: var(--rule-strong); border-top-color: var(--rule-strong);
+}
+.tabulator .tabulator-header .tabulator-col[aria-sort="ascending"] .tabulator-arrow,
+.tabulator .tabulator-header .tabulator-col[aria-sort="descending"] .tabulator-arrow {
+  border-bottom-color: var(--accent); border-top-color: var(--accent);
+}
+/* The arrow under the pointer. Tabulator writes this one at #555 behind seven
+ * class selectors, so it needs eight to answer: in the dark theme a #555 arrow
+ * on a hovered heading is an arrow that disappears at the moment it is being
+ * aimed at. */
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable
+  .tabulator-col-content .tabulator-col-sorter .tabulator-arrow:hover {
+  border-bottom-color: var(--accent); border-top-color: var(--accent);
+}
+
+/* The column help. Every heading on this table carries a `headerTooltip` and the
+ * two wide text columns carry a cell tooltip, and Tabulator draws all of them in
+ * one popup it paints `#fff` and does not set a text colour on -- so in the dark
+ * theme the help text was `--ink` on white. */
+.tabulator-popup-container {
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule-strong); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lift);
+}
+.tabulator-tooltip { max-width: 42ch; padding: 7px 10px; line-height: 1.45; }
+
+/* ------------------------------------------------------- the check grid --- */
+
+/* One column per check, drawn as `gb_audit/matrix.py` draws the same grid on the
+ * overview: a fill, not a word. Ten words of Pass and Fail across a row are ten
+ * things to read; ten fills are one shape. The flag is still carried in the
+ * tooltip and to a screen reader, and the fills are `--flag-fill-*`, whose
+ * lightness orders the severity -- so the ordering survives colour vision
+ * deficiency and colour is never the only signal. */
+.tabulator-row .tabulator-cell.check-cell { padding: 6px 4px; }
+.cflag { display: block; height: 18px; border-radius: 2px; }
+.cflag-Pass { background: var(--flag-fill-pass); }
+.cflag-Warning { background: var(--flag-fill-warning); }
+.cflag-Fail { background: var(--flag-fill-fail); }
+/* Unknown is not a fourth degree of severity, so it is not a fourth fill on the
+ * ramp: it is the outline of a cell that was scored and could not be. */
+.cflag-Unknown {
+  height: 16px; border: 1px solid var(--flag-fill-unknown); background: none;
+}
+/* And a check that had nothing to run on is neither. The grid on the overview
+ * leaves this one blank, because its cells sit in a lattice of rules and an
+ * empty box there is visibly a box. These do not, so the box is drawn -- an
+ * absence with no outline at all is indistinguishable from a column that failed
+ * to render, which is a different statement. */
+.cflag-blank {
+  height: 16px; border: 1px dashed var(--rule-strong); background: none;
+}
+
+/* The heading, two short lines of it. Not the uppercase the other columns take:
+ * these are the manuscript's own abbreviations, and `Per position / from 3'`
+ * shouted is a heading that reads as an acronym. */
+.ch-line {
+  display: block; font-size: 9px; line-height: 1.3;
+  text-transform: none; letter-spacing: 0;
+}
+/* The band over each family. The check columns are the only groups this site
+ * has, which is why these rules can be written on the group rather than on a
+ * class of their own -- and why they can reach the ten headings under it, which
+ * `cssClass` does not. */
+.tabulator .tabulator-header .tabulator-col.tabulator-col-group
+  > .tabulator-col-content .tabulator-col-title {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.05em; text-align: center;
+}
+/* The rule under a band is the vendor's `#aaa`, which is a light theme's value
+ * and twice the weight of every other rule on this page. */
+.tabulator .tabulator-header .tabulator-col-group .tabulator-col-group-cols {
+  border-top: 1px solid var(--rule);
+}
+/* Tabulator keeps 25 pixels at the right of a sortable heading for its sort
+ * arrow. On a column 64 pixels wide that is a third of the heading spent holding
+ * a mark 12 pixels across, and `Dinucleotide` came apart into three lines to pay
+ * for it. The arrow goes under the two lines instead, where the width it wants
+ * is width the heading was not using. */
+.tabulator .tabulator-header .tabulator-col-group-cols .tabulator-col-content {
+  padding: 4px 2px 11px;
+}
+.tabulator .tabulator-header .tabulator-col-group-cols
+  .tabulator-col.tabulator-sortable .tabulator-col-title { padding-right: 0; }
+.tabulator .tabulator-header .tabulator-col-group-cols .tabulator-col-sorter {
+  left: 0; right: 0; top: auto; bottom: 2px; justify-content: center;
+}
+
+/* The disclosure and the name stay while the checks scroll past them. Tabulator
+ * pins them with `position: sticky` and paints them `background-color: inherit`,
+ * which is what keeps the zebra and the hover running under a frozen cell; what
+ * it also ships is a 2px `#aaa` rule at the seam, which is a light theme's value
+ * and twice this site's weight. */
+.tabulator .tabulator-header .tabulator-frozen { background: var(--paper); }
+.tabulator .tabulator-frozen-left { border-right: 1px solid var(--rule); }
 
 .tabulator .tabulator-row.tabulator-group {
   background: var(--accent-wash); border-bottom: 1px solid var(--rule);
@@ -466,11 +793,36 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
   white-space: nowrap;
 }
 
-.flag { font-weight: 600; }
-.flag-Fail { color: var(--fail); }
-.flag-Warning { color: var(--warning); }
-.flag-Pass { color: var(--pass); font-weight: 500; }
-.flag-Unknown { color: var(--unknown); font-weight: 500; font-style: italic; }
+/* A flag, wherever it is written as a value rather than as a sentence.
+ *
+ * The same fill the grid on the landing page uses, with the word still on it.
+ * It used to be a coloured word in `--pass`, `--warning` and `--fail` -- the
+ * inks -- which meant the two halves of one key were two palettes: the grid
+ * called Pass a leaf green and the table beside it called Pass a teal. Reading
+ * the ink was never the problem; reading it as *the same statement* as the cell
+ * above it was. So the chip takes the fill, and the ink becomes whichever of the
+ * two the fill can carry -- 8.6:1 on Pass, 7.6:1 on Warning, 6.5:1 on Fail.
+ *
+ * Both of those hold in either theme, which is why nothing here is restated in
+ * the dark block: a flag fill is a figure's colour, and figures on this site
+ * keep their palette when the page inverts.
+ *
+ * Unknown stays outside the ramp, as it is in every figure. A fourth fill on the
+ * same three-step lightness order would read as a mild Pass, so Unknown is an
+ * outline and a blank is still only a dash. */
+.flag {
+  display: inline-block; font-weight: 600; font-size: 12px; line-height: 1.5;
+  padding: 1px 9px; border-radius: 999px; border: 1px solid transparent;
+  white-space: nowrap; vertical-align: baseline;
+}
+.flag-Pass { background: var(--flag-fill-pass); color: var(--flag-ink-on-light); }
+.flag-Warning { background: var(--flag-fill-warning); color: var(--flag-ink-on-light); }
+.flag-Fail { background: var(--flag-fill-fail); color: var(--flag-ink-on-dark); }
+.flag-Unknown {
+  border-color: var(--flag-fill-unknown); color: var(--unknown);
+  font-weight: 500; font-style: italic;
+}
+.flag-blank { padding: 1px 0; color: var(--unknown); font-weight: 400; }
 
 .num { font-variant-numeric: tabular-nums; }
 .absent { color: var(--unknown); font-style: italic; }
@@ -490,7 +842,16 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
   color: var(--ink-soft);
   cursor: default;
 }
-.tabulator-row.panel-open .panel { display: block; }
+/* The panel is a child of its row, so it is as wide as every column put
+ * together -- and at any scroll position but the first it opens off the left of
+ * the screen. Pinned to the left edge instead, at the width of what the reader
+ * can see: `--table-view` is what `assets/catalogue.js` measures the scrolling
+ * box at, and 100% is what it is before that measurement or without scripting to
+ * take it. */
+.tabulator-row.panel-open .panel {
+  display: block; position: sticky; left: 0;
+  width: var(--table-view, 100%); box-sizing: border-box;
+}
 
 /* On a benchmark page the panel is the page's own content rather than a row's
  * expanded body, so it is always open and needs a frame of its own -- inside a
@@ -504,30 +865,83 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
 .panel .headline b { color: var(--ink); }
 .panel .caveat { margin: 0 0 14px; font-size: 13px; color: var(--ink-faint); max-width: 78ch; }
 
+/* Two columns, because the ten checks ask two questions: nine of them about the
+ * classes inside one split, the tenth about what two splits have in common.
+ *
+ * Not two equal ones. The left column's longest row is "Per position reversed
+ * nucleotide content" and carries an AUROC and a flag after it; the right
+ * column's longest is a pair of split names. Equal tracks wrapped every check
+ * name onto two lines while the column beside it ran out of things to hold.
+ *
+ * `minmax(0, …)` rather than `minmax(260px, …)`: a grid item's default minimum
+ * is its content's width, so the checks table would refuse to shrink and paint
+ * over the column beside it instead. */
 .panel-grid {
   display: grid; gap: 26px;
-  /* `minmax(0, …)` rather than `minmax(280px, …)`: a grid item defaults to a
-   * minimum of its content's width, so the checks table -- whose longest row is
-   * "Per position reversed nucleotide content" -- refuses to shrink and paints
-   * over the column beside it. */
-  /* `auto-fit` collapses the tracks it has no child for, so an entry with no
-   * shared-rows section gets two wide columns rather than two narrow ones and a
-   * gap its notes then overflow into. */
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   align-items: start;
 }
 .panel-grid > div { min-width: 0; }
 .panel .shares li { overflow-wrap: anywhere; }
-.panel h3 {
+.panel h3, .panel h4 {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
   color: var(--ink-faint); margin: 0 0 6px; font-weight: 600;
 }
+.panel h4 { margin-top: 16px; }
 .panel table { border-collapse: collapse; width: 100%; }
 .panel td { padding: 3px 12px 3px 0; vertical-align: baseline; }
-.panel td.kind { color: var(--ink-faint); font-size: 12px; }
 .panel td.right { text-align: right; }
-.panel .shares { margin: 0; }
+
+/* The kind of check is a section heading rather than a cell on every row. Said
+ * once over six probes it is a heading; said six times beside six names that
+ * already are the probes, it was six repetitions charged to the width of the
+ * column holding the names.
+ *
+ * The heading row is also the header row, which is why it is a `th`: the AUROC
+ * column is the only one here that cannot name itself, and this puts its label
+ * where it belongs without a band of headers over a column of check names and a
+ * column of chips that each already say what they are. */
+.panel .checks .group-head th {
+  text-align: left; font-weight: 600; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-faint);
+  padding: 0 12px 4px 0; border-bottom: 1px solid var(--rule);
+}
+.panel .checks .group-head th.right { text-align: right; }
+.panel .checks tbody + tbody .group-head th { padding-top: 16px; }
+.panel .checks .group-head + tr td { padding-top: 6px; }
+/* The flag column is the last thing before the gap between the two columns, and
+ * a gap of 26px does not need 12 more added to it. */
+.panel .checks td:last-child, .panel .checks th:last-child { padding-right: 0; }
+
+.panel .shares { list-style: none; margin: 0; padding: 0; }
 .panel .shares li { margin-bottom: 2px; }
+
+/* One comparison, then its two figures. Both ways round, because the share of
+ * the held-out split found in train and the share of train found in the held-out
+ * split are two facts and a small split inside a large one makes them differ by
+ * an order of magnitude. */
+.panel .pairs { list-style: none; margin: 0; padding: 0; }
+.panel .pairs > li { margin-bottom: 12px; }
+.panel .pairs > li:last-child { margin-bottom: 0; }
+.panel .pair-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px;
+  margin-bottom: 3px;
+}
+.panel .pair-nums { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.panel .pair-nums li { margin-bottom: 1px; color: var(--ink-faint); }
+.panel .pair-nums b { color: var(--ink); font-variant-numeric: tabular-nums; }
+/* Quiet mono here rather than the washed pill a `code` span gets everywhere
+ * else. Two splits named twice a comparison and twice a direction is six pills
+ * on four lines, which turned two plain sentences into a row of buttons. The
+ * line above is where these two are named as identifiers; down here they are
+ * being talked about. */
+.panel .pair-nums code {
+  background: none; padding: 0; color: var(--ink-soft);
+}
+
+/* The way out of the panel, under both columns rather than at the foot of
+ * whichever one happened to be third. */
+.panel-more { margin: 16px 0 0; font-size: 14px; }
 .panel .note { font-size: 13px; color: var(--ink-faint); max-width: 70ch; }
 
 /* -------------------------------------------------- static data tables --- */
@@ -710,7 +1124,10 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 /* The same panel on a dataset page, where the four cells are that dataset's own
  * figures and each one is a word rather than a count. */
 .glance .stat { font-size: 26px; }
-.glance .stat .flag { font-size: 26px; font-weight: 600; }
+/* The one categorical headline among four numeric ones. It keeps the chip, at a
+ * line height tighter than the default so the cell is not taller than the three
+ * beside it by the height of two paddings. */
+.glance .stat .flag { font-size: 21px; font-weight: 600; line-height: 1.25; padding: 3px 15px; }
 .glance .stat-label { margin-top: 8px; }
 .glance li a { font-size: 13px; }
 
@@ -811,6 +1228,46 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .chart .val { font-size: 10.5px; fill: #2c3634; font-variant-numeric: tabular-nums; }
 .chart .leg { font-size: 10.5px; fill: #4a5654; }
 .chart .sub { font-size: 9px; fill: #6d7a77; }
+
+/* A mark that can be selected, and a mark that can be opened. Both say so before
+ * they are pressed: the pointer changes, and the mark lifts out of the row it
+ * sits in. `paint-order` puts the halo behind the fill, so a dot in a dense strip
+ * separates from the ones under it without changing colour -- the colour is the
+ * flag and is not free to carry a second meaning. */
+.chart .hit, .chart .dot, .chart .median { cursor: pointer; }
+.chart .hit:hover, .chart .hit:focus-visible { stroke: #1c2321; stroke-width: 1.5; }
+.chart .dot { paint-order: stroke; transition: r 0.1s ease; }
+.chart a:hover .dot, .chart a:focus-visible .dot { r: 5; stroke: #1c2321; stroke-width: 1.2; }
+
+/* What a figure says when its filters have left it nothing to draw. Stated
+ * rather than drawn empty: an axis with no marks on it reads as a measurement
+ * that came back zero. */
+.fig-empty { margin: 8px 0; font-size: 14px; color: var(--ink-faint); }
+
+/* The two live figures sit in the same card as every other figure, and are given
+ * a minimum height so the page does not jump as a filter changes how many rows
+ * their tallies are drawn from. */
+#explore .fig { margin: 18px 0; }
+
+/* ------------------------------------------------------------- readout --- */
+
+/* What a mark says when it is pointed at or focused.
+ *
+ * One element for the whole document rather than one per figure, positioned in
+ * page coordinates and hidden on scroll -- a readout placed against the viewport
+ * is wrong the moment the viewport moves. It is `position: absolute` and not
+ * `fixed` so that it scrolls out with its mark rather than hanging over the page.
+ *
+ * It takes the page's surface in either theme, unlike the figure it sits over:
+ * this is a sentence, and a sentence is chrome. */
+.readout {
+  position: absolute; z-index: 60; max-width: 40ch; pointer-events: none;
+  font-size: 12.5px; line-height: 1.45; padding: 7px 10px;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule-strong); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lift);
+}
+.readout[hidden] { display: none; }
 
 /* --------------------------------------------------------- flag matrix --- */
 
@@ -1081,15 +1538,27 @@ td.mx-blank { min-width: 46px; height: 15px; }
 .reports li { padding: 4px 0; font-size: 14px; }
 .reports .fine { margin-left: 8px; font-size: 12px; }
 .report-leakage-scan a { color: var(--ink); }
-
-.reports-table .reports { margin: 0; }
-.reports-table .reports li { padding: 2px 0; font-size: 13px; }
-
-/* Filtering the reports table hides rows and report links with the `hidden`
- * attribute. A row and a list item each carry a display of their own, so the
- * attribute has to be said out loud for both. */
-.reports-table tbody tr[hidden], .reports li[hidden] { display: none; }
+.reports li[hidden] { display: none; }
 .table-card[hidden] { display: none; }
+
+/* The offer of a dataset's reports, in its page head.
+ *
+ * Filled rather than outlined, unlike every other button on this site. It is the
+ * one thing in that head a reader can act on, it competes with a 50-character
+ * identifier and a copy button beside it, and it used to be at the foot of the
+ * page where nobody found it. */
+.reports-cta { margin: 16px 0 0; }
+.cta {
+  display: inline-block; text-decoration: none; font-size: 13.5px; font-weight: 600;
+  padding: 7px 14px; border-radius: 999px;
+  background: var(--accent); color: var(--paper);
+  border: 1px solid var(--accent);
+}
+.cta:hover {
+  background: var(--accent-hover); border-color: var(--accent-hover);
+  color: var(--paper); text-decoration: none;
+}
+.reports-cta .fine { margin: 0; }
 
 .kinds { max-width: var(--measure); }
 .kinds dt { font-weight: 600; margin-top: 14px; color: var(--ink); }
@@ -1117,5 +1586,312 @@ td.mx-blank { min-width: 46px; height: 15px; }
  * rotating chevron, no fading button. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .row-toggle svg, .to-top { transition: none; }
+  .row-toggle svg, .to-top, .drawer-toggle .drawer-caret { transition: none; }
 }
+
+/* ------------------------------------------------------------------ jumpnav ---
+   Where the reader is on a page long enough to get lost on. Sticky under the
+   masthead, so it is reachable from anywhere down the page rather than only
+   from the top -- which is where a reader who needs it least already is. */
+
+.jumpnav {
+  position: sticky;
+  top: var(--masthead-height);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin: 2rem 0;
+  padding: 0.65rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.jumpnav-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.jumpnav ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.jumpnav a {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+}
+
+.jumpnav a:hover { background: var(--accent-wash); color: var(--accent-on-wash); }
+
+/* Set by `site.js` as the reader passes each section. Never colour alone: the
+   current item also carries a border, so it survives a greyscale print and a
+   reader who cannot separate the two hues. */
+.jumpnav a[aria-current="true"] {
+  background: var(--accent-wash);
+  border-color: var(--accent-line);
+  color: var(--accent-on-wash);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------- thresholds ---
+   The sliders over the grid. Boxed and set off from the page, because what is
+   inside the box is the only thing on this site a reader can change. */
+
+.thresholds {
+  margin: 0 0 1.5rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--wash);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+/* Moved off the shipped setting. The left rule is the second signal beside the
+   banner: a reader who scrolled past the banner still has it on screen. */
+.thresholds.is-moved {
+  border-left: 4px solid var(--warning);
+  background: var(--paper);
+}
+
+.thresholds .th-head h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.thresholds .th-head p { margin: 0 0 0.9rem; max-width: var(--measure-fine); }
+
+.th-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem 1.5rem;
+}
+
+.th-control { display: grid; gap: 0.3rem; min-width: 14rem; flex: 1 1 14rem; }
+.th-control label { font-size: 0.85rem; color: var(--ink-soft); }
+.th-control output {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.th-control input[type="range"] { width: 100%; accent-color: var(--accent-line); }
+
+.th-summary {
+  margin: 0.9rem 0 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* A cell whose flag is not the one the run published. Dashed outline rather than
+   a different fill: the fill is the flag, and a second meaning on the same
+   channel would make "which flag is this" and "did this move" the same
+   question. */
+.mx-cell.mx-moved { outline: 2px dashed var(--ink); outline-offset: -3px; }
+
+/* --------------------------------------------------------------------- joint ---
+   The one number on a dataset page the ten checks cannot produce between them. */
+
+.joint-card {
+  margin: 0 0 1rem;
+  padding: 1rem 1.15rem;
+  background: var(--wash);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent-line);
+  border-radius: var(--radius);
+}
+
+.joint-card .joint-value { display: grid; gap: 0.15rem; margin: 0 0 0.75rem; }
+.joint-card .joint-value .stat { font-size: 2.2rem; line-height: 1.1; }
+.joint-card p:last-child { margin-bottom: 0; }
+
+/* The lower-bound mark, beside a joint figure wherever one is shown. */
+abbr.lb {
+  margin-left: 0.15rem;
+  border: 0;
+  color: var(--ink-faint);
+  cursor: help;
+  text-decoration: none;
+}
+
+/* A finding rather than a caveat: this dataset is one no check flagged and the
+   features recovered anyway. */
+.note.flagged {
+  border-left: 4px solid var(--warning);
+  padding-left: 0.9rem;
+}
+
+/* The joint gate's own qualification, under the funnel step it qualifies. */
+.gate-note td { padding-top: 0; border-top: 0; color: var(--ink-faint); }
+
+/* ---------------------------------------------------------------- percentile ---
+   Where one dataset's figures sit among the ones this run measured. */
+
+.percentile { margin: 1.25rem 0 0; }
+.percentile h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.rank-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin: 0 0 0.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.rank-list li {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.87rem;
+  background: var(--wash);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------ dataset nav ---
+   A dataset page is two clicks from the overview and used to say nothing about
+   where in the corpus it sat. The left column is that map: every dataset, under
+   the collection it came from, with this one marked.
+
+   Two columns above the fold width and one below it. On a narrow screen the nav
+   goes above the page rather than beside it, collapsed, because 93 links pushing
+   the dataset's own name off the screen is worse than a tap to open them. */
+
+.with-sidebar {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 60rem) {
+  .with-sidebar { grid-template-columns: 15rem minmax(0, 1fr); }
+  .dataset-nav {
+    position: sticky;
+    top: calc(var(--masthead-height) + 1rem);
+    align-self: start;
+    max-height: calc(100vh - var(--masthead-height) - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+.sidebar-main { min-width: 0; }
+
+.dataset-nav {
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.sb-head {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sb-all { margin: 0 0 0.75rem; font-size: 0.85rem; }
+
+.sb-group { border-top: 1px solid var(--rule); }
+.sb-group:first-of-type { border-top: 0; }
+
+.sb-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sb-group > summary::-webkit-details-marker { display: none; }
+
+/* The disclosure triangle, drawn rather than inherited, so it turns with the
+   group and sits where the text starts. */
+.sb-group > summary::before {
+  content: "\25B8";
+  margin-right: 0.35rem;
+  color: var(--ink-faint);
+  transition: transform 120ms ease;
+}
+.sb-group[open] > summary::before { transform: rotate(90deg); }
+
+.sb-n {
+  margin-left: auto;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  background: var(--wash);
+  border-radius: 999px;
+}
+
+.dataset-nav ul {
+  margin: 0 0 0.5rem;
+  padding: 0 0 0 0.75rem;
+  list-style: none;
+  border-left: 1px solid var(--rule);
+}
+
+.dataset-nav ul a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.22rem 0.4rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.dataset-nav ul a:hover { background: var(--accent-wash); color: var(--accent-on-wash); }
+
+/* Where you are. A fill, a weight and a rule -- never the fill alone. */
+.dataset-nav ul a[aria-current="page"] {
+  background: var(--accent-wash);
+  box-shadow: inset 3px 0 0 var(--accent-line);
+  color: var(--accent-on-wash);
+  font-weight: 600;
+}
+
+/* The dataset's rollup flag, as a dot. Decoration beside a name that is already
+   the link's text, so it is hidden from the accessibility tree: the flag is
+   stated in words on the page the link opens. */
+.sb-flag {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--flag-fill-unknown);
+}
+.sb-flag.flag-Pass { background: var(--flag-fill-pass); }
+.sb-flag.flag-Warning { background: var(--flag-fill-warning); }
+.sb-flag.flag-Fail { background: var(--flag-fill-fail); }

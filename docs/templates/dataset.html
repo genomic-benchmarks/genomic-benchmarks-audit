@@ -1,6 +1,9 @@
+<div class="with-sidebar">
+{{sidebar}}
+<div class="sidebar-main">
 <nav class="crumb" aria-label="Breadcrumb">
   <a href="../index.html">Overview</a> <span aria-hidden="true">&rsaquo;</span>
-  <a href="../catalogue.html">Datasets</a> <span aria-hidden="true">&rsaquo;</span>
+  <a href="../index.html#datasets">Datasets</a> <span aria-hidden="true">&rsaquo;</span>
   <a href="{{collection_href}}">{{collection}}</a> <span aria-hidden="true">&rsaquo;</span>
   <span class="here">{{dataset_name}}</span>
 </nav>
@@ -24,6 +27,7 @@
     <dt>Sequences</dt><dd>{{total_size}} across {{n_dataset_splits}} {{split_word}}</dd>
     <dt>Sequence length</dt><dd>{{min_seq_length}} to {{max_seq_length}}</dd>
   </dl>
+  {{reports_cta}}
 </section>
 
 <!-- The four figures this page is opened for. Each one is stated again below,
@@ -56,7 +60,18 @@
         another, at worst</span>
       {{glance_overlap_note}}
     </li>
+    <!-- The fifth figure, and the only one on this page the {{n_checks_word}}
+         checks cannot produce between them: the same features they use, read
+         together instead of one at a time. -->
+    <li>
+      <span class="stat">{{glance_joint}}</span>
+      <span class="stat-label">AUROC when all those features are read
+        <strong>together</strong> rather than one at a time</span>
+      <span class="fine">Measured on a held-out split. This is what Core Set
+        membership turns on</span>
+    </li>
   </ul>
+  {{percentile_note}}
 </section>
 
 <section class="summary">
@@ -83,9 +98,45 @@
   <p class="fine">
     <a href="../checks.html">What each of the {{n_checks_word}} checks measures</a>
     &middot;
-    <a href="../methods.html#what">What a flag is, and what it does not say</a>
+    <a href="../checks.html#flags">What a flag is, and what it does not say</a>
     &middot;
-    <a href="../methods.html#reference-split">Why one split is quoted</a>
+    <a href="../checks.html#reference-split">Why one split is quoted</a>
+  </p>
+</section>
+
+<!-- Directly under the summary, not at the foot of the page. These are the files
+     every flag above was read out of, and this site no longer has an index of
+     them anywhere else: a report belongs to one split of one dataset, so the
+     dataset is where it is listed. -->
+<section id="reports">
+  <h2>The reports behind those flags</h2>
+  <p>
+    The full report <code>genomic-benchmarks-qc</code> rendered for each split and
+    each split pair, with every distribution, every probe fit, and every
+    individually-listed overlapping sequence behind the numbers on this page. Each
+    opens inside this site, and the file the tool wrote is one click further on.
+  </p>
+  {{report_items}}
+  {{route_note}}
+  <p class="fine">
+    <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/examples/">Worked
+    examples of a report</a>
+  </p>
+</section>
+
+<section id="joint">
+  <h2>The same features, read together</h2>
+  <p>
+    Every flag above is one feature on its own. This is all of them at once:
+    length, GC, mononucleotide and dinucleotide content and the two per-position
+    profiles, handed to a single model and scored on a held-out split. Nothing is
+    added that the checks do not already look at &mdash; the only change is that
+    they are read jointly.
+  </p>
+  {{joint_note}}
+  <p class="fine">
+    <a href="../core-set.html#joint">How it was measured, why it exists, and the
+    {{n_clean_but_joint_word}} datasets it changes the reading of</a>
   </p>
 </section>
 
@@ -100,7 +151,10 @@
 
   <div class="table-card">
     <table class="listing">
-      <caption>Each split, the flag it rolled up to, and its strongest probe.</caption>
+      <caption>
+        Each split, the flag it rolled up to, its strongest probe, and the report
+        every flag on that row was read out of.
+      </caption>
       <thead>
         <tr>
           <th scope="col">Split</th>
@@ -109,6 +163,7 @@
           <th scope="col" class="right">Checks scored</th>
           <th scope="col">Strongest probe</th>
           <th scope="col" class="right">AUROC</th>
+          <th scope="col">Report</th>
         </tr>
       </thead>
       <tbody>
@@ -130,18 +185,10 @@
 
 {{leakage_section}}
 
-<section id="reports">
-  <h2>Reports</h2>
-  <p>
-    The full report <code>genomic-benchmarks-qc</code> rendered for each split and
-    each split pair, with every distribution, every probe fit, and every
-    individually-listed overlapping sequence behind the numbers above.
-  </p>
-  {{report_items}}
-</section>
-
 <section class="onward">
   <h2>Nearby</h2>
   {{pager}}
   {{nearby}}
 </section>
+</div>
+</div>

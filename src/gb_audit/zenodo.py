@@ -27,7 +27,7 @@ match the record's copies. `data/reports.csv` does the same for the 93 archives.
 
 **The mirror does not make a result reproducible**: it reads a tree that exists on
 one machine. So `mirror_root()` is public, `fetch()` returns its route, and
-`site/qc-reports/PROVENANCE.json` records it for the reports page to print.
+`site/qc-reports/PROVENANCE.json` records it for the dataset pages to print.
 
 Publication deletes the branches below: `RECORD_REGISTERED` becomes True in that
 same commit, and the token and the mirror stop being set.

@@ -19,8 +19,8 @@
     <span class="stat">{{n_datasets}}</span>
     <span class="stat-label">Datasets audited, across {{n_collections_word}}
       collections</span>
-    <span class="fine">Curated from {{n_curated}}; {{n_excluded}} could not be put
-      through the same {{n_checks_word}} checks</span>
+    <span class="fine">Curated from {{n_curated}}; {{n_excluded}} could not be
+      put through the same {{n_checks_word}} checks</span>
   </li>
   <li>
     <span class="stat">{{n_fail}}</span>
@@ -36,11 +36,11 @@
       reach 0.70 or more from one feature</span>
   </li>
   <li>
-    <span class="stat">{{n_leakage_over_50}}</span>
-    <span class="stat-label">Datasets where half or more of the held-out split is
-      also in training</span>
-    <span class="fine">{{n_with_any_leakage}} of the {{n_leakage_scanned}} scanned
-      have at least one sequence in two splits</span>
+    <span class="stat">{{median_joint_auroc}}</span>
+    <span class="stat-label">Median AUROC when those same features are read
+      <strong>together</strong> rather than one at a time</span>
+    <span class="fine">{{n_joint_over_0_8}} of {{n_joint_scored}} reach 0.80 or
+      more, including {{n_clean_but_joint_word}} no check flagged Fail</span>
   </li>
 </ul>
 
@@ -57,30 +57,148 @@
   <p>
     The aggregate is not the useful part. What tells you what to control for is the
     name of the feature that separated <em>your</em> benchmark and the distribution
-    it was measured on &mdash; so the audit is published per dataset, not as a
-    headline. That is what the rest of this page is.
+    it was measured on &mdash; so the audit is published per dataset, and the table
+    below is the whole of it.
   </p>
 </div>
 
-<section class="figures" id="matrix">
-  <h2>Every dataset, every check</h2>
+<!-- Where the reader is, on a page long enough to get lost on. Rendered rather
+     than built by a script: with scripting off these anchors still work, and a
+     table of contents that appears only for some readers is a second layout to
+     keep in step with the first. `assets/site.js` marks the current one. -->
+<nav class="jumpnav" id="jumpnav" aria-label="On this page">
+  <span class="jumpnav-label">On this page</span>
+  <ol>
+    <li><a href="#datasets">All {{n_datasets}} datasets</a></li>
+    <li><a href="#explore">These rows, as figures</a></li>
+    <li><a href="#flagging">How a flag is decided</a></li>
+    <li><a href="#collections">Where the flags fall</a></li>
+    <li><a href="#onward">Go deeper</a></li>
+  </ol>
+</nav>
+
+<!-- The table, which used to be a page of its own. It is the main surface of this
+     site and it was one click away from the only page most readers see, behind a
+     nav item that did not say it was where the data was. -->
+<section id="datasets">
+  <p class="eyebrow">The corpus</p>
+  <h2>All {{n_datasets}} datasets</h2>
   <p>
-    {{n_datasets}} rows by {{n_checks}} columns, grouped by collection and ordered
-    worst-first inside each group. This is the whole audit on one surface, and it
-    is the way into the rest of the site: <strong>every mark is a link</strong>.
-    Narrow it to a collection, or to the flag a dataset rolled up to, and the rows
-    that are left are the ones worth reading.
+    One row per dataset and one column per check, with everything else the run
+    measured available beside it. Tick a column to bring it in; sort any column;
+    filter by any facet; open a row for what the checks returned on it. Whatever
+    you filter, sort and put on screen is in this page's address, so a view of
+    these rows is something you can send someone.
   </p>
-  {{fig_flag_matrix}}
   <p class="note">
-    Each cell is the flag that check returned on that dataset&rsquo;s
-    <strong>reference split</strong> &mdash; <code>train</code> for all but one of
-    them, never a maximum taken over splits.
-    <a href="methods.html#reference-split">Why one split is quoted</a>.
+    Every figure in this table was measured on that dataset's <strong>reference
+    split</strong> &mdash; <code>train</code> for all but one of them &mdash;
+    except the joint AUROC, which is measured on a held-out split. It is not a
+    maximum taken over splits, and the dataset page names the split for each
+    number it shows.
+  </p>
+
+  <div class="controls" id="controls">
+    <div class="search-row">
+      <label for="search">Search</label>
+      <input type="search" id="search" placeholder="collection, dataset, species&hellip;"
+             autocomplete="off">
+      <!-- Filled in and unhidden by `assets/catalogue.js`. It ships wordless and
+           hidden because the panel it opens is built in the browser: a button that
+           opens nothing is worse than no button. -->
+      <button type="button" id="facet-toggle" class="ghost drawer-toggle"
+              aria-expanded="false" aria-controls="facets" hidden></button>
+      <button type="button" id="clear" class="ghost">Clear filters</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <!-- Filled by `assets/catalogue.js`: saved views, and one chip per condition
+         currently narrowing the table. A reader who arrives on a link from another
+         page lands on a subset of the rows and is owed a statement of which
+         subset. -->
+    <div class="presets" id="presets"></div>
+    <div class="chips" id="chips"></div>
+    <div class="facets" id="facets" hidden></div>
+  </div>
+
+  <!-- Two controls over the table, and neither of them narrows it.
+       The picker is what the reader has on screen: {{n_datasets}} rows against
+       {{n_checks}} checks is already a wide table, and the dozen facts the run
+       holds about a dataset besides cannot all be on it at once. They ship off and
+       go on one at a time, in the open rather than behind a menu, so that what is
+       available to add is visible without a click and what is already added is
+       visible without a memory. Which columns are on is in the address with the
+       filters and the sort, for the same reason those are.
+
+       Both ship hidden and are revealed by `assets/catalogue.js`: with scripting
+       off the table is not there to have columns or to be scrolled, and a control
+       that cannot do anything is worse than no control. -->
+  <div class="table-tools">
+    <fieldset class="picker" id="picker" hidden>
+      <legend>Columns</legend>
+      <div class="picker-body">
+        <div class="picker-list" id="picker-list"></div>
+        <button type="button" class="ghost" id="picker-reset" hidden>Reset columns</button>
+      </div>
+    </fieldset>
+    <!-- The table scrolls sideways under a dataset name that stays put. A wheel
+         and a trackpad can already do it; these are for the pointer that has
+         neither, and for the keyboard, which has no other way to reach a column
+         that is off the right-hand edge. Revealed only when there is something
+         off the edge to reach. -->
+    <div class="scroller" id="scroller" hidden>
+      <span class="scroller-label">Scroll table horizontally</span>
+      <button type="button" id="scroll-left" aria-label="Scroll the table left">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 4.5 8 12l7.5 7.5"/></svg>
+      </button>
+      <button type="button" id="scroll-right" aria-label="Scroll the table right">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 4.5 16 12l-7.5 7.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="table" class="catalogue-table"></div>
+
+  <noscript>
+    <p class="note warn">
+      This table sorts and filters {{n_datasets}} rows in the browser, so it needs
+      scripting. Without it, every dataset still has its own page &mdash; and
+      <a href="checks.html#matrix">the checks page</a> carries the whole
+      {{n_datasets}}-by-{{n_checks}} grid as static HTML.
+    </p>
+  </noscript>
+</section>
+
+<!-- Revealed by `assets/explore.js`. It ships hidden so a reader with scripting
+     off is not left with two empty cards and a paragraph describing figures that
+     were never drawn. -->
+<section class="figures" id="explore" hidden>
+  <p class="eyebrow">These rows</p>
+  <h2>What the checks returned, and how far one feature got</h2>
+  <p>
+    Both figures describe the rows the table above is showing rather than the
+    whole corpus, so every filter narrows them with it. Narrow to one collection
+    and the shape of that collection is on screen; narrow to one species, or to
+    the datasets one feature already separates, and so is that.
+  </p>
+  <p>
+    The first is also a control. Selecting a segment filters the table to the
+    datasets it counts &mdash; the same filter <a href="checks.html">the checks
+    page</a> links in with &mdash; and selecting it again takes the filter off.
+  </p>
+  <figure class="fig" id="explore-flags"></figure>
+  <figure class="fig" id="explore-probes"></figure>
+  <p class="note">
+    Every mark is a measurement on that dataset&rsquo;s <strong>reference
+    split</strong>. An AUROC is what one hand-crafted feature reached on its own,
+    which is a <strong>lower bound</strong> on what is recoverable from the
+    sequences and never an upper one: a row that sits to the left is a feature
+    that did not separate these classes, not a set of datasets a model would do
+    badly on. <a href="checks.html#probes">How to read a probe AUROC</a>.
   </p>
 </section>
 
 <section id="flagging">
+  <p class="eyebrow">Reading the grid</p>
   <h2>How results are flagged</h2>
   <p>
     {{n_probe_checks_cap}} of the {{n_checks_word}} checks ask one narrow
@@ -95,7 +213,7 @@
     <table class="listing">
       <caption>
         The boundaries <code>genomic-benchmarks-qc</code> puts on a probe AUROC.
-        Every probe mark in the grid above was decided by them.
+        Every probe flag in the table above was decided by them.
       </caption>
       <thead>
         <tr>
@@ -152,48 +270,54 @@
     That is the short version.
     <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/how-it-works/">How
     a flag is decided</a> gives the rules in full, including the simulations the
-    0.60 boundary comes from; what this run measured, and on which split, is on
-    <a href="methods.html">the methods page</a>.
+    0.60 boundary comes from. What each check returned across this corpus, and
+    which split every number here was measured on, is on
+    <a href="checks.html">the checks page</a>.
   </p>
 </section>
 
-<section class="onward">
-  <h2>Where to go next</h2>
+<section class="figures" id="collections">
+  <p class="eyebrow">By collection</p>
+  <h2>Where the flags fall</h2>
+  <p>
+    The same {{n_datasets}} rows grouped by the {{n_collections_word}} collections
+    they came from, each bar the share of that collection whose {{n_checks_word}}
+    checks rolled up to each flag. Collections differ in task, in size and in how
+    their splits are defined, so a longer red bar is a measurement on those
+    datasets rather than a ranking of the collections.
+  </p>
+  {{fig_collection_bars}}
+</section>
+
+<section class="onward" id="onward">
+  <h2>Go deeper</h2>
+  <p>
+    Everything above is this run at the level of a dataset. These two pages
+    take one cut through it each. The reports themselves are not among them: each
+    one is the working behind one split of one dataset, so each is listed at the
+    top of that dataset&rsquo;s own page.
+  </p>
   <ul class="cards">
-    <li>
-      <a href="catalogue.html">
-        <strong>All {{n_datasets}} datasets</strong>
-        <p>Filter by collection, species, task or flag; sort by probe AUROC or
-          split overlap; open any dataset for its own page.</p>
-      </a>
-    </li>
     <li>
       <a href="checks.html">
         <strong>The {{n_checks_word}} checks</strong>
-        <p>What each check measures, what it returned across the corpus, and every
-          count linked to the datasets behind it.</p>
+        <p>What each check measures, what it returned across the corpus, the whole
+          {{n_datasets}}-by-{{n_checks}} grid &mdash; and the boundaries, which you
+          can move to see which flags depend on them.</p>
       </a>
     </li>
     <li>
       <a href="core-set.html">
         <strong>The Core Set</strong>
-        <p>{{n_gates_cap}} gates applied in order, and the {{core_set_size}}
-          datasets that came through all of them.</p>
-      </a>
-    </li>
-    <li>
-      <a href="reports.html">
-        <strong>{{n_reports}} reports</strong>
-        <p>The full report <code>genomic-benchmarks-qc</code> rendered for each
-          split and each split pair, readable here.</p>
-      </a>
-    </li>
-    <li>
-      <a href="methods.html">
-        <strong>Methods</strong>
-        <p>What was measured, on which split, with which thresholds &mdash; how to
-          read a probe AUROC or a split overlap, and what a flag does not say.</p>
+        <p>{{n_gates_cap}} criteria and one selection, the {{core_set_size}}
+          datasets that came through &mdash; and the
+          {{n_clean_but_joint_word}} no check flagged that the same features
+          recover together.</p>
       </a>
     </li>
   </ul>
+  <p class="fine">
+    <a href="cite.html">What identifies this run, and what a citation of it has to
+    name</a>
+  </p>
 </section>

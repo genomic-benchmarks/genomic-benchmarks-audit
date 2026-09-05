@@ -1,98 +1,21 @@
+<!-- The reports were an index: all {{n_reports}} of them on one page, filterable
+     by collection and kind and split. It went because a reader never wants "a
+     report" -- they want the working behind a number they are looking at, and
+     that number is on a dataset page. So the reports are listed on the dataset
+     they belong to, at the top of it, and this address stays because it was
+     published and because the site's own footer pointed at it for a while. -->
 <section class="page-head">
-  <p class="eyebrow">Behind every number</p>
-  <h1>The {{n_reports}} reports</h1>
+  <p class="eyebrow">Moved</p>
+  <h1>Reports are on the dataset they belong to</h1>
   <p class="lede">
-    <code>genomic-benchmarks-qc</code> renders a self-contained report for every
-    unit it measures: one per split per sequence column for the
-    {{n_split_checks_word}} class-distribution checks, and one per split pair for the
-    leakage scan. There
-    are {{n_reports}} of them across {{n_datasets}} datasets.
+    Every one of the {{n_reports}} reports is the working behind one split, or one
+    pair of splits, of one dataset &mdash; so each is listed at the top of that
+    dataset&rsquo;s page, beside the numbers it is the working for. Find the
+    dataset and you have its reports:
+    <a href="index.html#datasets" id="forward">all {{n_datasets}} of them are
+    here</a>.
   </p>
-  {{report_state}}
-  {{route_note}}
-  <p>
-    They are downloaded, not committed, and there is one copy of them. The
-    archives are 90 MB and unpack to far more, so a clone does not carry them;
-    <code>gb-audit fetch</code> brings them from Zenodo straight into the built
-    site, at the address this page links to. Nothing stages or copies them
-    anywhere else, so the record is the only place they come from.
-  </p>
-  <p>
-    <code>data/reports.csv</code> records each archive's size, digest and every
-    path inside it. That is how this page can list what exists whether or not it
-    was downloaded, and how each archive is checked before it is unpacked: an
-    archive whose bytes are not the bytes the manifest describes is refused
-    rather than published.
-  </p>
-</section>
-
-<section>
-  <h2>What each report holds</h2>
-  <dl class="kinds">
-    <dt>Class distributions</dt>
-    <dd>
-      What the nine class-distribution checks found on one split, for one sequence
-      column: the distribution of each feature by class, the probe fits, and the
-      per-position profiles. A dataset with two sequence columns gets one report
-      per column.
-    </dd>
-    <dt>Leakage scan</dt>
-    <dd>
-      The comparison of one pair of splits: the sequence matches found, and the
-      individual sequences of one split that were also present in the other. This
-      is the report that makes an overlapping held-out sequence identifiable
-      rather than only countable.
-    </dd>
-  </dl>
-</section>
-
-<section>
-  <h2>Every dataset's reports</h2>
   <p class="fine">
-    {{n_reports}} reports is a long page. Narrow it to the collection, the kind of
-    report or the split you came for, and what you filter to is in this page's
-    address, so a view of these reports is something you can send someone. With
-    scripting off there is nothing to narrow it with and the table below is the
-    whole list, which is what it is for.
+    If nothing happens on its own, the link above is the same destination.
   </p>
-
-  <!-- Hidden until `assets/reports.js` unhides it. The table below is the whole
-       list whether or not that file runs, and a control that cannot do anything
-       is worse than no control. -->
-  <div class="controls" id="controls" hidden>
-    <div class="search-row">
-      <label for="search">Search</label>
-      <input type="search" id="search" placeholder="collection, dataset, sequence column&hellip;"
-             autocomplete="off">
-      <button type="button" id="clear" class="ghost">Clear filters</button>
-      <span class="count" id="count" aria-live="polite"></span>
-    </div>
-    <!-- One chip per condition currently narrowing the table, and one fieldset
-         per facet. A reader who arrives on a filtered link is looking at a subset
-         of the rows and is owed a statement of which subset. -->
-    <div class="chips" id="chips"></div>
-    <div class="facets" id="facets"></div>
-  </div>
-
-  <div class="table-card">
-  <table class="listing reports-table">
-    <caption>
-      {{n_datasets_unpacked}} of {{n_datasets}} datasets have their reports in this
-      build. Sizes are the compressed archive.
-    </caption>
-    <thead>
-      <tr>
-        <th scope="col">Dataset</th>
-        <th scope="col" class="right">Class</th>
-        <th scope="col" class="right">Leakage</th>
-        <th scope="col" class="right">Archive</th>
-        <th scope="col">Reports</th>
-      </tr>
-    </thead>
-    <tbody>
-{{report_rows}}
-    </tbody>
-  </table>
-  </div>
-  <p class="note" id="empty" hidden></p>
 </section>

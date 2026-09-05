@@ -67,11 +67,18 @@ def _cell(dataset: Dataset, check: str, prefix: str) -> str:
     is a fill, `Unknown` is a hatch, and a check with nothing to run on is an
     empty cell that is still a cell -- not a link, because there is no result on
     the other end of it.
+
+    A probe cell also carries the AUROC its flag was decided from, and a leakage
+    cell the percentage. `assets/thresholds.js` re-decides a flag from that number
+    when a reader moves a boundary; without it on the cell the script would need a
+    second copy of the run in the page, which is how a grid and a table come to
+    disagree. The three integrity checks carry nothing, because their flags are
+    not decided from a number on a scale and cannot be re-decided from one.
     """
     flag = dataset.flags[check]
     if flag is None:
         return (
-            f'<td class="mx-cell mx-blank" title="'
+            f'<td class="mx-cell mx-blank" data-check="{_esc(check)}" title="'
             f"{_esc(check)}: the check had nothing to run on"
             f'"><span class="sr-only">no result recorded</span></td>'
         )
@@ -81,10 +88,34 @@ def _cell(dataset: Dataset, check: str, prefix: str) -> str:
     )
     href = f"{prefix}datasets/{_esc(catalogue.slug(dataset))}.html#checks"
     return (
-        f'<td class="mx-cell mx-{_esc(flag)}">'
+        f'<td class="mx-cell mx-{_esc(flag)}" data-check="{_esc(check)}" '
+        f'data-flag="{_esc(flag)}"{_scale(dataset, check)}>'
         f'<a href="{href}" title="{_esc(tip)}">'
         f'<span class="sr-only">{_esc(flag)}</span></a></td>'
     )
+
+
+def _scale(dataset: Dataset, check: str) -> str:
+    """The number behind a re-decidable flag, or nothing.
+
+    Only for the flags a boundary on a scale produced: the six probes, off the
+    reference split's AUROC, and the leakage scan, off the worst share of one
+    split found in another. `Unknown` is left without one on purpose -- a check
+    that could not be scored has no value to compare a boundary against, and
+    giving it one would let a reader's slider turn an absence of measurement into
+    a Pass.
+    """
+    if dataset.flags[check] == audit.UNKNOWN:
+        return ""
+    if check in audit.PROBE_CHECKS:
+        for m in dataset.measurements:
+            if m.split == dataset.reference_split and m.check == check:
+                if m.au_roc is not None:
+                    return f' data-auroc="{m.au_roc:.6f}"'
+        return ""
+    if check == audit.LEAKAGE_SCAN and dataset.max_leaked_test_pct is not None:
+        return f' data-leaked="{dataset.max_leaked_test_pct:.6f}"'
+    return ""
 
 
 def _row_key(dataset: Dataset) -> tuple:
@@ -112,7 +143,8 @@ def _row(dataset: Dataset, prefix: str) -> str:
     cells = "".join(_cell(dataset, check, prefix) for check in audit.DISPLAY_CHECKS)
     href = f"{prefix}datasets/{_esc(catalogue.slug(dataset))}.html"
     return (
-        f'<tr data-collection="{_esc(dataset.collection)}" '
+        f'<tr data-id="{_esc(dataset.benchmark_id)}" '
+        f'data-collection="{_esc(dataset.collection)}" '
         f'data-verdict="{_esc(dataset.overall_verdict or "")}">'
         f'<th scope="row" class="mx-name">'
         f'<a href="{href}" title="{_esc(dataset.benchmark_id)}">'
@@ -229,7 +261,7 @@ def flag_matrix(run: Run, copy: dict, prefix: str = "") -> str:
     for collection in order:
         members = sorted(by_collection[collection], key=_row_key)
         query = urllib.parse.urlencode({"collection": collection})
-        href = _esc(f"{prefix}catalogue.html?{query}")
+        href = _esc(f"{prefix}index.html?{query}#datasets")
         rows = "".join(_row(dataset, prefix) for dataset in members)
         bodies.append(
             f'<tbody data-collection="{_esc(collection)}">'

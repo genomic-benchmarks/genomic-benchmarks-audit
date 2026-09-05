@@ -8,16 +8,83 @@
     {{n_split_checks_word}} run per split. The last, the leakage scan, runs across
     pairs of splits.
   </p>
-  <p>
-    Each returns one of {{n_flags_word}} flags. <strong>Pass</strong>, <strong>Warning</strong>
-    and <strong>Fail</strong> are scored outcomes. <strong>Unknown</strong> is not
-    a fourth degree of severity: the check ran and could not be scored, which is a
-    different statement from any of the {{n_scored_flags_word}} &mdash; and
-    different again from a blank, which means the check had nothing to run on.
+  <p class="lede">
+    This page is what they returned on this corpus, and how to read the two scales
+    they return it on. What each check computes, in full, is
+    <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/checks/">documented
+    by the tool</a> rather than restated here.
   </p>
 </section>
 
-<section class="figures">
+<!-- Where the reader is. The three sections that used to be on a page called
+     Methods are here now: what a flag is, which split it was measured on, and how
+     to read an AUROC and an overlap. Each of those is a question a reader has
+     while looking at a flag, and a reader looking at a flag was on this page. -->
+<nav class="jumpnav" id="jumpnav" aria-label="On this page">
+  <span class="jumpnav-label">On this page</span>
+  <ol>
+    <li><a href="#flags">What a flag is</a></li>
+    <li><a href="#reference-split">Which split</a></li>
+    <li><a href="#returned">What each returned</a></li>
+    <li><a href="#probes">Reading an AUROC</a></li>
+    <li><a href="#leakage">Reading an overlap</a></li>
+    <li><a href="#matrix">Every cell</a></li>
+  </ol>
+</nav>
+
+<section id="flags">
+  <h2>What a flag is</h2>
+  <p>
+    Each check returns one of {{n_flags_word}} flags on one split:
+    <strong>Pass</strong>, <strong>Warning</strong>, <strong>Fail</strong>,
+    <strong>Unknown</strong>. The first {{n_scored_flags_word}} are scored
+    outcomes and are ordered by severity. Unknown is not the fourth degree of that
+    order: it means the check ran and could not be scored. A blank &mdash; a check
+    with no flag at all &mdash; is a third thing again: the check had nothing to
+    run on.
+  </p>
+  <p>
+    Keeping those apart matters more than it looks. Reading Unknown or a blank as
+    Pass converts an absence of measurement into a reassuring result, which is the
+    single easiest way to make an audit say more than it found. Every figure on
+    this site draws Unknown as a hatch rather than a fourth colour, and draws
+    nothing at all for a blank.
+  </p>
+  <p>
+    <strong>Pass is the narrowest of the {{n_flags_word}}.</strong> It says this
+    check did not separate the classes on this split. It does not say the dataset
+    is free of structure a model could use, because a check that did not find
+    something is not evidence there is nothing to find. No combination of the
+    {{n_checks_word}} flags licenses that conclusion either.
+  </p>
+  <p class="fine">
+    <a href="index.html#flagging">The boundaries a probe flag is drawn at</a>
+    &middot;
+    <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/how-it-works/">How
+    the tool decides one, including the simulations the 0.60 boundary comes
+    from</a>
+  </p>
+</section>
+
+<section id="reference-split">
+  <h2>The split these numbers are on</h2>
+  <p>
+    A dataset ships several splits and a check runs on each of them. The single
+    flag, AUROC and overlap this site quotes per dataset are the values on that
+    dataset&rsquo;s <strong>reference split</strong> &mdash; <code>train</code>
+    for every dataset but one, where the training split is not released and
+    <code>test</code> stands in.
+  </p>
+  <p>
+    They are not maxima over splits. A maximum would make a dataset with more
+    splits look worse for having been measured more times, and would name no split
+    a reader could go and check. Every figure here names the split its numbers
+    were measured on, and every dataset page shows all splits alongside the
+    reference one.
+  </p>
+</section>
+
+<section class="figures" id="returned">
   <p class="eyebrow">Across the corpus</p>
   <h2>What each check returned</h2>
   {{fig_check_bars}}
@@ -49,14 +116,124 @@
   </div>
 </section>
 
+<!-- The scale {{n_probe_checks_word}} of the {{n_checks_word}} report on, and the
+     one number on this site most easily read as more than it is. -->
+<section class="figures" id="probes">
+  <p class="eyebrow">The probe scale</p>
+  <h2>Reading a probe AUROC</h2>
+  <p>
+    A probe is one feature and one fit &mdash; sequence length, GC content, a
+    nucleotide or dinucleotide frequency, a per-position profile. The AUROC it
+    reaches is a <strong>lower bound</strong> on what is recoverable from the
+    sequences: a stronger feature, or a model, may recover more. It is never an
+    upper bound, and a low value is not evidence that a model would also score
+    low.
+  </p>
+  <p>
+    Across the {{n_probed}} probed datasets the median strongest probe reaches
+    {{median_probe_auroc}}, and {{n_probe_over_0_7}} datasets reach 0.70 or more
+    from a single feature.
+  </p>
+  <p>
+    The figure below is the strongest probe per dataset, one mark each. Read a mark
+    as a lower bound on what a model could recover from the sequences alone, and
+    the spread as the range this corpus covers rather than as a ranking.
+  </p>
+  {{fig_probe_auroc}}
+  <p class="fine">
+    <a href="core-set.html#joint">What the same features reach read together
+    rather than one at a time</a>
+  </p>
+</section>
+
+<!-- The scale the tenth check reports on, which is not an AUROC and is not a
+     flag drawn on one. -->
+<section class="figures" id="leakage">
+  <p class="eyebrow">The overlap scale</p>
+  <h2>Reading a split overlap</h2>
+  <p>
+    The leakage scan compares two splits and reports, in each direction, the
+    percentage of one split&rsquo;s sequences that were also present in the other.
+    Both directions are shown because the two differ whenever the splits differ in
+    size, and quoting only the larger would describe neither split.
+  </p>
+  <p>
+    {{n_leakage_scanned}} of {{n_datasets}} datasets were scanned;
+    {{n_leakage_unscanned_cap}} ships a single split and so has no pair to compare.
+    {{n_with_any_leakage}} have at least one sequence in two splits,
+    {{n_leakage_over_50}} have more than half of one split present in another, and
+    {{n_leakage_complete}} have all of it.
+  </p>
+  <p>
+    The bands below count datasets rather than implying a density, because the
+    structure worth seeing is all at one end: most of the corpus sits in the
+    narrowest band and a handful sit at the top of the range.
+  </p>
+  {{fig_leakage}}
+  <p class="fine">
+    <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/leakage/">How
+    the scan matches sequences across a pair of splits</a>
+  </p>
+</section>
+
 <section class="figures" id="matrix">
   <p class="eyebrow">Every cell</p>
   <h2>Every dataset, every check</h2>
   <p>
     {{n_datasets}} rows by {{n_checks}} columns, grouped by collection and ordered
     worst-first inside each group. Each cell is the flag that check returned on
-    that dataset's reference split.
+    that dataset's reference split, and every mark is a link.
   </p>
+
+  <!-- Revealed by `assets/thresholds.js`. It ships hidden because sliders that
+       recolour nothing are worse than no sliders: with scripting off the grid
+       below is the shipped setting and says so. -->
+  <form class="thresholds" id="thresholds" hidden
+        data-warn="0.60" data-fail="0.70" data-leak="2.0">
+    <div class="th-head">
+      <h3>Move the boundaries</h3>
+      <p class="fine">
+        A flag is a boundary drawn on a number. These are the boundaries
+        <code>genomic-benchmarks-qc</code> ships; move them and the grid below
+        recolours, so which flags depend on the line is something you can see
+        rather than take on trust.
+      </p>
+    </div>
+    <div class="th-controls">
+      <div class="th-control">
+        <label for="th-warn">Probe <strong>Warning</strong> above</label>
+        <input type="range" id="th-warn" min="0.50" max="0.95" step="0.01" value="0.60">
+        <output id="th-warn-out" for="th-warn">0.60</output>
+      </div>
+      <div class="th-control">
+        <label for="th-fail">Probe <strong>Fail</strong> above</label>
+        <input type="range" id="th-fail" min="0.50" max="0.95" step="0.01" value="0.70">
+        <output id="th-fail-out" for="th-fail">0.70</output>
+      </div>
+      <div class="th-control">
+        <label for="th-leak">Leakage <strong>Fail</strong> at or above</label>
+        <input type="range" id="th-leak" min="0.1" max="10" step="0.1" value="2.0">
+        <output id="th-leak-out" for="th-leak">2.0%</output>
+      </div>
+      <button type="button" class="ghost" id="th-reset" hidden>Shipped setting</button>
+    </div>
+    <p class="th-summary" id="th-summary" aria-live="polite"></p>
+    <p class="note warn" id="th-banner" hidden>
+      <strong>This is not the shipped setting.</strong> The grid below is
+      recoloured from the boundaries above; every other number on this site, and
+      every flag in the table on the overview, is at the boundaries the run used.
+    </p>
+    <p class="fine">
+      Nothing is re-run. Each cell is re-decided from the value this run published
+      for it &mdash; a probe's AUROC on the reference split, the leakage scan's
+      worst overlap. Three things cannot move and do not: the
+      {{n_integrity_checks_word}} integrity checks are not decided by a boundary
+      on a scale; <strong>Unknown</strong> stays Unknown, because a check that
+      could not be scored has no value to compare against; and a blank stays
+      blank.
+    </p>
+  </form>
+
   {{fig_flag_matrix}}
 </section>
 
@@ -64,17 +241,18 @@
   <h2>Where to go next</h2>
   <ul class="cards">
     <li>
-      <a href="catalogue.html">
+      <a href="index.html#datasets">
         <strong>All {{n_datasets}} datasets</strong>
         <p>The same flags as a table you can filter and sort, one row per dataset,
-          each row opening its {{n_checks_word}} flags in place.</p>
+          each row opening its {{n_checks_word}} flags in place &mdash; and each
+          dataset&rsquo;s page opening the reports behind them.</p>
       </a>
     </li>
     <li>
-      <a href="methods.html#checks">
-        <strong>What each check measures</strong>
-        <p>The feature each probe fits, the threshold behind each flag, and what
-          Pass does not say.</p>
+      <a href="https://genomic-benchmarks.github.io/genomic-benchmarks-qc/guide/checks/">
+        <strong>What each check computes</strong>
+        <p>The feature each probe fits and the rule behind each flag, in the
+          documentation of the tool that runs them.</p>
       </a>
     </li>
     <li>
@@ -82,13 +260,6 @@
         <strong>The Core Set</strong>
         <p>{{n_gates_cap}} gates over these same flags, and the {{core_set_size}}
           datasets that came through all of them.</p>
-      </a>
-    </li>
-    <li>
-      <a href="reports.html">
-        <strong>{{n_reports}} reports</strong>
-        <p>What a check actually looked at: every distribution and every probe fit
-          behind one of these flags.</p>
       </a>
     </li>
   </ul>

@@ -1,0 +1,62 @@
+<!-- What is left of the page that was called Methods, and then Provenance, and
+     was both times somewhere to put things. Everything else it held is now on the
+     page whose reader has the question -- what a flag is, which split it was
+     measured on, how to read either scale -- or in this repository's README,
+     where the reader is a maintainer rather than someone reading a number. This
+     is the part that is neither: a number on this site belongs to one run, and a
+     reader quoting one needs that run named. -->
+<section class="page-head">
+  <p class="eyebrow">Citing</p>
+  <h1>How to cite this run</h1>
+  <p class="lede">
+    A number on this site belongs to one run, and the run is what a citation has
+    to name &mdash; the site is rebuilt whenever the tables under
+    <code>data/</code> move, and a URL alone does not say which build a reader
+    saw.
+  </p>
+</section>
+
+<section id="run">
+  <h2>What identifies it</h2>
+  <div class="table-card">
+    <table class="listing">
+      <caption>What identifies the run on screen. The same values are in the
+        footer of every page.</caption>
+      <tbody>
+        <tr>
+          <th scope="row">Measurements</th>
+          <td><code>genomic-benchmarks-qc</code>, run <code>{{qc_run}}</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Rollup</th>
+          <td><code>gb-audit {{package_version}}</code>, run
+            <code>{{audit_run}}</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Core Set</th>
+          <td>run <code>{{core_set_run}}</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Reports and full tables</th>
+          <td>{{record_line}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Catalogue schema</th>
+          <td>version {{schema_version}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The instrument, this audit and the corpus are described in one manuscript, in
+    preparation. Until it has a DOI, cite the Zenodo record above for the
+    measurements and
+    <a href="https://github.com/genomic-benchmarks/genomic-benchmarks-qc">the
+    tool&rsquo;s repository</a> for the instrument that produced them.
+  </p>
+  <p class="fine">
+    <a href="index.html#datasets">All {{n_datasets}} datasets</a> &middot;
+    <a href="checks.html">The {{n_checks_word}} checks</a> &middot;
+    <a href="core-set.html">The Core Set</a>
+  </p>
+</section>

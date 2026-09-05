@@ -1,197 +1,62 @@
+<!-- Methods held everything: what a flag is, which split it was quoted from, how
+     to read an AUROC and an overlap, a second rendering of the checks table, the
+     joint reading, and the provenance. Six subjects on one page is what a page
+     called Methods invites, and none of them was findable from its name.
+
+     Nothing here redirects: this page renders no forwarding anchor and loads no
+     script. The other two moved addresses on this site each went to one place and
+     could send a reader there without asking. This one went to three, and a page
+     that guesses which of six subjects a reader came for is wrong five times. -->
 <section class="page-head">
-  <p class="eyebrow">What was measured</p>
-  <h1>Methods</h1>
+  <p class="eyebrow">Moved</p>
+  <h1>Methods was four pages&rsquo; worth of one page</h1>
   <p class="lede">
-    What was measured, on what, and what the results do and do not say. Every
-    number on this site comes from one run of <code>genomic-benchmarks-qc</code>
-    &mdash; run <code>{{qc_run}}</code> &mdash; rolled up by
-    <code>gb-audit {{package_version}}</code> in run <code>{{audit_run}}</code>.
+    Everything that was here is still on this site, on the page where the question
+    it answers comes up. Nothing was dropped.
   </p>
 </section>
 
-<section id="what">
-  <h2>What a flag is</h2>
-  <p>
-    Each check returns one of {{n_flags_word}} flags on one split: <strong>Pass</strong>,
-    <strong>Warning</strong>, <strong>Fail</strong>, <strong>Unknown</strong>.
-    The first {{n_scored_flags_word}} are scored outcomes and are ordered by
-    severity. Unknown is
-    not the fourth degree of that order: it means the check ran and could not be
-    scored. A blank &mdash; a check with no flag at all &mdash; is a third thing
-    again: the check had nothing to run on.
-  </p>
-  <p>
-    Keeping those apart matters more than it looks. Reading Unknown or a blank as
-    Pass converts an absence of measurement into a reassuring result, which is
-    the single easiest way to make an audit say more than it found. Every figure
-    on this site draws Unknown as a hatch rather than a fourth colour, and draws
-    nothing at all for a blank.
-  </p>
-  <p>
-    <strong>Pass is the narrowest of the {{n_flags_word}}.</strong> It says this check did not
-    separate the classes on this split. It does not say the dataset is free of
-    structure a model could use, because a check that did not find something is
-    not evidence there is nothing to find. No combination of the {{n_checks_word}} flags
-    licenses that conclusion either.
-  </p>
-</section>
-
-<section id="reference-split">
-  <h2>The reference split</h2>
-  <p>
-    A dataset ships several splits and a check runs on each of them. The single
-    flag, AUROC and overlap this site quotes per dataset are the values on that
-    dataset's <strong>reference split</strong> &mdash; <code>train</code> for
-    every dataset but one, where the training split is not released and
-    <code>test</code> stands in.
-  </p>
-  <p>
-    They are not maxima over splits. A maximum would make a dataset with more
-    splits look worse for having been measured more times, and would name no
-    split a reader could go and check. Every figure here names the split its
-    numbers were measured on, and every dataset page shows all splits alongside
-    the reference one.
-  </p>
-</section>
-
-<section id="checks">
-  <h2>The {{n_checks_word}} checks</h2>
-  <p>
-    {{n_probe_checks_cap}} probe checks each fit a single sequence feature against the
-    class labels and report the AUROC it reaches. {{n_integrity_checks_cap}}
-    integrity checks count duplicates and unique bases. Those
-    {{n_split_checks_word}} run per split. The
-    leakage scan runs across pairs of splits and counts sequences of one that are
-    also present in the other.
-  </p>
-  <div class="table-card">
-  <table class="listing">
-    <caption>Each check, and how the {{n_datasets}} datasets came out on it.</caption>
-    <thead>
-      <tr>
-        <th scope="col">Check</th>
-        <th scope="col">Kind</th>
-        <th scope="col" class="right">Pass</th>
-        <th scope="col" class="right">Warning</th>
-        <th scope="col" class="right">Fail</th>
-        <th scope="col" class="right">Unknown</th>
-        <th scope="col" class="right">Blank</th>
-        <th scope="col" class="right">Scored</th>
-      </tr>
-    </thead>
-    <tbody>
-{{check_rows}}
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="probes">
-  <h2>Reading a probe AUROC</h2>
-  <p>
-    A probe is one feature and one fit &mdash; sequence length, GC content, a
-    nucleotide or dinucleotide frequency, a per-position profile. The AUROC it
-    reaches is a <strong>lower bound</strong> on what is recoverable from the
-    sequences: a stronger feature, or a model, may recover more. It is never an
-    upper bound, and a low value is not evidence that a model would also score
-    low.
-  </p>
-  <p>
-    Across the {{n_probed}} probed datasets the median strongest probe reaches
-    {{median_probe_auroc}}, and {{n_probe_over_0_7}} datasets reach 0.70 or more
-    from a single feature.
-  </p>
-  <p>
-    The figure below is the strongest probe per dataset, one mark each. Read a mark
-    as a lower bound on what a model could recover from the sequences alone, and
-    the spread as the range this corpus covers rather than as a ranking.
-  </p>
-  {{fig_probe_auroc}}
-</section>
-
-<section id="leakage">
-  <h2>Reading a split overlap</h2>
-  <p>
-    The leakage scan compares two splits and reports, in each direction, the
-    percentage of one split's sequences that were also present in the other. Both
-    directions are shown because the two differ whenever the splits differ in
-    size, and quoting only the larger would describe neither split.
-  </p>
-  <p>
-    {{n_leakage_scanned}} of {{n_datasets}} datasets were scanned;
-    {{n_leakage_unscanned_cap}} ships a single split and so has no pair to compare.
-    {{n_with_any_leakage}} have at least one sequence in two splits,
-    {{n_leakage_over_50}} have more than half of one split present in another, and
-    {{n_leakage_complete}} have all of it.
-  </p>
-  <p>
-    The bands below count datasets rather than implying a density, because the
-    structure worth seeing is all at one end: most of the corpus sits in the
-    narrowest band and a handful sit at the top of the range.
-  </p>
-  {{fig_leakage}}
-</section>
-
-<section id="exclusions">
-  <h2>What is not here</h2>
-  <p>
-    The curation covered {{n_curated}} datasets. {{n_excluded}} were not measured,
-    for {{n_exclusion_reasons}} reasons recorded at curation time. They are listed
-    as recorded, because a dataset left out for an unsupported file format and one
-    left out for an unsupported task are different absences.
-  </p>
-  <div class="table-card">
-  <table class="listing">
-    <caption>Why {{n_excluded}} curated datasets are not in this run.</caption>
-    <thead>
-      <tr>
-        <th scope="col" class="right">Datasets</th>
-        <th scope="col">Reason recorded</th>
-        <th scope="col">Collections</th>
-      </tr>
-    </thead>
-    <tbody>
-{{exclusion_rows}}
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="provenance">
-  <h2>Where these numbers come from</h2>
-  <p>
-    The tables under <code>data/</code> are committed to this repository and
-    carry a SHA-256 each in <code>data/provenance.json</code>. Two of them &mdash;
-    the combined class and split results &mdash; are also on the Zenodo record, so
-    the committed copy and the published copy are two routes to the same bytes,
-    and the digests are what make that a claim you can check rather than one you
-    have to take.
-  </p>
-  <p>
-    <code>gb-audit build</code> turns those tables into
-    <code>docs/data/catalogue.json</code>, which is committed and gated in CI.
-    <code>gb-audit render</code> turns that file plus the templates into this
-    site. The site itself is not committed: every number it shows is already
-    diffable in the catalogue, and the HTML adds none of its own. Neither step
-    writes a timestamp, so two builds of one commit produce the same bytes.
-  </p>
-  <p>
-    The {{n_reports}} reports are fetched separately with
-    <code>gb-audit fetch</code>, which verifies each archive against the digest in
-    <code>data/reports.csv</code> before unpacking it, and records which route the
-    bytes came by.
-  </p>
-</section>
-
-<section id="vocabulary">
-  <h2>How this site words things</h2>
-  <p>
-    The wording here is constrained on purpose, and the constraint is checked by a
-    tool rather than remembered. A check reports what it measured; it does not
-    report a cause. So this site says a probe reached an AUROC, not that a dataset
-    is easy; it says sequences were found in two splits, not that a benchmark is
-    unusable. Where a number is a lower bound it is called one every time it
-    appears, and a flag is always named as the tool's output rather than as a
-    judgement about the data.
+<section id="where">
+  <h2>Where each part went</h2>
+  <dl class="kinds">
+    <dt><a href="checks.html#flags">What a flag is</a></dt>
+    <dd>
+      The {{n_flags_word}} a check can return, why Unknown is not a fourth degree
+      of severity and a blank is a third thing again, and what a
+      <strong>Pass</strong> does not say &mdash; on the checks page, with the
+      checks it is a statement about.
+    </dd>
+    <dt><a href="checks.html#reference-split">The split these numbers are on</a></dt>
+    <dd>
+      Why one split per dataset is quoted and why it is not a maximum over splits.
+    </dd>
+    <dt><a href="checks.html#probes">Reading a probe AUROC</a></dt>
+    <dd>
+      What a probe fits, why the AUROC it reaches is a lower bound and never an
+      upper one, and the figure of the strongest probe on each of the
+      {{n_probed}} probed datasets.
+    </dd>
+    <dt><a href="checks.html#leakage">Reading a split overlap</a></dt>
+    <dd>
+      What the leakage scan compares, why both directions are reported, and the
+      figure of where the {{n_leakage_scanned}} scanned datasets fall.
+    </dd>
+    <dt><a href="core-set.html#joint">Reading a joint AUROC</a></dt>
+    <dd>
+      The same features read together rather than one at a time, which is the
+      fifth Core Set criterion and is described where it is applied.
+    </dd>
+    <dt><a href="cite.html">How to cite this run</a></dt>
+    <dd>
+      What identifies the run on screen, and what to cite until the manuscript has
+      a DOI. Where the committed tables and the {{n_reports}} fetched reports come
+      from, and which curated datasets were never measured, is in this
+      repository&rsquo;s README, whose reader is a maintainer.
+    </dd>
+  </dl>
+  <p class="fine">
+    The table of what each check returned was on this page and on
+    <a href="checks.html#returned">the checks page</a>, rendered from the same
+    values. There is one of it now.
   </p>
 </section>

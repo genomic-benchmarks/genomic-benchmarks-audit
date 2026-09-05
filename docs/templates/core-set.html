@@ -2,26 +2,35 @@
   <p class="eyebrow">Screened on their inputs</p>
   <h1>The Core Set</h1>
   <p class="lede">
-    {{n_gates_cap}} gates applied in order to the {{n_datasets}} measured datasets.
-    {{core_set_size_cap}} came through all of them. A dataset that did not is not
-    thereby unusable &mdash; the gates say which checks returned Fail on it, and
-    nothing more.
+    {{n_gates_cap}} criteria applied in order to the {{n_datasets}} measured
+    datasets, then one selection among the {{n_eligible}} that met all
+    {{n_gates_word}}. {{core_set_size_cap}} came out. A dataset that did not is
+    not thereby unusable &mdash; the criteria say which checks returned Fail on
+    it, and what the same checks&rsquo; features recovered together, and nothing
+    more.
   </p>
   <p class="fine">
     <a href="{{core_set_href}}">These {{core_set_size}} in the catalogue</a>, where
     they sort against the other {{n_datasets}} &middot;
-    <a href="methods.html">How the gates were chosen</a>
+    <a href="#joint">What the joint reading is</a> &middot;
+    <a href="checks.html">What each of the {{n_checks_word}} checks returned</a>
   </p>
 </section>
 
 <section class="figures">
   <p class="eyebrow">The funnel</p>
-  <h2>What each gate removed</h2>
+  <h2>What each step removed</h2>
   {{fig_funnel}}
 
   <div class="table-card">
     <table class="listing">
-      <caption>The gates in the order applied, with the threshold each one used.</caption>
+      <caption>
+        The {{n_funnel_steps_word}} steps in the order applied, with the threshold
+        each one used. The first {{n_gates_word}} are criteria a dataset either
+        meets or does not. The last is not: it picks among the {{n_eligible}} that
+        met all {{n_gates_word}}, so no dataset is excluded by it for anything it
+        was measured on.
+      </caption>
       <thead>
         <tr>
           <th scope="col" class="right">Step</th>
@@ -40,14 +49,93 @@
   </div>
 </section>
 
+<!-- The step that cannot be read off the grid, and the one that is worth the
+     page. Everything else on this site is a check taken on its own; this is the
+     same features taken together, which is a different question and gets a
+     different answer on six datasets. -->
+<section class="figures" id="joint">
+  <p class="eyebrow">The fifth criterion</p>
+  <h2>The checks read together</h2>
+  <p>
+    Nine of the {{n_checks_word}} checks reduce a sequence to one feature and ask
+    whether that feature alone separates the classes. The fifth criterion asks
+    something the {{n_checks_word}} cannot answer between them: hand a model
+    <em>all</em> of those same features at once &mdash; length, GC, mononucleotide
+    and dinucleotide content, and the two per-position profiles &mdash; and score
+    it on a held-out split. Nothing is added that the checks do not already look
+    at. The only change is that they are read jointly rather than one at a time.
+  </p>
+  <p>
+    Over the {{n_joint_scored}} datasets a held-out split could be scored on, the
+    median is <strong>{{median_joint_auroc}}</strong>, and {{n_joint_over_0_8}}
+    reach 0.80 or more. The criterion cuts at 0.80, which is that median.
+  </p>
+  <p>
+    Two differences from every other number on this site are worth holding on to.
+    It is measured on a <strong>held-out split</strong>, not on the reference
+    split everything else is measured on, because a model fitted on the training
+    pool and scored there would report how well it memorised. And it is still a
+    <strong>lower bound</strong>, for the same reason a probe AUROC is: these are
+    six fixed feature blocks, and a learned model has access to feature classes
+    none of them spans.
+  </p>
+  <p class="note">
+    {{n_joint_lower_bound}} of the {{n_joint_scored}} joint figures are
+    <strong>lower bounds</strong>, not point values: the position window had to be
+    capped, or the training pool subsampled. Both can only move the number down,
+    so a dataset admitted for sitting under the ceiling may in fact sit above it.
+    Every joint figure on this site that is a lower bound says so where it is
+    shown.
+  </p>
+
+  <div class="table-card">
+    <table class="listing">
+      <caption>
+        The {{n_clean_but_joint_word}} datasets no check returned Fail on, which
+        the same checks&rsquo; features recovered when read together. These are
+        the datasets step 5 removed and no earlier step did.
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Dataset</th>
+          <th scope="col">Task category</th>
+          <th scope="col" class="right">Strongest single feature</th>
+          <th scope="col" class="right">All features together</th>
+          <th scope="col">Scored on</th>
+        </tr>
+      </thead>
+      <tbody>
+{{joint_rows}}
+      </tbody>
+    </table>
+  </div>
+  <p>
+    This is the clearest thing this run has to say about what a
+    <strong>Pass</strong> is worth. On every dataset in that table each of the
+    {{n_checks_word}} checks returned Pass or Warning and none returned Fail; the
+    features those checks are built from still recover the label. A row where the
+    left figure is near 0.50 and the right is near 1.00 is not a check that
+    misfired &mdash; each check answered the narrow question it was asked. It is
+    the whole reason a flag bounds separability from below and never from above.
+  </p>
+  <p class="note">
+    One consequence is recorded rather than smoothed over. <strong>RNA Processing
+    Prediction has no eligible dataset anywhere in this corpus</strong>: one of its
+    11 audited datasets had no Fail on any check, and it does not clear the joint
+    ceiling. So the Core Set spans six task categories and not seven, and the
+    absent one is a finding about the corpus rather than a gap in the selection.
+  </p>
+</section>
+
 <section class="figures">
   <p class="eyebrow">The members</p>
   <h2>The {{core_set_size}} datasets</h2>
   <div class="table-card">
     <table class="listing">
       <caption>
-        Ranked as the selection ranked them. Every figure was measured on the
-        dataset's reference split.
+        Ranked as the selection ranked them. Every per-check figure was measured on
+        the dataset&rsquo;s reference split; the joint figure was measured on a
+        held-out split, which is what the criterion is defined over.
       </caption>
       <thead>
         <tr>
@@ -58,6 +146,7 @@
           <th scope="col" class="right">Rows</th>
           <th scope="col">Rollup flag</th>
           <th scope="col" class="right">Strongest probe AUROC</th>
+          <th scope="col" class="right">Joint AUROC</th>
           <th scope="col" class="right">Worst split overlap</th>
         </tr>
       </thead>
@@ -67,8 +156,32 @@
     </table>
   </div>
   <p class="note">
-    A Core Set member can still carry a Warning: the gates screen for Fail. The
-    strongest probe on a member still reaches an AUROC worth reading, and that
-    column is there so it can be read.
+    A Core Set member can still carry a Warning: the criteria screen for Fail. The
+    strongest probe on a member still reaches an AUROC worth reading, and the joint
+    column still reaches higher than it &mdash; both are there so they can be read.
+  </p>
+</section>
+
+<section class="onward">
+  <h2>Where to go next</h2>
+  <ul class="cards">
+    <li>
+      <a href="index.html#datasets">
+        <strong>All {{n_datasets}} datasets</strong>
+        <p>Every dataset the criteria were applied to, with the joint AUROC as a
+          column you can sort against the per-check flags.</p>
+      </a>
+    </li>
+    <li>
+      <a href="checks.html">
+        <strong>The {{n_checks_word}} checks</strong>
+        <p>What each check measures on its own, which is the reading the fifth
+          criterion exists to sit beside.</p>
+      </a>
+    </li>
+  </ul>
+  <p class="fine">
+    <a href="cite.html">What identifies this run, and what a citation of it has to
+    name</a>
   </p>
 </section>

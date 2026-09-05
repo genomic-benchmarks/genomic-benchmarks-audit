@@ -131,7 +131,9 @@ def test_every_cell_is_present_and_a_blank_is_not_a_link(run, committed):
 def test_every_mark_links_to_the_dataset_it_belongs_to(run, committed):
     html = rendered(run)
     slugs = {d["slug"] for d in committed["datasets"]}
-    targets = re.findall(r'<td class="mx-cell[^"]*"><a href="datasets/([^"#]+)', html)
+    # The cell carries its check, its flag and -- where one exists -- the value
+    # the flag was decided from, between the class and the link.
+    targets = re.findall(r'<td class="mx-cell[^"]*"[^>]*><a href="datasets/([^"#]+)', html)
     assert len(targets) == len(committed["datasets"]) * len(PAPER_COLUMNS) - sum(
         1
         for dataset in committed["datasets"]

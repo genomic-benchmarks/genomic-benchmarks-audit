@@ -48,11 +48,8 @@
          stated by colour alone. -->
     <nav aria-label="Sections">
       <a href="{{root}}index.html"{{nav_index}}>Overview</a>
-      <a href="{{root}}catalogue.html"{{nav_catalogue}}>Datasets</a>
       <a href="{{root}}checks.html"{{nav_checks}}>Checks</a>
       <a href="{{root}}core-set.html"{{nav_core}}>Core Set</a>
-      <a href="{{root}}reports.html"{{nav_reports}}>Reports</a>
-      <a href="{{root}}methods.html"{{nav_methods}}>Methods</a>
     </nav>
     <div class="masthead-right">
       <button type="button" class="icon-button" id="theme-toggle">
@@ -81,11 +78,11 @@
       <div>
         <h2>This site</h2>
         <ul>
-          <li><a href="{{root}}catalogue.html">All {{n_datasets}} datasets</a></li>
+          <li><a href="{{root}}index.html#datasets">All {{n_datasets}} datasets</a></li>
           <li><a href="{{root}}checks.html">The {{n_checks_word}} checks</a></li>
           <li><a href="{{root}}core-set.html">The Core Set</a></li>
-          <li><a href="{{root}}reports.html">The {{n_reports}} reports</a></li>
-          <li><a href="{{root}}methods.html">Methods, and what a flag does not say</a></li>
+          <li><a href="{{root}}checks.html#flags">What a flag does not say</a></li>
+          <li><a href="{{root}}cite.html">How to cite this run</a></li>
         </ul>
       </div>
       <!-- The repositories the project is made of, named rather than described:
@@ -122,14 +119,20 @@
       Every number on this site comes from one committed file,
       <code>docs/data/catalogue.json</code>, built offline from the tables this
       repository carries under <code>data/</code>. Nothing is fetched at render
-      time and nothing is computed in the browser except the sorting, the
-      filtering and the grouping.
+      time. Three things are computed in the browser and no others: the sorting,
+      filtering and grouping of rows; and, on the overview, the flag a published
+      AUROC would have been given under boundaries a reader moved. That last one
+      re-decides a flag from a number this run measured &mdash; it never re-runs a
+      check, and the page marks itself as showing something other than the shipped
+      boundaries whenever it is doing so.
     </p>
     <dl class="provenance">
       <dt>Measurements</dt>
       <dd><code>genomic-benchmarks-qc</code>, run <code>{{qc_run}}</code></dd>
       <dt>Audit</dt>
       <dd><code>gb-audit {{package_version}}</code>, run <code>{{audit_run}}</code></dd>
+      <dt>Core Set</dt>
+      <dd>run <code>{{core_set_run}}</code></dd>
       <dt>Reports and full tables</dt>
       <dd>{{record_line}}</dd>
       <dt>Catalogue schema</dt>
@@ -140,6 +143,8 @@
       files, so two builds of the same commit produce the same page, and what a
       reader needs in order to find these numbers again is the run label rather
       than the hour it was rendered.
+      <a href="{{root}}cite.html">What each of these labels names, and how to cite
+      this run</a>
     </p>
   </div>
 </footer>
@@ -159,19 +164,42 @@
     "task_type": "Task type",
     "species": "Species",
     "total_size": "Rows",
+    "seq_length": "Sequence length",
     "overall_verdict": "Rollup flag",
     "n_checks_failed": "Checks flagged Fail",
     "max_probe_auroc": "Strongest probe AUROC",
     "max_leaked_test_pct": "Worst split overlap",
-    "in_core_set": "Core Set"
+    "in_core_set": "Core Set",
+    "joint_auroc": "Joint AUROC",
+    "checks": "The {{n_checks}} checks"
   },
   "column_help": {
     "overall_verdict": "The worst flag the {{n_checks}} checks returned on this dataset's reference split. A rollup of what was measured, not a judgement about the dataset.",
     "n_checks_failed": "How many of the {{n_checks}} checks returned Fail on the reference split.",
     "max_probe_auroc": "The AUROC the strongest single sequence feature reaches on the reference split. A lower bound on what a learned model could recover from that feature alone.",
     "max_leaked_test_pct": "The largest overlap the leakage scan found between two splits: the percentage of one split's sequences that were also present in the other. Open the dataset to see which two splits.",
-    "in_core_set": "Whether this dataset passed all {{n_gates}} Core Set gates.",
-    "total_size": "Sequences across every split, as the data package reports them."
+    "in_core_set": "Whether this dataset met all {{n_gates}} Core Set criteria and was then picked by the selection.",
+    "joint_auroc": "What one model reaches on a held-out split given all the features the {{n_checks}} checks use at once. A \u2265 marks a lower bound, where the window was capped or the pool subsampled.",
+    "total_size": "Sequences across every split, as the data package reports them.",
+    "seq_length": "The shortest and the longest sequence in the dataset, in bases, across every split.",
+    "checks": "One column per check, each cell the flag that check returned on this dataset's reference split. The same grid the overview opens with, with these columns beside it."
+  },
+  "check_short": {
+    "Per sequence GC content": ["GC", "content"],
+    "Per sequence nucleotide content": ["Nucleotide", "content"],
+    "Per sequence dinucleotide content": ["Dinucleotide", "content"],
+    "Sequence lengths": ["Sequence", "lengths"],
+    "Per position nucleotide content": ["Per position", "nucleotide"],
+    "Per position reversed nucleotide content": ["Per position", "from 3\u2032"],
+    "Sequence Duplications within Labels": ["Duplicates", "within label"],
+    "Duplicate Sequences between Labels": ["Duplicates", "across labels"],
+    "Unique bases": ["Unique", "bases"],
+    "Split leakage": ["Split", "leakage"]
+  },
+  "bands": {
+    "probe": "probe checks",
+    "integrity": "integrity checks",
+    "leakage scan": "leakage scan"
   },
   "flags": {
     "Pass": "Pass",
@@ -203,7 +231,10 @@
     "core_set_value": "Members only",
     "leaked_over": "Split overlap above",
     "probe_over": "Strongest probe AUROC at least",
+    "joint_over": "Joint AUROC at least",
     "shown": "{shown} of {total} datasets",
+    "drawer": "Filters",
+    "drawer_count": "Filters, {n} on",
     "expand": "Show what the checks returned on this dataset",
     "collapse": "Hide what the checks returned on this dataset"
   },
@@ -238,7 +269,8 @@
     "fail": "Flagged Fail somewhere",
     "core": "In the Core Set",
     "leakage": "Over half of one split in another",
-    "probe": "One feature reaches 0.70"
+    "probe": "One feature reaches 0.70",
+    "joint": "All features together reach 0.80"
   },
   "panel": {
     "reference": "reference",
@@ -248,16 +280,19 @@
     "probe_tail": "on the reference split, from that feature alone.",
     "probe_bound": "A lower bound: a stronger feature, or a model, may recover more.",
     "no_probe": "No probe reported an AUROC for this dataset.",
-    "leakage_none": "The leakage scan found no sequences of one split present in another.",
-    "leakage_some": "of the sequences in {query} were also found in {target}.",
-    "leakage_reverse": "The same comparison the other way: {pct} of the sequences in {target} were found in {query}.",
-    "leakage_scope": "The largest of the {n} split comparisons the scan made on this dataset.",
     "leakage_absent": "The leakage scan had nothing to compare: this dataset ships one split only.",
     "leakage_unscanned": "This dataset was not scanned for leakage.",
     "pass_note": "No check returned Warning or Fail on the reference split. That establishes only that these {{n_checks}} checks do not separate the classes.",
-    "checks_heading": "The {{n_checks}} checks on the reference split",
-    "splits_heading": "Splits, and what each was measured on",
-    "leakage_heading": "Split comparisons",
+    "checks_heading": "The {{n_split_checks}} checks on the reference split",
+    "sections": {
+      "probe": "Probes",
+      "integrity": "Integrity"
+    },
+    "auroc": "AUROC",
+    "splits_heading": "Splits and their overlap",
+    "overlap_heading": "Overlap",
+    "pair_vs": "vs",
+    "pair_share": "of {from} was also found in {to}",
     "reports_heading": "Reports",
     "core_set_member": "In the Core Set",
     "core_set_absent": "Not in the Core Set",
@@ -274,6 +309,8 @@
     "state_linked": "Not in this build",
     "state_unpublished": "Not in this build, not published yet",
     "shown": "{shown} of {total} reports, across {datasets} of {n} datasets",
+    "drawer": "Filter by column",
+    "drawer_count": "Filter by column, {n} on",
     "no_rows": "No report matches these filters."
   },
   "reports": {
@@ -287,6 +324,54 @@
     "linked": "The reports for this dataset are not in this build. They can be downloaded from the record.",
     "unpublished": "The reports for this dataset are not in this build, and the record they live on is not published yet.",
     "none": "This dataset has no rendered reports."
+  },
+  "explore": {
+    "flags_title": "What the checks returned on the datasets shown",
+    "flags_desc": "{checks} horizontal stacked bars, one per check, showing the share of the {n} datasets currently shown that carry each flag on that check.",
+    "flags_axis": "share of the {n} datasets shown",
+    "flags_caption": "The share of the {n} datasets shown carrying each flag on each of the {checks} checks, measured on each dataset's reference split. The trailing figure counts the datasets flagged Warning or Fail. Select a segment to filter the table to the datasets it counts.",
+    "flags_tip": "{check}: {n} of the {total} shown flagged {flag}. Select to filter the table to them.",
+    "flags_twin": "Datasets per flag per check, over the {n} shown.",
+    "probe_title": "How far each single feature got on the datasets shown",
+    "probe_desc": "{probes} rows, one per probe, with one mark per dataset at the AUROC that probe reached on it, over the {n} datasets currently shown.",
+    "probe_axis": "AUROC on the reference split",
+    "probe_caption": "One mark per dataset per probe, over the {n} datasets shown: where a mark sits is the AUROC that one feature reached on that dataset's reference split. The strongest-probe column in the table is the furthest right of the {probes} marks on a dataset; this is which of the {probes} it was. The rule behind each row is its median, and the trailing figure repeats it. Every mark opens its dataset. The colour is that check's flag, which on a probe is a boundary drawn on this same number at 0.60 and 0.70 — so it marks where the boundaries fall rather than adding a second measurement, and the dashed line is the 0.70 the Core Set cuts at.",
+    "probe_tip": "{dataset} — {check} reaches AUROC {value} on the reference split, and the check returned {flag}.",
+    "probe_median": "{check}: median AUROC {value} over the {n} datasets shown.",
+    "probe_cut": "0.70",
+    "probe_twin": "What each probe reached over the {n} datasets shown, and how many reached {cut} or more.",
+    "col_check": "Check",
+    "col_blank": "No result",
+    "col_measured": "Measured",
+    "col_median": "Median AUROC",
+    "col_strongest": "Strongest",
+    "col_over_cut": "Reaching 0.70",
+    "table_view": "Table view"
+  },
+  "sidebar": {
+    "label": "All datasets, by collection",
+    "heading": "Browse the corpus",
+    "all": "All {n} datasets, as a table"
+  },
+  "thresholds": {
+    "summary": "At this setting: {pass} datasets roll up to Pass, {warning} to Warning, {fail} to Fail."
+  },
+  "joint": {
+    "lower_bound": "a lower bound",
+    "lower_bound_mark": "\u2265",
+    "lower_bound_tip": "A lower bound rather than a point value: {caveat}. The measurement can only be too low, so the value may in fact be higher.",
+    "interval": "95% interval {lo} to {hi}, over {n} held-out sequences",
+    "against_single": "The strongest single feature reaches {single} on its own.",
+    "absent": "No joint reading: this dataset has no held-out split to score one on.",
+    "clean_but_joint": "No check returned Fail on this dataset, and the same checks\u2019 features together recover the label anyway. That is what removed it from the Core Set, and no single flag could have shown it."
+  },
+  "percentile": {
+    "heading": "Where this sits in the corpus",
+    "probe": "Stronger than {n} of the {total} probed datasets",
+    "joint": "Higher than {n} of the {total} jointly scored datasets",
+    "leakage": "More overlap than {n} of the {total} scanned datasets",
+    "tied_leakage": "No sequence was found in two splits, which {n} of the {total} scanned datasets also show",
+    "note": "A rank among the datasets this run measured, not among benchmarks in general."
   },
   "kinds": {
     "probe": "probe",

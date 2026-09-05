@@ -1,11 +1,12 @@
 {
-  "audit_run": "2026-09-04_corpus-rollups",
+  "audit_run": "2026-09-04_core-set-split-out",
   "qc_run": "2026-08-27_full-corpus",
+  "core_set_run": "2026-09-05_merged-arms",
   "source_repository": "GenBench2_paper",
   "zenodo_record_id": "22288544",
   "zenodo_concept_record_id": "22288543",
   "zenodo_record_registered": false,
-  "copied": "2026-09-04",
+  "copied": "2026-09-05",
   "generated_by": "scripts/regenerate_audit_data.py",
   "files": {
     "combined_classes_results.csv": {
@@ -17,16 +18,20 @@
       "sha256": "c42891b47407ea6f0c540ddd4bd65387787f089f0a81670117e08e79b26f87e1"
     },
     "core_set.csv": {
-      "bytes": 2605,
-      "sha256": "5339b5fe9c38d4e25756381576209ff7bea028caf8e9b2a71921155b0e24f1b3"
+      "bytes": 3483,
+      "sha256": "0cf1cbd2f46380e8cba5a8d397470e18333cd1e3324c6f7cc70e44e40436097c"
+    },
+    "core_set_candidates.csv": {
+      "bytes": 67929,
+      "sha256": "9f0aee9a9d639ac262b57514903b5feeb9bd47dd9f96d2a292d5678bd97daba3"
     },
     "core_set_criteria.csv": {
-      "bytes": 621,
-      "sha256": "f0e04c3eaeda1256472cedfa46c7ad28f3b3c9996a1b63b05a4483729d1d3ce0"
+      "bytes": 953,
+      "sha256": "db70a19de7b475e770d8fdc7415db2403e5e322006e5c397bdbf619ce2eca002"
     },
     "core_set_selection_trace.csv": {
-      "bytes": 2667,
-      "sha256": "df82fb8204ca743cf8f1b0bbe28d47341c28685ec26359ff76aa4c6f025c22b9"
+      "bytes": 2632,
+      "sha256": "2f8b607ceab5cffb1f81d7b09f0f0e9709078d906354038561532871659de2e9"
     },
     "dataset_level_summary.csv": {
       "bytes": 36931,

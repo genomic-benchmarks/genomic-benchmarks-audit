@@ -7,21 +7,16 @@ import re
 from pathlib import Path
 
 import pytest
-from gb_audit import site, zenodo
+from gb_audit import audit, charts, site, zenodo
 
 PLACEHOLDER_LEFT = re.compile(r"\{\{[a-z0-9_]+\}\}")
-
-
-@pytest.fixture(scope="session")
-def pages(built):
-    return sorted(Path(built["out"]).rglob("*.html"))
 
 
 def test_every_page_kind_is_written(built):
     out = Path(built["out"])
     for name in (
         "index.html", "catalogue.html", "checks.html", "core-set.html",
-        "reports.html", "methods.html", ".nojekyll",
+        "reports.html", "cite.html", "methods.html", ".nojekyll",
     ):
         assert (out / name).exists(), name
     assert built["dataset_pages"] == 93
@@ -44,12 +39,33 @@ def test_no_placeholder_survives_into_a_page(built):
 
 def test_the_copy_block_survives_being_filled(built):
     """It is JSON inside HTML, and `fill()` runs over it. It must still parse."""
-    for name in ("index.html", "catalogue.html", "methods.html"):
+    for name in ("index.html", "catalogue.html", "cite.html"):
         text = (Path(built["out"]) / name).read_text(encoding="utf-8")
         match = site.COPY_BLOCK.search(text)
         assert match is not None, name
         copy = json.loads(match.group("json"))
-        assert "10" in copy["panel"]["checks_heading"]
+        assert "9" in copy["panel"]["checks_heading"]
+
+
+def test_the_grids_agree_on_what_a_check_is_called():
+    """The two grids draw the same ten columns, so they name them the same way.
+
+    `matrix.py` renders the grid on the overview from `charts.CHECK_SHORT` and
+    `charts.KIND_BANDS`; `assets/catalogue.js` renders it on the datasets page
+    from the copy block, because a column heading built in the browser has to be
+    a word the browser can read. Two copies of the same ten abbreviations is one
+    rename away from two grids that disagree, and this is what makes that a
+    failing build rather than a thing someone notices later.
+    """
+    copy = site.site_copy()
+    short = {name: tuple(lines) for name, lines in copy["check_short"].items()}
+    assert short == charts.CHECK_SHORT
+    # And in the order the grid lays them out, which is what makes a reader with
+    # one page open beside the other find a column in the same place.
+    assert list(short) == list(audit.DISPLAY_CHECKS)
+    assert [copy["bands"][kind] for kind in ("probe", "integrity", "leakage scan")] == [
+        name for name, _, _ in charts.KIND_BANDS
+    ]
 
 
 def test_no_draft_token_is_ever_rendered(built, monkeypatch):
@@ -168,31 +184,27 @@ def test_the_reports_live_in_the_site_and_survive_a_rebuild(built, run):
     assert not (out / "index.html").is_dir()
 
 
-def test_the_reports_table_carries_what_its_filters_narrow_on(built):
-    """The reports page filters what is on it, so what it filters on is on it.
+def test_every_report_is_reachable_from_the_dataset_it_belongs_to(built, committed):
+    """The reports index is gone, so the dataset pages are the only route to them.
 
-    `assets/reports.js` reads these attributes and nothing else -- no second copy
-    of the catalogue -- so a row that lost them would be a row no filter can
-    reach while still looking like every other row.
+    All 423 of them, each linked from exactly the one dataset it is the working
+    for. A report that no page links is a file in the build that nothing reaches.
     """
-    text = (Path(built["out"]) / "reports.html").read_text(encoding="utf-8")
-    assert 'src="assets/reports.js"' in text
-
-    rows = re.findall(r"<tr (data-collection=.*?)>", text)
-    assert len(rows) == 93
-    for row in rows:
-        assert "data-state=" in row and "data-search=" in row
-
-    # Every report link is reachable by both of the filters that act on links.
-    items = re.findall(r'<li class="report [^"]*" (data-kind=.*?)>', text)
-    assert len(items) == 423
-    assert all("data-split=" in item for item in items)
-    # A leakage scan carries both sides of the comparison: it is a fact about the
-    # held-out split as much as about the split it was compared against.
-    pairs = [i for i in items if 'data-kind="leakage-scan"' in i]
-    assert len(pairs) == 141
-    assert all(len(re.search(r'data-split="([^"]*)"', i).group(1).split()) == 2
-               for i in pairs)
+    out = Path(built["out"])
+    seen = set()
+    for dataset in committed["datasets"]:
+        entry = dataset["reports"]
+        if not entry:
+            continue
+        text = (out / "datasets" / f'{dataset["slug"]}.html').read_text(
+            encoding="utf-8"
+        )
+        links = re.findall(r'<li class="report[^"]*"><a href="\.\./(view/[^"]+)"', text)
+        assert len(links) == len(entry["files"]), dataset["benchmark_id"]
+        for link in links:
+            assert (out / link).is_file(), link
+        seen.update(links)
+    assert len(seen) == built["report_views"] == 423
 
 
 def test_a_build_with_no_reports_still_renders_every_page(built_bare):
@@ -202,7 +214,12 @@ def test_a_build_with_no_reports_still_renders_every_page(built_bare):
     assert built_bare["dataset_pages"] == 93
     assert built_bare["report_views"] == 0
     assert not site.reports.report_root(out).exists()
-    assert "Run" in (out / "reports.html").read_text(encoding="utf-8")
+    # What a build with nothing fetched has to say, and where it says it now: on
+    # each dataset's own page, which is the only place its reports are offered.
+    page = (out / "datasets" / "beacon--crisprontarget.html").read_text(
+        encoding="utf-8"
+    )
+    assert "no rendered reports" in page or "not in this build" in page
 
 
 def test_the_catalogue_says_nothing_about_this_machine(run, tmp_path):
@@ -234,3 +251,46 @@ def test_the_route_note_names_the_route_only_where_it_changes_what_they_are():
     assert "local copy" in site.route_note("local_mirror", 423)
     assert site.route_note("zenodo", 423) == ""
     assert site.route_note("zenodo_draft", 0) == ""
+
+
+def test_the_checks_table_is_rendered_on_one_page_and_not_two(built):
+    """Methods carried a second copy of the checks page's own table.
+
+    Same values, same columns, rendered from the same `check_rows()` -- two
+    surfaces for one statement, and the kind of duplication that only ever
+    diverges. There is one of it now.
+    """
+    marker = '<th scope="col" class="right">Scored</th>'
+    carrying = sorted(
+        page.name
+        for page in Path(built["out"]).rglob("*.html")
+        if site.reports.SITE_DIR not in page.parts
+        and marker in page.read_text(encoding="utf-8")
+    )
+    assert carrying == ["checks.html"]
+
+
+def test_the_checks_page_carries_the_two_scales_its_flags_are_drawn_on(built):
+    """A probe AUROC and a split overlap, explained where the flags are.
+
+    Both figures were on Methods, one page away from the flags they say how to
+    read. Nothing else on this site draws them, so a page that lost them would
+    lose them silently.
+    """
+    checks = (Path(built["out"]) / "checks.html").read_text(encoding="utf-8")
+    for element in (
+        'id="flags"', 'id="reference-split"', 'id="returned"',
+        'id="fig-probe-auroc"', 'id="fig-leakage"', 'id="fig-flag-matrix"',
+    ):
+        assert element in checks, element
+
+    # And nowhere else: two drawings of one measurement is two things to keep in
+    # step, and the reader cannot tell which one the numbers came from.
+    for slug in ("fig-probe-auroc", "fig-leakage"):
+        drawn = [
+            page.name
+            for page in Path(built["out"]).rglob("*.html")
+            if site.reports.SITE_DIR not in page.parts
+            and f'id="{slug}"' in page.read_text(encoding="utf-8")
+        ]
+        assert drawn == ["checks.html"], slug

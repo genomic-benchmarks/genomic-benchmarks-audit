@@ -1,9 +1,10 @@
 {
-  "schema_version": 2,
+  "schema_version": 4,
   "provenance": {
     "package_version": "0.1.0",
-    "audit_run": "2026-09-04_corpus-rollups",
+    "audit_run": "2026-09-04_core-set-split-out",
     "qc_run": "2026-08-27_full-corpus",
+    "core_set_run": "2026-09-05_merged-arms",
     "zenodo_record_id": "22288544",
     "zenodo_concept_record_id": "22288543",
     "zenodo_record_registered": false
@@ -77,7 +78,13 @@
     "n_with_any_leakage": 75,
     "n_leakage_over_50_pct": 6,
     "median_max_leaked_test_pct": 0.8200000000000001,
-    "core_set_size": 10
+    "n_joint_scored": 92,
+    "median_joint_auroc": 0.7978982971145723,
+    "n_joint_over_0_8": 46,
+    "n_joint_lower_bound": 21,
+    "n_clean_but_joint": 6,
+    "core_set_size": 10,
+    "n_gates": 5
   },
   "gates": [
     {
@@ -87,7 +94,8 @@
       "threshold": "reference split = 'train', leakage scan present",
       "n_in": 93,
       "n_removed": 1,
-      "n_out": 92
+      "n_out": 92,
+      "note": null
     },
     {
       "step": 2,
@@ -96,7 +104,8 @@
       "threshold": "flag != Fail in any split",
       "n_in": 92,
       "n_removed": 27,
-      "n_out": 65
+      "n_out": 65,
+      "note": null
     },
     {
       "step": 3,
@@ -105,7 +114,8 @@
       "threshold": "flag != Fail in any split pair (< 2% of held-out sequences)",
       "n_in": 65,
       "n_removed": 11,
-      "n_out": 54
+      "n_out": 54,
+      "note": null
     },
     {
       "step": 4,
@@ -114,16 +124,28 @@
       "threshold": "strongest-probe AUROC <= 0.7 in every split",
       "n_in": 54,
       "n_removed": 23,
-      "n_out": 31
+      "n_out": 31,
+      "note": null
     },
     {
       "step": 5,
+      "criterion": "joint",
+      "requirement": "The QC features jointly do not recover the label",
+      "threshold": "joint QC-feature AUROC < 0.8 on every held-out split",
+      "n_in": 31,
+      "n_removed": 6,
+      "n_out": 25,
+      "note": "9 of the 25 admitted joint values are lower bounds (position window capped or training pool subsampled), which for admission is the anticonservative direction; 21 of the 92 modelled datasets carry one."
+    },
+    {
+      "step": 6,
       "criterion": "diversity selection",
       "requirement": "greedy facet coverage, at most 2 per collection",
       "threshold": "target size 10",
-      "n_in": 31,
-      "n_removed": 21,
-      "n_out": 10
+      "n_in": 25,
+      "n_removed": 15,
+      "n_out": 10,
+      "note": null
     }
   ],
   "exclusions": [
@@ -257,7 +279,7 @@
       "min_seq_length": 23,
       "max_seq_length": 23,
       "in_core_set": true,
-      "core_set_rank": 7,
+      "core_set_rank": 4,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -288,6 +310,31 @@
       "probe_auroc_by_split": {
         "train": 0.6020884725711536
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5447734188199362,
+        "Per sequence nucleotide content": 0.6020884725711536,
+        "Per sequence dinucleotide content": 0.5904022720641453,
+        "Per position nucleotide content": 0.5789614287175873,
+        "Per position reversed nucleotide content": 0.5789614287175873
+      },
+      "joint": {
+        "auroc": 0.6525721514242879,
+        "lo": 0.6013598669415292,
+        "hi": 0.7046301068215891,
+        "split": "test",
+        "n_held_out": 416,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -506,6 +553,31 @@
         "train": 0.7492858280597534,
         "val": 0.7574346245434246
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6850798739407467,
+        "Per sequence nucleotide content": 0.7492858280597534,
+        "Per sequence dinucleotide content": 0.7001991189354295,
+        "Per position nucleotide content": 0.7186033667599261,
+        "Per position reversed nucleotide content": 0.7186033667599261
+      },
+      "joint": {
+        "auroc": 0.9603964166832776,
+        "lo": 0.9587463138382266,
+        "hi": 0.961978314075158,
+        "split": "test",
+        "n_held_out": 49755,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -690,8 +762,8 @@
       "total_size": 91519,
       "min_seq_length": 25,
       "max_seq_length": 100,
-      "in_core_set": true,
-      "core_set_rank": 5,
+      "in_core_set": false,
+      "core_set_rank": null,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -724,6 +796,31 @@
         "train": 0.6393409876818518,
         "val": 0.6535020429362881
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5550742069772825,
+        "Per sequence GC content": 0.5263408906587097,
+        "Per sequence nucleotide content": 0.5780305461375532,
+        "Per sequence dinucleotide content": 0.6393409876818518,
+        "Per position nucleotide content": 0.5337694237885691,
+        "Per position reversed nucleotide content": 0.5321185411691552
+      },
+      "joint": {
+        "auroc": 0.8440758501641104,
+        "lo": 0.8352910064166753,
+        "hi": 0.8528345886398842,
+        "split": "test",
+        "n_held_out": 7600,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "val",
@@ -942,6 +1039,31 @@
         "train": 0.7799891698332688,
         "val": 0.780654311564837
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7170258438307223,
+        "Per sequence nucleotide content": 0.686711151405433,
+        "Per sequence dinucleotide content": 0.7799891698332688,
+        "Per position nucleotide content": 0.6082225283824113,
+        "Per position reversed nucleotide content": 0.6082225283824113
+      },
+      "joint": {
+        "auroc": 0.9207412376094786,
+        "lo": 0.9138701992436028,
+        "hi": 0.9272245300367424,
+        "split": "test",
+        "n_held_out": 5920,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -1160,6 +1282,31 @@
         "train": 0.800768950862205,
         "val": 0.8051149665842888
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.727564618099636,
+        "Per sequence nucleotide content": 0.6991373770399179,
+        "Per sequence dinucleotide content": 0.800768950862205,
+        "Per position nucleotide content": 0.6012627850217119,
+        "Per position reversed nucleotide content": 0.6012627850217119
+      },
+      "joint": {
+        "auroc": 0.9233877931530492,
+        "lo": 0.9165509615635888,
+        "hi": 0.9300557894070074,
+        "split": "test",
+        "n_held_out": 5307,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -1378,6 +1525,31 @@
         "train": 0.7167118379919815,
         "val": 0.7353579868429456
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7014802167890963,
+        "Per sequence nucleotide content": 0.7167118379919815,
+        "Per sequence dinucleotide content": 0.7157405782650386,
+        "Per position nucleotide content": 0.710113193048578,
+        "Per position reversed nucleotide content": 0.710113193048578
+      },
+      "joint": {
+        "auroc": 0.968590316811446,
+        "lo": 0.9567722970958952,
+        "hi": 0.9792155031084996,
+        "split": "test",
+        "n_held_out": 613,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -1596,6 +1768,31 @@
         "train": 0.5813025081051983,
         "val": 0.5777097993380889
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5707936052979056,
+        "Per sequence nucleotide content": 0.5672313285161352,
+        "Per sequence dinucleotide content": 0.5813025081051983,
+        "Per position nucleotide content": 0.5295138355387841,
+        "Per position reversed nucleotide content": 0.5295138355387841
+      },
+      "joint": {
+        "auroc": 0.6614668450958653,
+        "lo": 0.6375328387259833,
+        "hi": 0.6840472766891112,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -1871,6 +2068,31 @@
         "train": 0.6016669699775213,
         "val": 0.6173888037387117
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5962984280313152,
+        "Per sequence nucleotide content": 0.5917675817186043,
+        "Per sequence dinucleotide content": 0.6016669699775213,
+        "Per position nucleotide content": 0.5320341197429529,
+        "Per position reversed nucleotide content": 0.5320341197429529
+      },
+      "joint": {
+        "auroc": 0.7130991399837522,
+        "lo": 0.6902380502163047,
+        "hi": 0.7339830477951327,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -2146,6 +2368,31 @@
         "train": 0.5805902468955146,
         "val": 0.5718923970416006
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5745371663498163,
+        "Per sequence nucleotide content": 0.5727403521989801,
+        "Per sequence dinucleotide content": 0.5805902468955146,
+        "Per position nucleotide content": 0.5328939112525071,
+        "Per position reversed nucleotide content": 0.5328939112525071
+      },
+      "joint": {
+        "auroc": 0.6526783245645319,
+        "lo": 0.6288587067587225,
+        "hi": 0.6783394157293465,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -2421,6 +2668,31 @@
         "train": 0.5596066543732127,
         "val": 0.5840106034554577
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5404154517138752,
+        "Per sequence nucleotide content": 0.5494385358570033,
+        "Per sequence dinucleotide content": 0.5596066543732127,
+        "Per position nucleotide content": 0.5320887854866041,
+        "Per position reversed nucleotide content": 0.5320887854866041
+      },
+      "joint": {
+        "auroc": 0.7339251985270172,
+        "lo": 0.7125086800771563,
+        "hi": 0.755179112703224,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -2696,6 +2968,31 @@
         "train": 0.5607728072653793,
         "val": 0.5733847165466157
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5529591683557014,
+        "Per sequence nucleotide content": 0.5605035568541102,
+        "Per sequence dinucleotide content": 0.5607728072653793,
+        "Per position nucleotide content": 0.5327733927947387,
+        "Per position reversed nucleotide content": 0.5327733927947387
+      },
+      "joint": {
+        "auroc": 0.6449646090138674,
+        "lo": 0.621172196006677,
+        "hi": 0.6692026194144838,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -2971,6 +3268,31 @@
         "train": 0.5447231760805994,
         "val": 0.5586710197810639
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5290906693568199,
+        "Per sequence nucleotide content": 0.533447034641656,
+        "Per sequence dinucleotide content": 0.5447231760805994,
+        "Per position nucleotide content": 0.5377872238888686,
+        "Per position reversed nucleotide content": 0.5377872238888686
+      },
+      "joint": {
+        "auroc": 0.7013770147618146,
+        "lo": 0.6771247216571056,
+        "hi": 0.7241496956383681,
+        "split": "test",
+        "n_held_out": 2000,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -3246,6 +3568,31 @@
         "train": 0.8219070145520215,
         "val": 0.8226078882996768
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5001717917883526,
+        "Per sequence GC content": 0.8219070145520215,
+        "Per sequence nucleotide content": 0.7337251163784615,
+        "Per sequence dinucleotide content": 0.7719894606436187,
+        "Per position nucleotide content": 0.5340141176536315,
+        "Per position reversed nucleotide content": 0.5338423258652789
+      },
+      "joint": {
+        "auroc": 0.8954766962389104,
+        "lo": 0.8793505560414845,
+        "hi": 0.9107993877296012,
+        "split": "test",
+        "n_held_out": 1497,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "val",
@@ -3464,6 +3811,31 @@
         "train": 0.5807274719248683,
         "val": 0.5910612533198993
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000668941066292,
+        "Per sequence GC content": 0.5306664209360655,
+        "Per sequence nucleotide content": 0.5255047828179975,
+        "Per sequence dinucleotide content": 0.5807274719248683,
+        "Per position nucleotide content": 0.5112311531065663,
+        "Per position reversed nucleotide content": 0.5112545669389107
+      },
+      "joint": {
+        "auroc": 0.6817774823093256,
+        "lo": 0.6635345263870298,
+        "hi": 0.7003809802415456,
+        "split": "test",
+        "n_held_out": 3305,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -3682,6 +4054,31 @@
         "train": 0.6445553986650207,
         "val": 0.6471780113063837
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000662734442309,
+        "Per sequence GC content": 0.5628552368445596,
+        "Per sequence nucleotide content": 0.5400622401505004,
+        "Per sequence dinucleotide content": 0.6445553986650207,
+        "Per position nucleotide content": 0.5152296685135745,
+        "Per position reversed nucleotide content": 0.5152296685135745
+      },
+      "joint": {
+        "auroc": 0.7201788476424326,
+        "lo": 0.7029668437734402,
+        "hi": 0.7371673252658267,
+        "split": "test",
+        "n_held_out": 3488,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -3900,6 +4297,31 @@
         "train": 0.6169824843015238,
         "val": 0.6182549936799506
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000434782608696,
+        "Per sequence GC content": 0.5760071432385823,
+        "Per sequence nucleotide content": 0.5619881480038826,
+        "Per sequence dinucleotide content": 0.6169824843015238,
+        "Per position nucleotide content": 0.5206759532956591,
+        "Per position reversed nucleotide content": 0.5206759532956591
+      },
+      "joint": {
+        "auroc": 0.6761472494486349,
+        "lo": 0.657652240689532,
+        "hi": 0.6957830931617868,
+        "split": "test",
+        "n_held_out": 3168,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -4118,6 +4540,31 @@
         "train": 0.6655372197679678,
         "val": 0.6581946225593396
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.500015656822905,
+        "Per sequence GC content": 0.6655372197679678,
+        "Per sequence nucleotide content": 0.6207785265456791,
+        "Per sequence dinucleotide content": 0.6447847267300624,
+        "Per position nucleotide content": 0.5171872657065353,
+        "Per position reversed nucleotide content": 0.5172216216199863
+      },
+      "joint": {
+        "auroc": 0.6798472120796036,
+        "lo": 0.6608754695364326,
+        "hi": 0.6985121653118073,
+        "split": "test",
+        "n_held_out": 3069,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -4303,7 +4750,7 @@
       "min_seq_length": 290,
       "max_seq_length": 500,
       "in_core_set": true,
-      "core_set_rank": 3,
+      "core_set_rank": 5,
       "reference_split": "train",
       "overall_verdict": "Pass",
       "worst_class_flag": "Pass",
@@ -4336,6 +4783,31 @@
         "train": 0.5864670480952143,
         "val": 0.5921227336503188
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.500040950329897,
+        "Per sequence GC content": 0.5549532796745085,
+        "Per sequence nucleotide content": 0.538107499395759,
+        "Per sequence dinucleotide content": 0.5864670480952143,
+        "Per position nucleotide content": 0.5117007187999862,
+        "Per position reversed nucleotide content": 0.5117371141996078
+      },
+      "joint": {
+        "auroc": 0.625788336254442,
+        "lo": 0.6078125504821238,
+        "hi": 0.6437581493894423,
+        "split": "test",
+        "n_held_out": 3680,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -4554,6 +5026,31 @@
         "train": 0.6854332067395745,
         "val": 0.6864637833879913
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000816393174954,
+        "Per sequence GC content": 0.562123793273554,
+        "Per sequence nucleotide content": 0.5368186342572158,
+        "Per sequence dinucleotide content": 0.6854332067395745,
+        "Per position nucleotide content": 0.5155419266184769,
+        "Per position reversed nucleotide content": 0.5155419266184769
+      },
+      "joint": {
+        "auroc": 0.8025172899009221,
+        "lo": 0.7860598786473824,
+        "hi": 0.8191537527240159,
+        "split": "test",
+        "n_held_out": 2884,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "val",
@@ -4772,6 +5269,31 @@
         "train": 0.6908176201165791,
         "val": 0.6747944844848714
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000404432581089,
+        "Per sequence GC content": 0.6908176201165791,
+        "Per sequence nucleotide content": 0.6304967200685829,
+        "Per sequence dinucleotide content": 0.6835124422959686,
+        "Per position nucleotide content": 0.5219558783446483,
+        "Per position reversed nucleotide content": 0.5219881393839794
+      },
+      "joint": {
+        "auroc": 0.7494438451145302,
+        "lo": 0.7312484682174766,
+        "hi": 0.7671706929417554,
+        "split": "test",
+        "n_held_out": 2779,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -4990,6 +5512,31 @@
         "train": 0.7444283819384534,
         "val": 0.7483649923629813
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5001542257865514,
+        "Per sequence GC content": 0.6979313705640419,
+        "Per sequence nucleotide content": 0.6364959366923185,
+        "Per sequence dinucleotide content": 0.7444283819384534,
+        "Per position nucleotide content": 0.5241823806761472,
+        "Per position reversed nucleotide content": 0.5243366064626988
+      },
+      "joint": {
+        "auroc": 0.8868962400647099,
+        "lo": 0.8696744376806201,
+        "hi": 0.9043025075096172,
+        "split": "test",
+        "n_held_out": 1461,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "val",
@@ -5208,6 +5755,31 @@
         "train": 0.628080035229671,
         "val": 0.627827372774058
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000399904023034,
+        "Per sequence GC content": 0.6250053547939179,
+        "Per sequence nucleotide content": 0.5915371591619528,
+        "Per sequence dinucleotide content": 0.628080035229671,
+        "Per position nucleotide content": 0.5150499613535975,
+        "Per position reversed nucleotide content": 0.5150370193309035
+      },
+      "joint": {
+        "auroc": 0.6883147231793569,
+        "lo": 0.6703414164442947,
+        "hi": 0.7055826359922968,
+        "split": "test",
+        "n_held_out": 3410,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -5426,6 +5998,31 @@
         "train": 0.8254499045004466,
         "val": 0.8185600161800551
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6972888799133962,
+        "Per sequence nucleotide content": 0.6818733769128378,
+        "Per sequence dinucleotide content": 0.8254499045004466,
+        "Per position nucleotide content": 0.6071787605180501,
+        "Per position reversed nucleotide content": 0.6071787605180501
+      },
+      "joint": {
+        "auroc": 0.9808643793087706,
+        "lo": 0.9782908733963382,
+        "hi": 0.9833423931653196,
+        "split": "test",
+        "n_held_out": 5920,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -5644,6 +6241,31 @@
         "train": 0.8493809864905814,
         "val": 0.8497969406443413
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7142555170779176,
+        "Per sequence nucleotide content": 0.7004774315974116,
+        "Per sequence dinucleotide content": 0.8493809864905814,
+        "Per position nucleotide content": 0.6003473341588925,
+        "Per position reversed nucleotide content": 0.6003473341588925
+      },
+      "joint": {
+        "auroc": 0.9853961151947728,
+        "lo": 0.9829245658889956,
+        "hi": 0.9877617094563405,
+        "split": "test",
+        "n_held_out": 5307,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -5862,6 +6484,31 @@
         "train": 0.7134435751067821,
         "val": 0.7160136649941283
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6076782530304845,
+        "Per sequence nucleotide content": 0.6485885460327598,
+        "Per sequence dinucleotide content": 0.645703265338709,
+        "Per position nucleotide content": 0.7134435751067821,
+        "Per position reversed nucleotide content": 0.7134435751067821
+      },
+      "joint": {
+        "auroc": 0.9744753382337276,
+        "lo": 0.9642476297006498,
+        "hi": 0.9832121551081282,
+        "split": "test",
+        "n_held_out": 613,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -6080,6 +6727,31 @@
         "train": 0.6967057135454484,
         "val": 0.7037895807553531
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.502825529619896,
+        "Per sequence nucleotide content": 0.505782740589264,
+        "Per sequence dinucleotide content": 0.6967057135454484,
+        "Per position nucleotide content": 0.5096321540844291,
+        "Per position reversed nucleotide content": 0.5096321540844291
+      },
+      "joint": {
+        "auroc": 0.877128,
+        "lo": 0.8550267,
+        "hi": 0.8973529,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -6298,6 +6970,31 @@
         "train": 0.6936847407965752,
         "val": 0.6864539330517153
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.503482175991042,
+        "Per sequence nucleotide content": 0.511609067417347,
+        "Per sequence dinucleotide content": 0.6936847407965752,
+        "Per position nucleotide content": 0.5127912290542128,
+        "Per position reversed nucleotide content": 0.5127912290542128
+      },
+      "joint": {
+        "auroc": 0.901008,
+        "lo": 0.8828490999999998,
+        "hi": 0.9184125,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -6516,6 +7213,31 @@
         "train": 0.6573041558721993,
         "val": 0.6526810863581076
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5047642360654971,
+        "Per sequence nucleotide content": 0.5069723539748549,
+        "Per sequence dinucleotide content": 0.6573041558721993,
+        "Per position nucleotide content": 0.5142425807371209,
+        "Per position reversed nucleotide content": 0.5142425807371209
+      },
+      "joint": {
+        "auroc": 0.8064439999999999,
+        "lo": 0.7807101000000001,
+        "hi": 0.8319132,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -6734,6 +7456,31 @@
         "train": 0.554643556306843,
         "val": 0.5759163876383793
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5006308731754786,
+        "Per sequence nucleotide content": 0.522982790753354,
+        "Per sequence dinucleotide content": 0.554643556306843,
+        "Per position nucleotide content": 0.5096553331627472,
+        "Per position reversed nucleotide content": 0.5096553331627472
+      },
+      "joint": {
+        "auroc": 0.7175279999999999,
+        "lo": 0.6851693,
+        "hi": 0.7488020999999999,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -6952,6 +7699,31 @@
         "train": 0.6960084975092791,
         "val": 0.6963076307630763
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5030065049879515,
+        "Per sequence nucleotide content": 0.5093568945586966,
+        "Per sequence dinucleotide content": 0.6960084975092791,
+        "Per position nucleotide content": 0.5150577050021343,
+        "Per position reversed nucleotide content": 0.5150577050021343
+      },
+      "joint": {
+        "auroc": 0.854984,
+        "lo": 0.8317604,
+        "hi": 0.8779454999999999,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -7170,6 +7942,31 @@
         "train": 0.5164792826170113,
         "val": 0.557877077931981
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5022938663453254,
+        "Per sequence nucleotide content": 0.5015562832254363,
+        "Per sequence dinucleotide content": 0.5035099538929528,
+        "Per position nucleotide content": 0.5164792826170113,
+        "Per position reversed nucleotide content": 0.5164792826170113
+      },
+      "joint": {
+        "auroc": 0.4916750495351318,
+        "lo": 0.4489193720469441,
+        "hi": 0.5317786922725194,
+        "split": "test",
+        "n_held_out": 810,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -7388,6 +8185,31 @@
         "train": 0.5295643304829831,
         "val": 0.5383239808205347
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5004741397333488,
+        "Per sequence nucleotide content": 0.501024809183058,
+        "Per sequence dinucleotide content": 0.501620209029643,
+        "Per position nucleotide content": 0.5295643304829831,
+        "Per position reversed nucleotide content": 0.5295643304829831
+      },
+      "joint": {
+        "auroc": 0.9348180143832872,
+        "lo": 0.9293447476805374,
+        "hi": 0.9401536484517514,
+        "split": "test",
+        "n_held_out": 6745,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "val",
@@ -7572,8 +8394,8 @@
       "total_size": 3276,
       "min_seq_length": 101,
       "max_seq_length": 101,
-      "in_core_set": true,
-      "core_set_rank": 1,
+      "in_core_set": false,
+      "core_set_rank": null,
       "reference_split": "train",
       "overall_verdict": "Pass",
       "worst_class_flag": "Pass",
@@ -7604,6 +8426,31 @@
       "probe_auroc_by_split": {
         "train": 0.5326537105376787
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5007563666198744,
+        "Per sequence nucleotide content": 0.5061928245398429,
+        "Per sequence dinucleotide content": 0.5104242237772996,
+        "Per position nucleotide content": 0.5326537105376787,
+        "Per position reversed nucleotide content": 0.5326537105376787
+      },
+      "joint": {
+        "auroc": 0.8485648423557407,
+        "lo": 0.8044625594883997,
+        "hi": 0.8843722114812611,
+        "split": "test",
+        "n_held_out": 328,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "val",
@@ -7820,6 +8667,31 @@
       "probe_auroc_by_split": {
         "train": 0.5320378151260504
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5026310156415508,
+        "Per sequence nucleotide content": 0.5079261484005367,
+        "Per sequence dinucleotide content": 0.5099227190876351,
+        "Per position nucleotide content": 0.5320378151260504,
+        "Per position reversed nucleotide content": 0.5320378151260504
+      },
+      "joint": {
+        "auroc": 0.4737394957983193,
+        "lo": 0.4005243347338936,
+        "hi": 0.5475498949579832,
+        "split": "test",
+        "n_held_out": 239,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -8004,8 +8876,8 @@
       "total_size": 18830,
       "min_seq_length": 101,
       "max_seq_length": 101,
-      "in_core_set": false,
-      "core_set_rank": null,
+      "in_core_set": true,
+      "core_set_rank": 1,
       "reference_split": "train",
       "overall_verdict": "Pass",
       "worst_class_flag": "Pass",
@@ -8038,6 +8910,31 @@
         "train": 0.5170456660747607,
         "val": 0.5449462766498322
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5028264634020456,
+        "Per sequence nucleotide content": 0.5021759490896907,
+        "Per sequence dinucleotide content": 0.5026868981286143,
+        "Per position nucleotide content": 0.5170456660747607,
+        "Per position reversed nucleotide content": 0.5170456660747607
+      },
+      "joint": {
+        "auroc": 0.5642526922842619,
+        "lo": 0.5390805959238375,
+        "hi": 0.5892063825130693,
+        "split": "test",
+        "n_held_out": 1883,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -8254,6 +9151,31 @@
       "probe_auroc_by_split": {
         "train": 0.5846007213037744
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5011137751295514,
+        "Per sequence GC content": 0.500194066878634,
+        "Per sequence nucleotide content": 0.5348729118200729,
+        "Per sequence dinucleotide content": 0.5465984263769952,
+        "Per position nucleotide content": 0.5846007213037744,
+        "Per position reversed nucleotide content": 0.5568667205553826
+      },
+      "joint": {
+        "auroc": 0.7254514860722378,
+        "lo": 0.680277680594429,
+        "hi": 0.7697602209116352,
+        "split": "test",
+        "n_held_out": 490,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -8412,6 +9334,31 @@
       "probe_auroc_by_split": {
         "train": 0.6162853422389819
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5118667767549427,
+        "Per sequence GC content": 0.5018051191048344,
+        "Per sequence nucleotide content": 0.5147064791879757,
+        "Per sequence dinucleotide content": 0.527021085191073,
+        "Per position nucleotide content": 0.6162853422389819,
+        "Per position reversed nucleotide content": 0.5963698801763055
+      },
+      "joint": {
+        "auroc": 0.7186881494309747,
+        "lo": 0.6630473775358733,
+        "hi": 0.7686711405244928,
+        "split": "test",
+        "n_held_out": 360,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -8571,6 +9518,31 @@
         "test": 0.6328562909958259,
         "train": 0.6298037941411931
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5180606053333278,
+        "Per sequence GC content": 0.5030196790863231,
+        "Per sequence nucleotide content": 0.5251539089764367,
+        "Per sequence dinucleotide content": 0.5400073963059346,
+        "Per position nucleotide content": 0.6298037941411931,
+        "Per position reversed nucleotide content": 0.5823879980592354
+      },
+      "joint": {
+        "auroc": 0.7429487179487179,
+        "lo": 0.7086735986881335,
+        "hi": 0.7755460830351819,
+        "split": "test",
+        "n_held_out": 734,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -8730,6 +9702,31 @@
         "test": 0.6001502545086397,
         "train": 0.571069578144306
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5382995779273235,
+        "Per sequence GC content": 0.5075391235824593,
+        "Per sequence nucleotide content": 0.5563781572192179,
+        "Per sequence dinucleotide content": 0.5576726056635172,
+        "Per position nucleotide content": 0.558710719823414,
+        "Per position reversed nucleotide content": 0.571069578144306
+      },
+      "joint": {
+        "auroc": 0.7733868732197451,
+        "lo": 0.7444618759315578,
+        "hi": 0.8026808779041504,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -8889,6 +9886,31 @@
         "test": 0.5822455980242645,
         "train": 0.5739644905695165
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5466773541833659,
+        "Per sequence GC content": 0.5061053845396634,
+        "Per sequence nucleotide content": 0.5050787891856081,
+        "Per sequence dinucleotide content": 0.533497458589779,
+        "Per position nucleotide content": 0.5739644905695165,
+        "Per position reversed nucleotide content": 0.5581835284117631
+      },
+      "joint": {
+        "auroc": 0.7594353783157415,
+        "lo": 0.728792413671642,
+        "hi": 0.7878495863203525,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -9048,6 +10070,31 @@
         "test": 0.6180704870524446,
         "train": 0.6312312641311418
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5340277677465444,
+        "Per sequence GC content": 0.5063453778796388,
+        "Per sequence nucleotide content": 0.513409346424859,
+        "Per sequence dinucleotide content": 0.5284244614353216,
+        "Per position nucleotide content": 0.6312312641311418,
+        "Per position reversed nucleotide content": 0.6001582756675502
+      },
+      "joint": {
+        "auroc": 0.7569188435603644,
+        "lo": 0.725955621446078,
+        "hi": 0.786636744963033,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -9207,6 +10254,31 @@
         "test": 0.7448863414146594,
         "train": 0.722181249359799
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5100749143649814,
+        "Per sequence nucleotide content": 0.5078969289450703,
+        "Per sequence dinucleotide content": 0.5143367170667598,
+        "Per position nucleotide content": 0.722181249359799,
+        "Per position reversed nucleotide content": 0.722181249359799
+      },
+      "joint": {
+        "auroc": 0.8660041109165257,
+        "lo": 0.8403340228316653,
+        "hi": 0.8894298167469873,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -9366,6 +10438,31 @@
         "test": 0.7007559876605867,
         "train": 0.6887460529010561
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5026990212574993,
+        "Per sequence nucleotide content": 0.5145011957149768,
+        "Per sequence dinucleotide content": 0.5194269174329862,
+        "Per position nucleotide content": 0.6887460529010561,
+        "Per position reversed nucleotide content": 0.6887460529010561
+      },
+      "joint": {
+        "auroc": 0.935765321658848,
+        "lo": 0.9190075951825094,
+        "hi": 0.9497560582723938,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -9525,6 +10622,31 @@
         "test": 0.7251336898395722,
         "train": 0.7280653770913331
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5078075918608018,
+        "Per sequence nucleotide content": 0.5158101150261123,
+        "Per sequence dinucleotide content": 0.5149125103688936,
+        "Per position nucleotide content": 0.7280653770913331,
+        "Per position reversed nucleotide content": 0.7280653770913331
+      },
+      "joint": {
+        "auroc": 0.9417780748663102,
+        "lo": 0.9255184937611408,
+        "hi": 0.9569074197860962,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -9684,6 +10806,31 @@
         "test": 0.8211528391315439,
         "train": 0.821341777269104
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5015055267041297,
+        "Per sequence nucleotide content": 0.5080415164289869,
+        "Per sequence dinucleotide content": 0.5103630724231146,
+        "Per position nucleotide content": 0.821341777269104,
+        "Per position reversed nucleotide content": 0.821341777269104
+      },
+      "joint": {
+        "auroc": 0.9433426874516068,
+        "lo": 0.9275031217691369,
+        "hi": 0.9581349499398024,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -9843,6 +10990,31 @@
         "test": 0.8314100335998146,
         "train": 0.8126033481160075
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5056071874659843,
+        "Per sequence nucleotide content": 0.5088595481177214,
+        "Per sequence dinucleotide content": 0.5150380029289624,
+        "Per position nucleotide content": 0.8126033481160075,
+        "Per position reversed nucleotide content": 0.8126033481160075
+      },
+      "joint": {
+        "auroc": 0.9637122002085504,
+        "lo": 0.9515694589271232,
+        "hi": 0.974103927702468,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -10002,6 +11174,31 @@
         "test": 0.7450021155066638,
         "train": 0.7574012708781461
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.508616180354063,
+        "Per sequence nucleotide content": 0.5153312228370496,
+        "Per sequence dinucleotide content": 0.5155283199357338,
+        "Per position nucleotide content": 0.7574012708781461,
+        "Per position reversed nucleotide content": 0.7574012708781461
+      },
+      "joint": {
+        "auroc": 0.863117904238065,
+        "lo": 0.8371581032719837,
+        "hi": 0.8876375079331499,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -10129,7 +11326,7 @@
       "min_seq_length": 1000,
       "max_seq_length": 1000,
       "in_core_set": true,
-      "core_set_rank": 8,
+      "core_set_rank": 7,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -10161,6 +11358,31 @@
         "test": 0.6620374586406823,
         "train": 0.6373002722681838
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5056622191445023,
+        "Per sequence nucleotide content": 0.5042930943115281,
+        "Per sequence dinucleotide content": 0.6373002722681838,
+        "Per position nucleotide content": 0.5234065733997461,
+        "Per position reversed nucleotide content": 0.5234065733997461
+      },
+      "joint": {
+        "auroc": 0.700555504963118,
+        "lo": 0.6646301186898581,
+        "hi": 0.7342635764805876,
+        "split": "test",
+        "n_held_out": 812,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -10320,6 +11542,31 @@
         "test": 0.753956,
         "train": 0.74254003125
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7013309062499999,
+        "Per sequence nucleotide content": 0.6855239375,
+        "Per sequence dinucleotide content": 0.74254003125,
+        "Per position nucleotide content": 0.53925,
+        "Per position reversed nucleotide content": 0.53925
+      },
+      "joint": {
+        "auroc": 0.7610506265664161,
+        "lo": 0.731203709273183,
+        "hi": 0.7908494235588972,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -10446,8 +11693,8 @@
       "total_size": 9000,
       "min_seq_length": 170,
       "max_seq_length": 170,
-      "in_core_set": false,
-      "core_set_rank": null,
+      "in_core_set": true,
+      "core_set_rank": 10,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Pass",
@@ -10479,6 +11726,31 @@
         "test": 0.6075440000000001,
         "train": 0.59754315625
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.564218,
+        "Per sequence nucleotide content": 0.59754315625,
+        "Per sequence dinucleotide content": 0.5867828749999999,
+        "Per position nucleotide content": 0.54925,
+        "Per position reversed nucleotide content": 0.54925
+      },
+      "joint": {
+        "auroc": 0.7354596547571256,
+        "lo": 0.7040609193095141,
+        "hi": 0.7643767563227619,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -10638,6 +11910,31 @@
         "test": 0.725,
         "train": 0.7341249999999999
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5495765937499999,
+        "Per sequence nucleotide content": 0.5466401875,
+        "Per sequence dinucleotide content": 0.5596767187500001,
+        "Per position nucleotide content": 0.7341249999999999,
+        "Per position reversed nucleotide content": 0.7341249999999999
+      },
+      "joint": {
+        "auroc": 0.97638,
+        "lo": 0.9685677,
+        "hi": 0.9829981,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -10797,6 +12094,31 @@
         "test": 0.8089999999999999,
         "train": 0.7795000000000001
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5551239375000001,
+        "Per sequence nucleotide content": 0.5554115312500001,
+        "Per sequence dinucleotide content": 0.6034935937500002,
+        "Per position nucleotide content": 0.7795000000000001,
+        "Per position reversed nucleotide content": 0.7795000000000001
+      },
+      "joint": {
+        "auroc": 0.990116,
+        "lo": 0.9840994,
+        "hi": 0.9949721,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -10955,6 +12277,31 @@
       "probe_auroc_by_split": {
         "train": 0.6607011605078008
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.500268817204301,
+        "Per sequence GC content": 0.6302818475899026,
+        "Per sequence nucleotide content": 0.6607011605078008,
+        "Per sequence dinucleotide content": 0.6382848798619408,
+        "Per position nucleotide content": 0.5718063363137588,
+        "Per position reversed nucleotide content": 0.571652623194785
+      },
+      "joint": {
+        "auroc": 0.694902168398297,
+        "lo": 0.6438416826594313,
+        "hi": 0.7452953698188957,
+        "split": "test",
+        "n_held_out": 426,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -11173,6 +12520,31 @@
         "train": 0.6288852289466832,
         "val": 0.6640514643563424
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5312025550402503,
+        "Per sequence nucleotide content": 0.6188188401442856,
+        "Per sequence dinucleotide content": 0.6288852289466832,
+        "Per position nucleotide content": 0.5414896328950507,
+        "Per position reversed nucleotide content": 0.5414896328950507
+      },
+      "joint": {
+        "auroc": 0.7550152689687573,
+        "lo": 0.7138586445853888,
+        "hi": 0.7919782123561192,
+        "split": "test",
+        "n_held_out": 588,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -11390,6 +12762,31 @@
         "test": 0.6219020000000001,
         "train": 0.6381289374999999
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6381289374999999,
+        "Per sequence nucleotide content": 0.61085215625,
+        "Per sequence dinucleotide content": 0.60569446875,
+        "Per position nucleotide content": 0.601625,
+        "Per position reversed nucleotide content": 0.601625
+      },
+      "joint": {
+        "auroc": 0.8130201331540876,
+        "lo": 0.7861949659112731,
+        "hi": 0.8382558935087382,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "test"
@@ -11549,6 +12946,31 @@
         "test": 0.6522939999999999,
         "train": 0.6300660625
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.50992059375,
+        "Per sequence nucleotide content": 0.5607614375000001,
+        "Per sequence dinucleotide content": 0.6300660625,
+        "Per position nucleotide content": 0.582625,
+        "Per position reversed nucleotide content": 0.582625
+      },
+      "joint": {
+        "auroc": 0.7714550858203433,
+        "lo": 0.7437838751355006,
+        "hi": 0.7993355973423893,
+        "split": "test",
+        "n_held_out": 1000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -11708,6 +13130,31 @@
         "test": 0.8515955264000001,
         "train": 0.8471964145777777
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8394337852444446,
+        "Per sequence nucleotide content": 0.8145094104888889,
+        "Per sequence dinucleotide content": 0.8471964145777777,
+        "Per position nucleotide content": 0.547,
+        "Per position reversed nucleotide content": 0.547
+      },
+      "joint": {
+        "auroc": 0.9390208416,
+        "lo": 0.93631769552,
+        "hi": 0.94184351104,
+        "split": "test",
+        "n_held_out": 25000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "test"
@@ -11867,6 +13314,31 @@
         "test": 0.8777341792,
         "train": 0.8780150467555555
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6336377205333334,
+        "Per sequence nucleotide content": 0.6367790218666668,
+        "Per sequence dinucleotide content": 0.8780150467555555,
+        "Per position nucleotide content": 0.5261866666666667,
+        "Per position reversed nucleotide content": 0.5261866666666667
+      },
+      "joint": {
+        "auroc": 0.984952704,
+        "lo": 0.98376066272,
+        "hi": 0.98605525744,
+        "split": "test",
+        "n_held_out": 25000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -12026,6 +13498,31 @@
         "test": 0.5909826589595376,
         "train": 0.5693689807670325
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5145131387174211,
+        "Per sequence nucleotide content": 0.5258342531864426,
+        "Per sequence dinucleotide content": 0.5693689807670325,
+        "Per position nucleotide content": 0.5611496913580247,
+        "Per position reversed nucleotide content": 0.5615354938271605
+      },
+      "joint": {
+        "auroc": 0.7868515486651743,
+        "lo": 0.7647282902870126,
+        "hi": 0.807881786895653,
+        "split": "test",
+        "n_held_out": 1730,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -12185,6 +13682,31 @@
         "test": 0.7596787750371292,
         "train": 0.7655133990454559
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7385111466629306,
+        "Per sequence nucleotide content": 0.7071459055991831,
+        "Per sequence dinucleotide content": 0.7655133990454559,
+        "Per position nucleotide content": 0.5284131335043378,
+        "Per position reversed nucleotide content": 0.5284131335043378
+      },
+      "joint": {
+        "auroc": 0.7807362630333269,
+        "lo": 0.7700750065707291,
+        "hi": 0.7912374708708727,
+        "split": "test",
+        "n_held_out": 6948,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -12344,6 +13866,31 @@
         "test": 0.689965488907834,
         "train": 0.6914603645242485
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6638751210270486,
+        "Per sequence nucleotide content": 0.6299536924330971,
+        "Per sequence dinucleotide content": 0.6914603645242485,
+        "Per position nucleotide content": 0.6243299535003874,
+        "Per position reversed nucleotide content": 0.62107659519504
+      },
+      "joint": {
+        "auroc": 0.9318130214236512,
+        "lo": 0.9290227988400872,
+        "hi": 0.9345327228251866,
+        "split": "test",
+        "n_held_out": 30970,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -12503,6 +14050,31 @@
         "test": 0.8451472310166247,
         "train": 0.847326847900165
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8041906327755511,
+        "Per sequence nucleotide content": 0.782595903828873,
+        "Per sequence dinucleotide content": 0.847326847900165,
+        "Per position nucleotide content": 0.6565182710130775,
+        "Per position reversed nucleotide content": 0.6565182710130775
+      },
+      "joint": {
+        "auroc": 0.9482401110206355,
+        "lo": 0.9438856012271742,
+        "hi": 0.952570928409818,
+        "split": "test",
+        "n_held_out": 9034,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "test"
@@ -12630,7 +14202,7 @@
       "min_seq_length": 71,
       "max_seq_length": 593,
       "in_core_set": true,
-      "core_set_rank": 4,
+      "core_set_rank": 3,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -12662,6 +14234,31 @@
         "test": 0.573737965446226,
         "train": 0.5747086916831874
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5692868611845792,
+        "Per sequence nucleotide content": 0.5607642928607717,
+        "Per sequence dinucleotide content": 0.5747086916831874,
+        "Per position nucleotide content": 0.5478670138193471,
+        "Per position reversed nucleotide content": 0.5511215701982776
+      },
+      "joint": {
+        "auroc": 0.7727201496781172,
+        "lo": 0.7680724966119052,
+        "hi": 0.7773790020945445,
+        "split": "test",
+        "n_held_out": 34952,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -12822,6 +14419,31 @@
         "train": 0.7385981841152409,
         "val": 0.7373406464137671
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7385981841152409,
+        "Per sequence nucleotide content": 0.7380399991503078,
+        "Per sequence dinucleotide content": 0.7289059211046507,
+        "Per position nucleotide content": 0.5930381310435954,
+        "Per position reversed nucleotide content": 0.5930381310435954
+      },
+      "joint": {
+        "auroc": 0.9313624842869104,
+        "lo": 0.927443061066956,
+        "hi": 0.9353517566420104,
+        "split": "test",
+        "n_held_out": 15003,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -13040,6 +14662,31 @@
         "train": 0.6673160825877014,
         "val": 0.6659034855321901
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.521233345329042,
+        "Per sequence nucleotide content": 0.5822848057923528,
+        "Per sequence dinucleotide content": 0.6673160825877014,
+        "Per position nucleotide content": 0.5406020096895747,
+        "Per position reversed nucleotide content": 0.5406020096895747
+      },
+      "joint": {
+        "auroc": 0.8570275987576911,
+        "lo": 0.853693992469761,
+        "hi": 0.8602462680184041,
+        "split": "test",
+        "n_held_out": 47769,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -13258,6 +14905,31 @@
         "train": 0.6722341345148317,
         "val": 0.6710647878421343
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5248651614841645,
+        "Per sequence nucleotide content": 0.5928981506772386,
+        "Per sequence dinucleotide content": 0.6722341345148317,
+        "Per position nucleotide content": 0.5441116687382375,
+        "Per position reversed nucleotide content": 0.5441116687382375
+      },
+      "joint": {
+        "auroc": 0.8589542448844533,
+        "lo": 0.8557317953214444,
+        "hi": 0.8623235429004031,
+        "split": "test",
+        "n_held_out": 47771,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -13476,6 +15148,31 @@
         "train": 0.660654445805861,
         "val": 0.6608759867393692
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5337589662884161,
+        "Per sequence nucleotide content": 0.5768407791968755,
+        "Per sequence dinucleotide content": 0.660654445805861,
+        "Per position nucleotide content": 0.534833041576891,
+        "Per position reversed nucleotide content": 0.534833041576891
+      },
+      "joint": {
+        "auroc": 0.9089019781110168,
+        "lo": 0.9062092729295804,
+        "hi": 0.9114607033366,
+        "split": "test",
+        "n_held_out": 47771,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -13694,6 +15391,31 @@
         "train": 0.6209750962967423,
         "val": 0.6169391222487894
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5349608758975134,
+        "Per sequence nucleotide content": 0.5833426748335474,
+        "Per sequence dinucleotide content": 0.6209750962967423,
+        "Per position nucleotide content": 0.5178072548108755,
+        "Per position reversed nucleotide content": 0.5178072548108755
+      },
+      "joint": {
+        "auroc": 0.873316923959732,
+        "lo": 0.8692211102183558,
+        "hi": 0.8773109749754233,
+        "split": "test",
+        "n_held_out": 28770,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -13912,6 +15634,31 @@
         "train": 0.6139239559107577,
         "val": 0.608472945669507
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5516175357752628,
+        "Per sequence GC content": 0.525564555420539,
+        "Per sequence nucleotide content": 0.5744532998147163,
+        "Per sequence dinucleotide content": 0.6139239559107577,
+        "Per position nucleotide content": 0.5354194001445151,
+        "Per position reversed nucleotide content": 0.5358144412452202
+      },
+      "joint": {
+        "auroc": 0.8013330142859691,
+        "lo": 0.7947533745312954,
+        "hi": 0.8080371317372538,
+        "split": "test",
+        "n_held_out": 15980,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": false,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "leakage",
       "split_names": [
         "train",
         "val",
@@ -14130,6 +15877,31 @@
         "train": 0.5420695323522179,
         "val": 0.571299517299032
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.526455696648333,
+        "Per sequence GC content": 0.5013065097943614,
+        "Per sequence nucleotide content": 0.5165281025108328,
+        "Per sequence dinucleotide content": 0.5384185211544754,
+        "Per position nucleotide content": 0.5373088148696298,
+        "Per position reversed nucleotide content": 0.5420695323522179
+      },
+      "joint": {
+        "auroc": 0.6654257937082976,
+        "lo": 0.6409118131627835,
+        "hi": 0.6896677254230782,
+        "split": "test",
+        "n_held_out": 1754,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": false,
+        "leakage": false,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": "integrity",
       "split_names": [
         "train",
         "val",
@@ -14348,6 +16120,31 @@
         "train": 0.6260350454511054,
         "val": 0.6235319635017993
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.6260350454511054,
+        "Per sequence GC content": 0.582549702272048,
+        "Per sequence nucleotide content": 0.5928939882516051,
+        "Per sequence dinucleotide content": 0.5937908147103823,
+        "Per position nucleotide content": 0.5336221345058315,
+        "Per position reversed nucleotide content": 0.5296916558163345
+      },
+      "joint": {
+        "auroc": 0.68318254560973,
+        "lo": 0.6592094846900671,
+        "hi": 0.7067389309719406,
+        "split": "test",
+        "n_held_out": 1940,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -14566,6 +16363,31 @@
         "train": 0.6354236579790487,
         "val": 0.6375612580170205
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.6354236579790487,
+        "Per sequence GC content": 0.5409522442185897,
+        "Per sequence nucleotide content": 0.5454344435380257,
+        "Per sequence dinucleotide content": 0.5773873284919044,
+        "Per position nucleotide content": 0.526614099341041,
+        "Per position reversed nucleotide content": 0.5251827794810254
+      },
+      "joint": {
+        "auroc": 0.7004589423944263,
+        "lo": 0.6774969853598887,
+        "hi": 0.7227870701661024,
+        "split": "test",
+        "n_held_out": 2059,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -14784,6 +16606,31 @@
         "train": 0.6477128838484476,
         "val": 0.6455683017143472
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.6477128838484476,
+        "Per sequence GC content": 0.5779292337383408,
+        "Per sequence nucleotide content": 0.6092960591101041,
+        "Per sequence dinucleotide content": 0.6212927183621559,
+        "Per position nucleotide content": 0.5498143070859303,
+        "Per position reversed nucleotide content": 0.5394715608023724
+      },
+      "joint": {
+        "auroc": 0.7653838453009298,
+        "lo": 0.7422778758322243,
+        "hi": 0.788669425464506,
+        "split": "test",
+        "n_held_out": 1542,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -14969,7 +16816,7 @@
       "min_seq_length": 311,
       "max_seq_length": 12252,
       "in_core_set": true,
-      "core_set_rank": 10,
+      "core_set_rank": 6,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -15002,6 +16849,31 @@
         "train": 0.6444910948406505,
         "val": 0.6612483323171283
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.6444910948406505,
+        "Per sequence GC content": 0.573515819481333,
+        "Per sequence nucleotide content": 0.6036212309411542,
+        "Per sequence dinucleotide content": 0.601111008537071,
+        "Per position nucleotide content": 0.5410934056968874,
+        "Per position reversed nucleotide content": 0.5325320737629959
+      },
+      "joint": {
+        "auroc": 0.7453951142917535,
+        "lo": 0.721933108373343,
+        "hi": 0.7692385330796871,
+        "split": "test",
+        "n_held_out": 1628,
+        "lower_bound": true,
+        "caveat": "position window capped"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "val",
@@ -15219,6 +17091,31 @@
         "test": 0.5477354810050795,
         "train": 0.5177876707003034
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5003771875428621,
+        "Per sequence GC content": 0.5059699225534003,
+        "Per sequence nucleotide content": 0.5084305158727859,
+        "Per sequence dinucleotide content": 0.5177876707003034,
+        "Per position nucleotide content": 0.5102107468989485,
+        "Per position reversed nucleotide content": 0.5133729610585926
+      },
+      "joint": {
+        "auroc": 0.7344960117426655,
+        "lo": 0.7034200513741622,
+        "hi": 0.765922803561427,
+        "split": "test",
+        "n_held_out": 1018,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -15415,6 +17312,23 @@
       "probe_auroc_by_split": {
         "test": 0.5377358490566038
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5105063530363163,
+        "Per sequence nucleotide content": 0.5334396934017203,
+        "Per sequence dinucleotide content": 0.5287435887293488,
+        "Per position nucleotide content": 0.5356394129979036,
+        "Per position reversed nucleotide content": 0.5377358490566038
+      },
+      "joint": null,
+      "gates": {
+        "evaluable": false,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "evaluable",
       "split_names": [
         "test"
       ],
@@ -15502,7 +17416,7 @@
       "min_seq_length": 16,
       "max_seq_length": 50,
       "in_core_set": true,
-      "core_set_rank": 9,
+      "core_set_rank": 8,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Pass",
@@ -15535,6 +17449,31 @@
         "test_leftout": 0.5114848182570866,
         "train": 0.5328848680335435
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5000135968487557,
+        "Per sequence GC content": 0.5282453727174966,
+        "Per sequence nucleotide content": 0.5285300314546503,
+        "Per sequence dinucleotide content": 0.5328848680335435,
+        "Per position nucleotide content": 0.5061701924123713,
+        "Per position reversed nucleotide content": 0.5061799220385579
+      },
+      "joint": {
+        "auroc": 0.7368477484001827,
+        "lo": 0.7352817971810245,
+        "hi": 0.7385693003865056,
+        "split": "test",
+        "n_held_out": 324171,
+        "lower_bound": true,
+        "caveat": "training pool subsampled"
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test",
@@ -15809,6 +17748,31 @@
         "test": 0.7140407579854611,
         "train": 0.723728942282491
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.718803048752122,
+        "Per sequence nucleotide content": 0.6925862832590068,
+        "Per sequence dinucleotide content": 0.723728942282491,
+        "Per position nucleotide content": 0.535746808096539,
+        "Per position reversed nucleotide content": 0.535746808096539
+      },
+      "joint": {
+        "auroc": 0.7615317400633965,
+        "lo": 0.7450579431493127,
+        "hi": 0.7779591584576464,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -15968,6 +17932,31 @@
         "test": 0.7093521774825996,
         "train": 0.7290506254500695
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7066178518464279,
+        "Per sequence nucleotide content": 0.6837224515247169,
+        "Per sequence dinucleotide content": 0.7290506254500695,
+        "Per position nucleotide content": 0.5295890921765658,
+        "Per position reversed nucleotide content": 0.5295890921765658
+      },
+      "joint": {
+        "auroc": 0.7508868615821979,
+        "lo": 0.7279964510219585,
+        "hi": 0.7723251320336242,
+        "split": "test",
+        "n_held_out": 1616,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16127,6 +18116,31 @@
         "test": 0.7746235362459004,
         "train": 0.7903307623635641
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7903307623635641,
+        "Per sequence nucleotide content": 0.7466431926663615,
+        "Per sequence dinucleotide content": 0.7669555330274631,
+        "Per position nucleotide content": 0.5367539210007988,
+        "Per position reversed nucleotide content": 0.5367539210007988
+      },
+      "joint": {
+        "auroc": 0.807967151284628,
+        "lo": 0.7919159795035535,
+        "hi": 0.82319319954079,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16286,6 +18300,31 @@
         "test": 0.7336735165540427,
         "train": 0.7596348789359869
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7552479343897276,
+        "Per sequence nucleotide content": 0.727082782245847,
+        "Per sequence dinucleotide content": 0.7596348789359869,
+        "Per position nucleotide content": 0.554124997282156,
+        "Per position reversed nucleotide content": 0.554124997282156
+      },
+      "joint": {
+        "auroc": 0.8120247701741007,
+        "lo": 0.7964277039543743,
+        "hi": 0.8271037892161831,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16445,6 +18484,31 @@
         "test": 0.6931670351892798,
         "train": 0.7100175911423843
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.703297048083641,
+        "Per sequence nucleotide content": 0.6742447853240627,
+        "Per sequence dinucleotide content": 0.7100175911423843,
+        "Per position nucleotide content": 0.522592440164338,
+        "Per position reversed nucleotide content": 0.522592440164338
+      },
+      "joint": {
+        "auroc": 0.7247249413882376,
+        "lo": 0.7053906487849865,
+        "hi": 0.7428813764597384,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16604,6 +18668,31 @@
         "test": 0.7455307802768908,
         "train": 0.7549641752603161
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.753030753012693,
+        "Per sequence nucleotide content": 0.7214534177939087,
+        "Per sequence dinucleotide content": 0.7549641752603161,
+        "Per position nucleotide content": 0.5301262001935798,
+        "Per position reversed nucleotide content": 0.5301262001935798
+      },
+      "joint": {
+        "auroc": 0.7854757031435269,
+        "lo": 0.7668995310480495,
+        "hi": 0.8035347067322038,
+        "split": "test",
+        "n_held_out": 2138,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16763,6 +18852,31 @@
         "test": 0.8370874960144542,
         "train": 0.8691629075383696
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8239134411976411,
+        "Per sequence nucleotide content": 0.7960465730944488,
+        "Per sequence dinucleotide content": 0.8691629075383696,
+        "Per position nucleotide content": 0.5420769406915502,
+        "Per position reversed nucleotide content": 0.5420769406915502
+      },
+      "joint": {
+        "auroc": 0.8664642895100436,
+        "lo": 0.8395684982463599,
+        "hi": 0.8907385880539909,
+        "split": "test",
+        "n_held_out": 776,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -16922,6 +19036,31 @@
         "test": 0.7496349264297392,
         "train": 0.7674815299677554
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.7500267741558472,
+        "Per sequence nucleotide content": 0.7251626976265186,
+        "Per sequence dinucleotide content": 0.7674815299677554,
+        "Per position nucleotide content": 0.5333848930136633,
+        "Per position reversed nucleotide content": 0.5333848930136633
+      },
+      "joint": {
+        "auroc": 0.7944635799431755,
+        "lo": 0.7682232226472596,
+        "hi": 0.8219480643164394,
+        "split": "test",
+        "n_held_out": 1004,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": true
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -17048,8 +19187,8 @@
       "total_size": 28288,
       "min_seq_length": 1000,
       "max_seq_length": 1000,
-      "in_core_set": false,
-      "core_set_rank": null,
+      "in_core_set": true,
+      "core_set_rank": 9,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -17081,6 +19220,31 @@
         "test": 0.5829397923875432,
         "train": 0.5428537660992018
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5283377278967296,
+        "Per sequence nucleotide content": 0.5241846408722178,
+        "Per sequence dinucleotide content": 0.5428537660992018,
+        "Per position nucleotide content": 0.520045192798309,
+        "Per position reversed nucleotide content": 0.520045192798309
+      },
+      "joint": {
+        "auroc": 0.7028373702422145,
+        "lo": 0.6678124567474049,
+        "hi": 0.7365998615916954,
+        "split": "test",
+        "n_held_out": 850,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": true
+      },
+      "excluded_by": null,
       "split_names": [
         "train",
         "test"
@@ -17240,6 +19404,31 @@
         "test": 0.8008146868753517,
         "train": 0.8237556727059323
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8237556727059323,
+        "Per sequence nucleotide content": 0.7816282972476841,
+        "Per sequence dinucleotide content": 0.8135589842927706,
+        "Per position nucleotide content": 0.5356734227343722,
+        "Per position reversed nucleotide content": 0.5356734227343722
+      },
+      "joint": {
+        "auroc": 0.8298247588736439,
+        "lo": 0.8132662772419413,
+        "hi": 0.8464831842263579,
+        "split": "test",
+        "n_held_out": 2270,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -17399,6 +19588,31 @@
         "test": 0.7063049900991685,
         "train": 0.6912929883846559
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6910438683447967,
+        "Per sequence nucleotide content": 0.6572645673845531,
+        "Per sequence dinucleotide content": 0.6912929883846559,
+        "Per position nucleotide content": 0.6107108577137372,
+        "Per position reversed nucleotide content": 0.6107108577137372
+      },
+      "joint": {
+        "auroc": 0.8329035039289685,
+        "lo": 0.818485748897473,
+        "hi": 0.846856669503526,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -17558,6 +19772,31 @@
         "test": 0.8982892370676462,
         "train": 0.8897126256958411
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8897126256958411,
+        "Per sequence nucleotide content": 0.85536568850765,
+        "Per sequence dinucleotide content": 0.8855021611351238,
+        "Per position nucleotide content": 0.6260961788464317,
+        "Per position reversed nucleotide content": 0.6260961788464317
+      },
+      "joint": {
+        "auroc": 0.947518110396898,
+        "lo": 0.9373998029537802,
+        "hi": 0.9572160605422916,
+        "split": "test",
+        "n_held_out": 1584,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -17717,6 +19956,31 @@
         "test": 0.9086095079431188,
         "train": 0.9002011225797735
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.9002011225797735,
+        "Per sequence nucleotide content": 0.8657521435593664,
+        "Per sequence dinucleotide content": 0.894863321979239,
+        "Per position nucleotide content": 0.6238400423822976,
+        "Per position reversed nucleotide content": 0.6238400423822976
+      },
+      "joint": {
+        "auroc": 0.9475303657489652,
+        "lo": 0.9365441907708524,
+        "hi": 0.9585752960076158,
+        "split": "test",
+        "n_held_out": 1372,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -17875,6 +20139,31 @@
       "probe_auroc_by_split": {
         "train": 0.8248496985854269
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.8248496985854269,
+        "Per sequence nucleotide content": 0.7893139686613765,
+        "Per sequence dinucleotide content": 0.815197126551348,
+        "Per position nucleotide content": 0.6124061635717107,
+        "Per position reversed nucleotide content": 0.6124061635717107
+      },
+      "joint": {
+        "auroc": 0.9875400498398006,
+        "lo": 0.9746328764684942,
+        "hi": 0.997063011747953,
+        "split": "test",
+        "n_held_out": 212,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -18034,6 +20323,31 @@
         "test": 0.7044123367602111,
         "train": 0.6992296909321466
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.5841677083785234,
+        "Per sequence nucleotide content": 0.5847991799644975,
+        "Per sequence dinucleotide content": 0.627702567654078,
+        "Per position nucleotide content": 0.6992296909321466,
+        "Per position reversed nucleotide content": 0.6992296909321466
+      },
+      "joint": {
+        "auroc": 0.9945006946373992,
+        "lo": 0.992618705195888,
+        "hi": 0.9962103917754932,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": false,
+        "joint": false
+      },
+      "excluded_by": "separability",
       "split_names": [
         "train",
         "test"
@@ -18160,8 +20474,8 @@
       "total_size": 33000,
       "min_seq_length": 600,
       "max_seq_length": 600,
-      "in_core_set": true,
-      "core_set_rank": 6,
+      "in_core_set": false,
+      "core_set_rank": null,
       "reference_split": "train",
       "overall_verdict": "Warning",
       "worst_class_flag": "Warning",
@@ -18193,6 +20507,31 @@
         "test": 0.6941500711237554,
         "train": 0.6854361352772023
       },
+      "probe_auroc": {
+        "Sequence lengths": 0.5,
+        "Per sequence GC content": 0.6222267530309751,
+        "Per sequence nucleotide content": 0.6160753712347531,
+        "Per sequence dinucleotide content": 0.6610895051002132,
+        "Per position nucleotide content": 0.6854361352772023,
+        "Per position reversed nucleotide content": 0.6854361352772023
+      },
+      "joint": {
+        "auroc": 0.9966931899004268,
+        "lo": 0.9947428431721196,
+        "hi": 0.9982011024182076,
+        "split": "test",
+        "n_held_out": 3000,
+        "lower_bound": false,
+        "caveat": null
+      },
+      "gates": {
+        "evaluable": true,
+        "integrity": true,
+        "leakage": true,
+        "separability": true,
+        "joint": false
+      },
+      "excluded_by": "joint",
       "split_names": [
         "train",
         "test"

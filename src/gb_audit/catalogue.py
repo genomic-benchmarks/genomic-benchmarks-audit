@@ -31,7 +31,17 @@ from .audit import Dataset, Run
 
 # Bumped when a consumer written for the previous shape would misread this one:
 # a page a browser cached, or a script somebody wrote against the JSON.
-SCHEMA_VERSION = 2
+#
+# 3 adds `probe_auroc` to every entry. A reader on the previous shape is not
+# misled by it, but a browser holding the previous shape in cache would hand the
+# new browse page six probes with no numbers on them, which is a figure that
+# would draw an empty axis rather than say it has nothing.
+#
+# 4 adds `joint` and `gates` to every entry, and a sixth gate to `gates`. This one
+# a stale consumer would actively misread rather than merely miss: the Core Set it
+# describes has different members, and a page that showed the previous ten beside
+# the new funnel would state a membership no gate in front of it produces.
+SCHEMA_VERSION = 4
 
 # The facets the browse page groups and filters by. Chosen because each one
 # partitions the corpus in a way a reader is likely to already have a question
@@ -77,6 +87,26 @@ def _split_entry(dataset: Dataset, split: str) -> dict:
     }
 
 
+def _probe_auroc(dataset: Dataset) -> dict[str, float | None]:
+    """What each of the six probes reached on the reference split.
+
+    `max_probe_auroc` is the strongest of these and answers "how far did one
+    feature get". It cannot answer "which feature", across more than one dataset
+    at a time: two datasets whose strongest probe reaches 0.83 are the same row
+    in that column whether the feature was GC content or sequence length, and
+    which of the six carries a corpus is the thing worth being able to ask.
+
+    Every check that ran is a key, `None` included, so a probe that reported no
+    AUROC is distinguishable from one that never ran here -- the same distinction
+    `flags` keeps between `Unknown` and a blank.
+    """
+    reference = dataset.reference_split
+    if reference is None:
+        return {}
+    scored = {m.check: m.au_roc for m in dataset.measurements_on(reference)}
+    return {check: scored[check] for check in audit.PROBE_CHECKS if check in scored}
+
+
 def _leakage_entry(dataset: Dataset) -> list[dict]:
     return [
         {
@@ -95,7 +125,7 @@ def _reports_entry(dataset: Dataset) -> dict:
     """Which reports this dataset has, and what each one is.
 
     What the run produced, and nothing about whether the files are on the machine
-    reading this -- which is what lets the reports page name a file it cannot
+    reading this -- which is what lets a dataset page name a file it cannot
     open. Whether it can be opened is `reports.state()`.
     """
     manifest = dataset.reports
@@ -120,6 +150,28 @@ def _reports_entry(dataset: Dataset) -> dict:
             }
             for report in reports.reports_for(dataset)
         ],
+    }
+
+
+def _joint_entry(dataset: Dataset) -> dict | None:
+    """What the checks' features recover together, with the caveat attached.
+
+    `lower_bound` and `caveat` are not separable from the value: where the window
+    was capped or the pool subsampled the measurement can only be too low, and a
+    consumer that took the number alone would read a capped 0.79 as clearing a
+    ceiling it may not clear.
+    """
+    joint = dataset.joint
+    if joint is None:
+        return None
+    return {
+        "auroc": joint.au_roc,
+        "lo": joint.lo,
+        "hi": joint.hi,
+        "split": joint.split,
+        "n_held_out": joint.n_held_out,
+        "lower_bound": joint.lower_bound,
+        "caveat": joint.caveat,
     }
 
 
@@ -161,7 +213,22 @@ def entry(dataset: Dataset) -> dict:
         "worst_leakage_comparison": dataset.worst_leakage_comparison,
         "n_split_comparisons": dataset.n_split_comparisons,
         "flags": {check: dataset.flags[check] for check in audit.CHECKS},
+        # The strongest probe by split, and every probe on the reference split.
+        # The first is how a flag was decided; the second is what the browse page
+        # draws one mark per dataset per probe from.
         "probe_auroc_by_split": dict(sorted(dataset.probe_auroc_by_split.items())),
+        "probe_auroc": _probe_auroc(dataset),
+        # The same features the ten checks use, read together rather than one at a
+        # time, on a held-out split. It is the only number on an entry the audit
+        # did not compute -- it comes from the Core Set run -- and the only one
+        # measured somewhere other than the reference split, so it carries its own
+        # split name rather than borrowing the entry's.
+        "joint": _joint_entry(dataset),
+        # Each gate's own verdict, and the first one the dataset broke. Carried per
+        # dataset so a page can say why a dataset is not in the Core Set without
+        # re-deriving it from six numbers and getting the order wrong.
+        "gates": {name: dataset.gates.get(name) for name in audit.GATES},
+        "excluded_by": dataset.excluded_by,
         "split_names": splits,
         "splits": [_split_entry(dataset, split) for split in splits],
         "leakage": _leakage_entry(dataset),
@@ -209,6 +276,7 @@ def build(run: Run | None = None) -> dict:
             "n_in": gate.n_in,
             "n_removed": gate.n_removed,
             "n_out": gate.n_out,
+            "note": gate.note,
         }
         for gate in sorted(run.gates, key=lambda g: g.step)
     ]
@@ -245,6 +313,7 @@ def provenance(run: Run) -> dict:
         "package_version": __version__,
         "audit_run": recorded.get("audit_run"),
         "qc_run": recorded.get("qc_run"),
+        "core_set_run": recorded.get("core_set_run"),
         "zenodo_record_id": recorded.get("zenodo_record_id"),
         "zenodo_concept_record_id": recorded.get("zenodo_concept_record_id"),
         "zenodo_record_registered": recorded.get("zenodo_record_registered"),
@@ -269,6 +338,8 @@ def totals(run: Run) -> dict:
     )
     excluded = sum(int(row.get("n_datasets", 0) or 0) for row in run.exclusions)
     gates = sorted(run.gates, key=lambda g: g.step)
+    joint = sorted(d.joint.au_roc for d in datasets if d.joint is not None)
+    clean_but_joint = [d for d in datasets if d.clean_but_joint]
 
     return {
         "n_datasets": len(datasets),
@@ -286,7 +357,19 @@ def totals(run: Run) -> dict:
         "n_with_any_leakage": sum(1 for value in leaked if value > 0),
         "n_leakage_over_50_pct": sum(1 for value in leaked if value > 50),
         "median_max_leaked_test_pct": _median(leaked),
+        # The joint reading, over the datasets a joint model could be scored on.
+        # `n_clean_but_joint` is the count this site exists to be able to state:
+        # datasets on which no check returned Fail and the same features together
+        # recovered the label anyway.
+        "n_joint_scored": len(joint),
+        "median_joint_auroc": _median(joint),
+        "n_joint_over_0_8": sum(1 for value in joint if value >= 0.8),
+        "n_joint_lower_bound": sum(
+            1 for d in datasets if d.joint is not None and d.joint.lower_bound
+        ),
+        "n_clean_but_joint": len(clean_but_joint),
         "core_set_size": gates[-1].n_out if gates else 0,
+        "n_gates": sum(1 for gate in gates if gate.criterion in audit.GATES),
     }
 
 

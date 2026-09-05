@@ -1,11 +1,12 @@
 """Render the site from `docs/` into an output directory.
 
-    index.html                the corpus, in six figures
-    catalogue.html            all 93 datasets, filterable
+    index.html                the whole corpus: the table, the grid, the figures
+    catalogue.html            where the table used to be; forwards to the above
     checks.html               the ten checks, and what each returned
-    core-set.html             the four gates, and the 10 that cleared them
-    reports.html              the 423 reports, and how to get them
-    methods.html              what was measured, and what it does not say
+    core-set.html             the five criteria, and the 10 that came through
+    reports.html              where the report index was; forwards to the table
+    cite.html                 what identifies this run, and what to cite
+    methods.html              where Methods was; says which page each part is on
     datasets/<slug>.html      one page per dataset, 93 of them
     view/<archive>/<report>   one framed viewer per report, 423 of them
     qc-reports/<archive>/...  the reports themselves, unchanged
@@ -111,10 +112,25 @@ def plural(n: int, one: str, many: str | None = None) -> str:
     return one if n == 1 else (many or one + "s")
 
 
-# The masthead's six links. `base.html` carries a `{{nav_*}}` slot on each one and
-# `render_page` fills exactly one of them, so the page a reader is on is marked
-# rather than left for them to work out from the heading.
-NAV_KEYS = ("index", "catalogue", "checks", "core", "reports", "methods")
+# The masthead's four links. `base.html` carries a `{{nav_*}}` slot on each one
+# and `render_page` fills exactly one of them, so the page a reader is on is
+# marked rather than left for them to work out from the heading.
+#
+# Three sections that used to be here are not any more. `catalogue` was the
+# datasets table and `reports` was an index of all 423 reports: both were a nav
+# item for something the reader already had in front of them, and both are now
+# sections of the page they belong to. `methods` was a page named after a heading
+# in a paper rather than after anything a reader is looking for, and it collected
+# what had nowhere else to go -- what a flag is, which split it was measured on,
+# how to read an AUROC, a second copy of the checks table, and the provenance.
+# Those went to the pages their questions come up on. The provenance was a page
+# about files rather than about measurements, and it went to the README, whose
+# reader is a maintainer. What is left of it is `cite.html`, which is one screen
+# and is reached from the run labels it is about -- in the footer of every page --
+# rather than from a nav item the size of a section.
+# All three addresses still resolve; see `catalogue_page`, `reports_page` and
+# `methods_page`.
+NAV_KEYS = ("index", "checks", "core")
 
 # An attribute, not a word: `site.css` turns this same attribute into a colour
 # and a rule, and a screen reader reads it directly. Which is how the masthead
@@ -147,9 +163,14 @@ def catalogue_href(prefix: str = "", **conditions: str) -> str:
     The names are the catalogue's own field names, which is why they are not
     spelled out here -- a facet renamed in the data is a link that stops filtering
     rather than one that filters on something else.
+
+    The destination is the overview's `#datasets` section rather than a page of
+    its own. The fragment matters as much as the query: the table sits below a
+    hero and four figures, and a link that filtered the rows and then left the
+    reader at the top of the page would look like it had done nothing.
     """
     query = urllib.parse.urlencode(conditions)
-    return html.escape(f"{prefix}catalogue.html?{query}", quote=True)
+    return html.escape(f"{prefix}index.html?{query}#datasets", quote=True)
 
 
 def site_copy(values: dict[str, str] | None = None) -> dict:
@@ -281,6 +302,22 @@ def record_line(document: dict) -> str:
     return part(name, values)
 
 
+def _gate_named(document: dict, criterion: str) -> dict:
+    """One funnel step, by name rather than by position.
+
+    By name because the funnel gained a step in the middle: anything that reached
+    for `gates[4]` would have moved from the separability gate to the joint one
+    without failing, and gone on rendering a number under the wrong heading.
+    """
+    for gate in document["gates"]:
+        if gate["criterion"] == criterion:
+            return gate
+    raise KeyError(
+        f"no funnel step named {criterion!r}. The Core Set's criteria moved; read "
+        f"data/core_set_criteria.csv before renaming one here."
+    )
+
+
 def counts(document: dict) -> dict[str, str]:
     """Every number the copy states, counted from the catalogue.
 
@@ -359,11 +396,26 @@ def counts(document: dict) -> dict[str, str]:
         "n_leakage_complete": str(len(complete)),
         "median_leaked_pct": f"{totals['median_max_leaked_test_pct']:.2f}",
         "core_set_size": str(totals["core_set_size"]),
-        "n_gates": str(len(document["gates"])),
+        # Two different counts, and the difference is the point. Five gates are
+        # criteria a dataset either meets or does not; the sixth funnel step picks
+        # among the datasets that met all five, so no dataset "fails" it. A page
+        # that called all six gates would tell a reader their dataset was rejected
+        # by a criterion it was never judged against.
+        "n_gates": str(totals["n_gates"]),
+        "n_funnel_steps": str(len(document["gates"])),
+        "n_eligible": str(_gate_named(document, "joint")["n_out"]),
+        # The joint reading: the same features the ten checks use, handed to one
+        # model instead of read one at a time.
+        "n_joint_scored": str(totals["n_joint_scored"]),
+        "median_joint_auroc": f"{totals['median_joint_auroc']:.2f}",
+        "n_joint_over_0_8": str(totals["n_joint_over_0_8"]),
+        "n_joint_lower_bound": str(totals["n_joint_lower_bound"]),
+        "n_clean_but_joint": str(totals["n_clean_but_joint"]),
         "n_species": str(len(facets["species"])),
         "n_task_categories": str(len(facets["task_category_grouped"])),
         "audit_run": html.escape(str(provenance["audit_run"])),
         "qc_run": html.escape(str(provenance["qc_run"])),
+        "core_set_run": html.escape(str(provenance["core_set_run"])),
         "package_version": html.escape(str(provenance["package_version"])),
         "record_id": html.escape(str(provenance["zenodo_record_id"])),
         "schema_version": str(document["schema_version"]),
@@ -375,6 +427,7 @@ def counts(document: dict) -> dict[str, str]:
         "n_checks", "n_probe_checks", "n_integrity_checks", "n_split_checks",
         "n_flags", "n_scored_flags", "n_gates", "n_collections",
         "n_leakage_unscanned", "core_set_size", "n_pass", "n_pass_with_train",
+        "n_funnel_steps", "n_clean_but_joint",
     ):
         word = cardinal(int(values[name]))
         values[f"{name}_word"] = word
@@ -505,7 +558,14 @@ def check_rows(document: dict, copy: dict) -> str:
 
 
 def gate_rows(document: dict) -> str:
-    """The Core Set funnel as a table: one row per gate, in the order applied."""
+    """The Core Set funnel as a table: one row per step, in the order applied.
+
+    A step's `note` is rendered under it rather than beside it, in a row that
+    spans the table. Only the joint gate carries one, and what it carries is the
+    count of admitted values that are lower bounds -- which is the qualification
+    on that step's own number, so it belongs under that step and not in a caveat
+    at the foot of the page that a reader scanning the funnel would never reach.
+    """
     rows = []
     for gate in document["gates"]:
         rows.append(
@@ -519,20 +579,41 @@ def gate_rows(document: dict) -> str:
             f'      <td class="right num">{gate["n_out"]}</td>\n'
             f"    </tr>"
         )
+        if gate.get("note"):
+            rows.append(
+                f'    <tr class="gate-note">\n'
+                f'      <td></td>\n'
+                f'      <td colspan="6" class="wrap fine">'
+                f'{html.escape(gate["note"])}</td>\n'
+                f"    </tr>"
+            )
     return "\n".join(rows)
 
 
-def exclusion_rows(document: dict) -> str:
-    """Why 54 curated datasets are not in the audit, as the curation recorded it."""
+def joint_rows(document: dict, copy: dict) -> str:
+    """The datasets no check flagged and the same features together recovered.
+
+    Ordered by what the joint model reached, worst first, because the point of the
+    table is the size of the gap: the strongest single feature beside the same
+    features read together, on datasets where every one of the ten checks returned
+    something other than Fail.
+    """
+    removed = sorted(
+        (d for d in document["datasets"] if d["excluded_by"] == "joint"),
+        key=lambda d: -(d["joint"] or {}).get("auroc", 0),
+    )
     rows = []
-    for entry in sorted(
-        document["exclusions"], key=lambda e: -int(e["n_datasets"])
-    ):
+    for dataset in removed:
+        joint = dataset["joint"] or {}
         rows.append(
             f'    <tr>\n'
-            f'      <td class="right num">{html.escape(str(entry["n_datasets"]))}</td>\n'
-            f'      <td class="wrap">{html.escape(entry["excluded"])}</td>\n'
-            f'      <td class="wrap fine">{html.escape(entry["collections"])}</td>\n'
+            f'      <th scope="row" class="wrap">{dataset_link(dataset)}</th>\n'
+            f'      <td class="wrap">{text(dataset["task_category"])}</td>\n'
+            f'      <td class="right num">'
+            f'{measurement(dataset["max_probe_auroc"], "{:.3f}", copy)}</td>\n'
+            f'      <td class="right num strong">'
+            f'{measurement(joint.get("auroc"), "{:.3f}", copy)}</td>\n'
+            f'      <td class="wrap fine"><code>{text(joint.get("split"))}</code></td>\n'
             f"    </tr>"
         )
     return "\n".join(rows)
@@ -556,11 +637,35 @@ def core_rows(document: dict, copy: dict) -> str:
             f'      <td>{flag_chip(dataset["overall_verdict"], copy)}</td>\n'
             f'      <td class="right num">'
             f'{measurement(dataset["max_probe_auroc"], "{:.3f}", copy)}</td>\n'
+            f'      <td class="right num">{joint_figure(dataset, copy)}</td>\n'
             f'      <td class="right num">'
             f'{measurement(dataset["max_leaked_test_pct"], "{:.2f}%", copy)}</td>\n'
             f"    </tr>"
         )
     return "\n".join(rows)
+
+
+def joint_figure(dataset: dict, copy: dict) -> str:
+    """A joint AUROC, with its lower-bound mark if it has one.
+
+    The mark travels with the number rather than being collected in a footnote,
+    because the direction it points matters: a capped or subsampled figure can
+    only be too low, so a reader comparing one against the 0.80 ceiling needs to
+    know it at the point of comparison and not at the foot of the table.
+    """
+    joint = dataset.get("joint")
+    if joint is None:
+        return measurement(None, "{:.3f}", copy)
+    shown = measurement(joint["auroc"], "{:.3f}", copy)
+    if not joint["lower_bound"]:
+        return shown
+    words = copy["joint"]
+    tip = words["lower_bound_tip"].replace("{caveat}", joint["caveat"] or "")
+    return (
+        f'{shown}<abbr class="lb" title="{html.escape(tip)}">'
+        f'{html.escape(words["lower_bound_mark"])}'
+        f'<span class="sr-only"> {html.escape(words["lower_bound"])}</span></abbr>'
+    )
 
 
 def dataset_link(dataset: dict, prefix: str = "") -> str:
@@ -600,9 +705,39 @@ def split_rows(dataset: dict, copy: dict) -> str:
             f'      <td class="wrap fine">{text(split["strongest_probe"])}</td>\n'
             f'      <td class="right num">'
             f'{measurement(split["max_probe_auroc"], "{:.3f}", copy)}</td>\n'
+            f'      <td class="wrap fine">'
+            f'{split_report_links(dataset, split["split"], copy)}</td>\n'
             f"    </tr>"
         )
     return "\n".join(rows)
+
+
+def split_report_links(dataset: dict, split: str, copy: dict) -> str:
+    """The report every flag on this row was read out of.
+
+    One link per sequence column, because a dataset with two of them gets a report
+    for each and a single link would send a reader to whichever the manifest
+    happened to list first. Named by the column rather than numbered, so which one
+    is on the other end is legible before the click.
+    """
+    reports = dataset["reports"]
+    if reports is None:
+        return text(None)
+    matching = [
+        report
+        for report in reports["files"]
+        if report["kind"] == "class" and report["split"] == split
+    ]
+    if not matching:
+        return text(None)
+    links = []
+    for report in matching:
+        label = report["seq_col"] or copy["reports"]["open"]
+        links.append(
+            f'<a href="../{view_path(reports["archive"].removesuffix(".zip"), report["path"])}">'
+            f"{html.escape(label)}</a>"
+        )
+    return ", ".join(links)
 
 
 def leakage_rows(dataset: dict, copy: dict) -> str:
@@ -771,18 +906,44 @@ def report_items(dataset: dict, copy: dict, prefix: str = "") -> str:
             body = f"<span>{title}</span>"
         # "leakage scan" carries a space, and a space in a class attribute is
         # two classes rather than one hyphenated name.
+        #
+        # The kind and the splits used to be written on here as data attributes
+        # too, for the filters on the reports index. That page is gone and nothing
+        # reads them, so they are not written: markup that no longer has a reader
+        # is markup that outlives what it was for.
         marker = report["kind"].replace(" ", "-")
-        # Which splits this report is about, for the reports page's split filter:
-        # the one a class report was measured on, both sides of the comparison for
-        # a leakage scan. Written here rather than derived in the browser, because
-        # the title is a label and the split is the thing.
-        splits = report["pair"] or ([report["split"]] if report["split"] else [])
         items.append(
-            f'    <li class="report report-{marker}" data-kind="{marker}" '
-            f'data-split="{html.escape(" ".join(splits), quote=True)}">{body} '
+            f'    <li class="report report-{marker}">{body} '
             f'<span class="fine">{html.escape(kind)}</span></li>'
         )
     return '<ul class="reports">\n' + "\n".join(items) + "\n  </ul>"
+
+
+def n_dataset_reports(dataset: dict) -> int:
+    """How many rendered reports this dataset has, whether or not they are here."""
+    entry = dataset["reports"]
+    return len(entry["files"]) if entry else 0
+
+
+def reports_cta(dataset: dict) -> str:
+    """The offer of this dataset's reports, made at the top of its page.
+
+    The reports used to be reachable two ways, and both were wrong for the reader
+    who wanted them: an index of all 423 that could not say which one they were
+    after, and the foot of a page they had to scroll past every figure to reach.
+    The index is gone, so the offer is made once and made early -- in the head,
+    above the numbers the reports are the working for.
+
+    Empty when there is nothing to open. A link into an empty section is worse
+    than no link.
+    """
+    n = n_dataset_reports(dataset)
+    if not n:
+        return ""
+    return part(
+        "reports_cta",
+        {"n_dataset_reports": str(n), "report_word": plural(n, "report")},
+    )
 
 
 # ----------------------------------------------------------------- pages ---
@@ -797,9 +958,9 @@ def render_page(
 ) -> str:
     """One page: the named content template inside `base.html`.
 
-    `nav` is which masthead link this page is. A dataset page is under Datasets
-    and a framed report is under Reports, because that is where a reader came
-    from rather than what the file is.
+    `nav` is which masthead link this page is. A dataset page and a framed report
+    are both under Overview, because that is the section a reader came through to
+    reach them rather than what the file is.
     """
     base = (TEMPLATES / "base.html").read_text(encoding="utf-8")
     content = (TEMPLATES / f"{name}.html").read_text(encoding="utf-8")
@@ -824,29 +985,49 @@ def landing(run: audit.Run, document: dict, copy: dict) -> str:
 
     So this page has one figure. The corpus-wide distributions live where a reader
     goes to find out what one of them means: the probe AUROC spread and the split
-    overlap bands on the methods page, the per-check bars on the checks page. A
+    overlap bands and the per-check bars on the checks page. A
     landing page that showed all four asked a first-time reader to interpret four
     figures before it had told them what a check was.
 
-    The flag matrix is here as well as on the checks page, and on purpose. It is
-    the only surface that answers the first question anyone brings to this site --
-    "is the dataset I am about to use in here, and what did it return" -- without
-    first asking them to learn what a check is. Rendered by one function so the
-    two pages cannot come to say different things.
+    The flag matrix is not here. It answers the first question anyone brings to
+    this site -- "is the dataset I am about to use in here, and what did it
+    return" -- but so does the table above it, one row per dataset and one column
+    per check, and the same statement made twice on one page is what makes a page
+    feel like it has no shape.
     """
+    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
     return render_page(
         "index",
         document,
         {
             "title": "Overview",
-            "fig_flag_matrix": matrix.flag_matrix(run, copy),
-            "scripts": '<script src="assets/matrix.js"></script>',
+            "fig_collection_bars": charts.render(by_slug["collection-bars"]),
+            "head_extra": (
+                '<link rel="stylesheet" '
+                'href="vendor/tabulator-6.5.2/tabulator.min.css">'
+            ),
+            # Order matters twice over. `explore.js` and `matrix.js` both register
+            # a builder that `catalogue.js` looks for and carries on without, so
+            # loading either after it means the table works and the figure beside
+            # it never updates.
+            "scripts": (
+                '<script src="vendor/tabulator-6.5.2/tabulator.min.js"></script>\n'
+                '<script src="assets/explore.js"></script>\n'
+                '<script src="assets/catalogue.js"></script>'
+            ),
         },
         nav="index",
     )
 
 
 def checks_page(run: audit.Run, document: dict, copy: dict) -> str:
+    """The {n} checks: what they are, what they returned, and how to read either scale.
+
+    The two corpus figures were on Methods, one page away from the flags they
+    explain how to read. A probe AUROC and a split overlap are the two scales
+    every flag on this site is a boundary on, so they are here, under the counts
+    of what each check returned.
+    """
     by_slug = {f.slug: f for f in charts.corpus_figures(run)}
     return render_page(
         "checks",
@@ -856,7 +1037,14 @@ def checks_page(run: audit.Run, document: dict, copy: dict) -> str:
             "check_rows": check_rows(document, copy),
             "fig_flag_matrix": matrix.flag_matrix(run, copy),
             "fig_check_bars": charts.render(by_slug["check-bars"]),
-            "scripts": '<script src="assets/matrix.js"></script>',
+            "fig_probe_auroc": charts.render(by_slug["probe-auroc"]),
+            "fig_leakage": charts.render(by_slug["leakage"]),
+            # `matrix.js` first: it is what publishes `matrixView`, and the
+            # threshold panel reveals itself only if that is there to drive.
+            "scripts": (
+                '<script src="assets/matrix.js"></script>\n'
+                '<script src="assets/thresholds.js"></script>'
+            ),
         },
         nav="checks",
     )
@@ -871,6 +1059,7 @@ def core_set_page(run: audit.Run, document: dict, copy: dict) -> str:
             "title": "The Core Set",
             "fig_funnel": charts.render(by_slug["core-set-funnel"]),
             "gate_rows": gate_rows(document),
+            "joint_rows": joint_rows(document, copy),
             "core_rows": core_rows(document, copy),
             "core_set_href": catalogue_href(core="1"),
         },
@@ -879,90 +1068,52 @@ def core_set_page(run: audit.Run, document: dict, copy: dict) -> str:
 
 
 def catalogue_page(run: audit.Run, document: dict) -> str:
-    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
+    """The address the table used to live at, kept so that it still resolves.
+
+    The table moved onto the overview. This page is what a published link lands
+    on -- and published links to it carry filters, because filtering the table and
+    sending the address was a thing this site invited readers to do. So it
+    forwards the query string rather than dropping the reader on unfiltered rows,
+    and it says where it went for the reader who arrives with scripting off.
+
+    No `nav` key: it is not one of the masthead's sections and no page on this
+    site links to it. It is here for the links that already exist.
+    """
     return render_page(
         "catalogue",
         document,
         {
             "title": "The datasets",
-            "fig_collection_bars": charts.render(by_slug["collection-bars"]),
-            "head_extra": (
-                '<link rel="stylesheet" '
-                'href="vendor/tabulator-6.5.2/tabulator.min.css">'
-            ),
-            "scripts": (
-                '<script src="vendor/tabulator-6.5.2/tabulator.min.js"></script>\n'
-                '<script src="assets/catalogue.js"></script>'
-            ),
+            "scripts": '<script src="assets/forward.js"></script>',
         },
-        nav="catalogue",
     )
 
 
-# What a row of the reports table can be narrowed by without opening it. The
-# terms are written onto the row rather than fetched as a second copy of the
-# catalogue: the table is already the list, and `assets/reports.js` removes rows
-# from what is on the page rather than rebuilding it from JSON that could
-# disagree with what was rendered.
-ROW_TERMS = (
-    "benchmark_id",
-    "collection",
-    "dataset_name",
-    "species",
-    "task_category_grouped",
-)
+def reports_page(document: dict) -> str:
+    """The address the report index used to live at, kept so that it still resolves.
 
+    There is no index of reports any more. A report is the working behind one
+    split of one dataset, and the page that says what that split returned is that
+    dataset's -- so that is where its reports are listed, above the numbers they
+    are the working for rather than at the foot of the page. A separate list of
+    all {n} of them was a second route to the same files that told a reader
+    nothing about which of them they wanted, and put a nav item in the masthead
+    for a question nobody asks in that order.
 
-def row_facets(dataset: dict, entry: dict) -> str:
-    """The attributes `assets/reports.js` filters one row of the table on."""
-    terms = [str(dataset.get(field) or "") for field in ROW_TERMS]
-    # The titles too, which is how the search box reaches a sequence column: the
-    # corpus has `enhancer`, `promoter` and `noncodingRNA` among them, and a
-    # reader after those has no other way to ask for them.
-    terms += [report["title"] for report in entry["files"]]
-    return (
-        f' data-collection="{html.escape(dataset["collection"], quote=True)}"'
-        f' data-state="{html.escape(entry["state"], quote=True)}"'
-        f' data-search="{html.escape(" ".join(terms).lower(), quote=True)}"'
-    )
+    What that page also carried -- what a report is and where these ones came
+    from -- is on the dataset pages, beside the reports themselves, and the table
+    is where this forwards.
 
-
-def reports_page(document: dict, copy: dict, route: str | None = None) -> str:
-    entries = [d for d in document["datasets"] if d["reports"]]
-    states = {"unpacked": 0, "linked": 0, "unpublished": 0}
-    for dataset in entries:
-        states[dataset["reports"]["state"]] += 1
-    rows = []
-    for dataset in sorted(entries, key=lambda d: d["benchmark_id"]):
-        entry = dataset["reports"]
-        by_kind = {"class": 0, "leakage scan": 0}
-        for report in entry["files"]:
-            by_kind[report["kind"] if report["kind"] == "class" else "leakage scan"] += 1
-        rows.append(
-            f'    <tr{row_facets(dataset, entry)}>\n'
-            f'      <th scope="row" class="wrap">{dataset_link(dataset)}</th>\n'
-            f'      <td class="right num">{by_kind["class"]}</td>\n'
-            f'      <td class="right num">{by_kind["leakage scan"] or "&mdash;"}</td>\n'
-            f'      <td class="right num">{entry["bytes"] / 1048576:.1f} MB</td>\n'
-            f'      <td class="wrap">{report_items(dataset, copy)}</td>\n'
-            f"    </tr>"
-        )
+    No `nav` key: it is not one of the masthead's sections. It is here for the
+    links that already exist.
+    """
     return render_page(
         "reports",
         document,
         {
             "title": "The reports",
-            "scripts": '<script src="assets/reports.js"></script>',
-            "report_rows": "\n".join(rows),
-            "n_datasets_unpacked": str(states["unpacked"]),
-            "n_datasets_absent": str(states["linked"] + states["unpublished"]),
-            "report_state": part(
-                "reports_present" if states["unpacked"] else "reports_absent",
-                counts(document),
-            ),
-            "route_note": route_note(route, states["unpacked"]),
+            "scripts": '<script src="assets/forward.js"></script>',
         },
-        nav="reports",
     )
 
 
@@ -981,29 +1132,55 @@ def route_note(route: str | None, unpacked: int) -> str:
     return part(ROUTE_PARTS[route], {"record_id": html.escape(zenodo.RECORD_ID)})
 
 
-def methods_page(run: audit.Run, document: dict, copy: dict) -> str:
-    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
-    return render_page(
-        "methods",
-        document,
-        {
-            "title": "Methods",
-            "exclusion_rows": exclusion_rows(document),
-            "check_rows": check_rows(document, copy),
-            "fig_probe_auroc": charts.render(by_slug["probe-auroc"]),
-            "fig_leakage": charts.render(by_slug["leakage"]),
-        },
-        nav="methods",
-    )
+def cite_page(document: dict) -> str:
+    """What identifies this run, and what a citation of it has to name.
+
+    All that is left of a page that was called Methods, then Provenance, and both
+    times held whatever had nowhere else to go. What it said about files -- which
+    are committed, which are fetched, what is verified before anything is
+    published, and which curated datasets were never measured -- is in the README,
+    whose reader is a maintainer rather than someone reading a number.
+
+    No `nav` key. It is one screen, and the reader who wants it is looking at the
+    run labels in the footer, which is what links to it from every page.
+    """
+    return render_page("cite", document, {"title": "How to cite this run"})
+
+
+def methods_page(document: dict) -> str:
+    """The address Methods lived at, kept so that it still resolves.
+
+    Unlike the other two moved addresses, this one does not forward. Methods was
+    six subjects on one page and they went to three different places, so the page
+    lists them rather than guessing which one a reader came for. It renders no
+    `id="forward"` and loads no script; `assets/forward.js` is what the other two
+    use and it has nothing to act on here.
+
+    No `nav` key: it is not one of the masthead's sections. It is here for the
+    links that already exist -- in a README, in the organisation site, and in the
+    anchors this site itself published, `#what` and `#probes` and the rest.
+    """
+    return render_page("methods", document, {"title": "Methods"})
 
 
 def dataset_page(
-    dataset: dict, measured: audit.Dataset, document: dict, copy: dict
+    dataset: dict,
+    measured: audit.Dataset,
+    document: dict,
+    copy: dict,
+    route: str | None = None,
 ) -> str:
-    """One dataset's page: what the ten checks returned, and what they do not say."""
+    """One dataset's page: what the ten checks returned, and what they do not say.
+
+    `route` is where this build's reports came from, and it is said here because
+    here is where a reader opens one. It renders to nothing for the published
+    record, which is the case the page already describes.
+    """
     drawn = {f.slug: f for f in charts.dataset_figures(measured)}
     reference = dataset["reference_split"]
     corpus = counts(document)
+    entry = dataset["reports"]
+    unpacked = int(bool(entry) and entry["state"] == "unpacked")
 
     core = (
         part(
@@ -1078,6 +1255,7 @@ def dataset_page(
             "n_dataset_splits": str(len(dataset["splits"])),
             "split_word": plural(len(dataset["splits"]), "split"),
             "reference_split": html.escape(reference or ""),
+            "route_note": route_note(route, unpacked),
             "rollup_flag": flag_chip(dataset["overall_verdict"], copy),
             "n_checks_failed": str(dataset["n_checks_failed"]),
             "n_checks_warning": str(dataset["n_checks_warning"]),
@@ -1101,6 +1279,7 @@ def dataset_page(
             "glance_overlap_note": glance_overlap_note(dataset),
             "split_rows": split_rows(dataset, copy),
             "report_items": report_items(dataset, copy, prefix="../"),
+            "reports_cta": reports_cta(dataset),
             "pager": pager(dataset, document, copy),
             "nearby": nearby(dataset, document, copy),
             "collection_href": catalogue_href(
@@ -1109,8 +1288,192 @@ def dataset_page(
             "fig_checks": charts.render(drawn["dataset-checks"]),
             "fig_probes": charts.render(drawn["dataset-probes"]),
             "leakage_section": leakage_section(dataset, drawn, copy, corpus),
+            "joint_note": joint_note(dataset, document, copy),
+            "glance_joint": joint_figure(dataset, copy),
+            "percentile_note": percentile_note(dataset, document, copy),
+            "sidebar": dataset_sidebar(dataset, document, copy),
         },
-        nav="catalogue",
+        nav="index",
+    )
+
+
+def dataset_sidebar(dataset: dict, document: dict, copy: dict) -> str:
+    """Every dataset in the corpus, grouped by collection, with this one marked.
+
+    A dataset page used to give a reader no way of knowing where they were. The
+    breadcrumb named the collection and the pager stepped through it, but neither
+    said what else was there or how far in this one sat -- so a reader two clicks
+    from the overview was somewhere in a corpus of 93 with no map.
+
+    Rendered by the build rather than filtered in the browser, for the reason
+    every list on this site is: 93 links is 8 KB, it works with scripting off, and
+    a sidebar built from a second copy of the catalogue is one that can disagree
+    with the page beside it.
+
+    The collection holding the current dataset ships open and the other six ship
+    closed. Open by default would be 93 links above the fold; closed by default
+    would hide the one group the reader is actually in.
+    """
+    words = copy["sidebar"]
+    groups: dict[str, list[dict]] = {}
+    for entry in document["datasets"]:
+        groups.setdefault(entry["collection"], []).append(entry)
+
+    blocks = []
+    for collection in sorted(groups):
+        members = sorted(groups[collection], key=lambda d: d["dataset_name"].lower())
+        here = collection == dataset["collection"]
+        items = []
+        for member in members:
+            current = member["slug"] == dataset["slug"]
+            # `aria-current` is what a screen reader announces, and `site.css`
+            # turns the same attribute into the mark -- so where you are is never
+            # said by colour alone.
+            mark = ' aria-current="page"' if current else ""
+            items.append(
+                f'<li><a href="{member["slug"]}.html"{mark}>'
+                f'{html.escape(member["dataset_name"])}'
+                f'<span class="sb-flag flag-{member["overall_verdict"] or "Unknown"}" '
+                f'aria-hidden="true"></span></a></li>'
+            )
+        blocks.append(
+            f'<details class="sb-group"{" open" if here else ""}>'
+            f"<summary>{html.escape(collection)}"
+            f'<span class="sb-n">{len(members)}</span></summary>'
+            f'<ul>{"".join(items)}</ul>'
+            f"</details>"
+        )
+
+    return (
+        f'<nav class="dataset-nav" aria-label="{html.escape(words["label"])}">'
+        f'<p class="sb-head">{html.escape(words["heading"])}</p>'
+        f'<p class="sb-all"><a href="../index.html#datasets">'
+        f'{html.escape(words["all"].replace("{n}", str(len(document["datasets"]))))}'
+        f"</a></p>"
+        f'{"".join(blocks)}'
+        f"</nav>"
+    )
+
+
+def joint_note(dataset: dict, document: dict, copy: dict) -> str:
+    """The joint reading, in the one place a reader would look for it.
+
+    This is the manuscript's own reason for the site carrying it: after the Core
+    Set gained its joint gate, this is the number membership turns on, and a
+    dataset's page is where a reader would go to check one. It sits beside the ten
+    per-check flags rather than under the Core Set heading, because it is a
+    measurement on the dataset and not a fact about the selection.
+    """
+    joint = dataset.get("joint")
+    words = copy["joint"]
+    if joint is None:
+        return part("joint_absent", {"absent": html.escape(words["absent"])})
+
+    interval = ""
+    if joint["lo"] is not None and joint["hi"] is not None:
+        interval = html.escape(
+            words["interval"]
+            .replace("{lo}", f'{joint["lo"]:.3f}')
+            .replace("{hi}", f'{joint["hi"]:.3f}')
+            .replace("{n}", f'{joint["n_held_out"]:,}' if joint["n_held_out"] else "?")
+        )
+
+    caveat = ""
+    if joint["lower_bound"]:
+        caveat = part(
+            "joint_lower_bound",
+            {
+                "caveat": html.escape(joint["caveat"] or ""),
+                "lower_bound": html.escape(words["lower_bound"]),
+            },
+        )
+
+    # Only where the two readings actually disagree. On a dataset a check already
+    # flagged Fail the joint figure is another number in the same direction and
+    # says nothing new; on one no check flagged it is the whole point.
+    finding = ""
+    if dataset["excluded_by"] == "joint":
+        finding = part(
+            "joint_finding", {"clean_but_joint": html.escape(words["clean_but_joint"])}
+        )
+
+    single = dataset["max_probe_auroc"]
+    return part(
+        "joint_present",
+        {
+            "joint_auroc": f'{joint["auroc"]:.3f}',
+            "joint_split": html.escape(joint["split"] or ""),
+            "joint_interval": interval,
+            "joint_caveat": caveat,
+            "joint_finding": finding,
+            "against_single": html.escape(
+                words["against_single"].replace(
+                    "{single}", f"{single:.3f}" if single is not None else "\u2014"
+                )
+            ),
+        },
+    )
+
+
+def percentile_note(dataset: dict, document: dict, copy: dict) -> str:
+    """Where this dataset's three headline figures sit among the ones measured.
+
+    A rank rather than a percentile band, and stated over the datasets this run
+    measured rather than over benchmarks in general -- 93 curated datasets from
+    seven collections is not a sample of anything, so "the 80th percentile" would
+    name a population that does not exist. What the rank is good for is the
+    question a reader actually arrives with: is this number unusual here?
+    """
+    words = copy["percentile"]
+    datasets = document["datasets"]
+    items = []
+
+    def rank(key: str, value, template: str, *, lower_is_ties: bool = False) -> None:
+        if value is None:
+            return
+        scored = [d[key] for d in datasets if d[key] is not None]
+        below = sum(1 for other in scored if other < value)
+        if lower_is_ties and below == 0:
+            same = sum(1 for other in scored if other == value)
+            items.append(
+                words["tied_leakage"]
+                .replace("{n}", str(same))
+                .replace("{total}", str(len(scored)))
+            )
+            return
+        items.append(
+            words[template]
+            .replace("{n}", str(below))
+            .replace("{total}", str(len(scored)))
+        )
+
+    rank("max_probe_auroc", dataset["max_probe_auroc"], "probe")
+    joint = dataset.get("joint")
+    if joint is not None:
+        scored = [d["joint"]["auroc"] for d in datasets if d["joint"] is not None]
+        below = sum(1 for other in scored if other < joint["auroc"])
+        items.append(
+            words["joint"]
+            .replace("{n}", str(below))
+            .replace("{total}", str(len(scored)))
+        )
+    rank(
+        "max_leaked_test_pct",
+        dataset["max_leaked_test_pct"],
+        "leakage",
+        lower_is_ties=True,
+    )
+
+    if not items:
+        return ""
+    body = "\n".join(f"    <li>{html.escape(item)}</li>" for item in items)
+    return part(
+        "percentile",
+        {
+            "heading": html.escape(words["heading"]),
+            "items": body,
+            "note": html.escape(words["note"]),
+        },
     )
 
 
@@ -1187,6 +1550,11 @@ def report_view(
             "title": f'{dataset["benchmark_id"]} · {report["title"]}',
             "root": "../../",
             "benchmark_id": html.escape(dataset["benchmark_id"]),
+            "collection": html.escape(dataset["collection"]),
+            "dataset_name": html.escape(dataset["dataset_name"]),
+            "collection_href": catalogue_href(
+                "../../", collection=dataset["collection"]
+            ),
             "dataset_href": f'../../datasets/{dataset["slug"]}.html',
             "report_title": html.escape(report["title"]),
             "report_kind": html.escape(kind),
@@ -1194,7 +1562,7 @@ def report_view(
             "raw_href": html.escape(raw, quote=True),
             "report_pager": report_pager(dataset, report, copy),
         },
-        nav="reports",
+        nav="index",
     )
 
 
@@ -1325,16 +1693,18 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
         Path("catalogue.html"): catalogue_page(run, document),
         Path("checks.html"): checks_page(run, document, copy),
         Path("core-set.html"): core_set_page(run, document, copy),
-        Path("reports.html"): reports_page(document, copy, fetch_route(report_root)),
-        Path("methods.html"): methods_page(run, document, copy),
+        Path("reports.html"): reports_page(document),
+        Path("cite.html"): cite_page(document),
+        Path("methods.html"): methods_page(document),
     }
+    route = fetch_route(report_root)
 
     n_views = 0
     for dataset in document["datasets"]:
         slug = safe_component(dataset["slug"], dataset["benchmark_id"])
         measured = run.datasets[dataset["benchmark_id"]]
         pages[Path("datasets") / f"{slug}.html"] = dataset_page(
-            dataset, measured, document, copy
+            dataset, measured, document, copy, route
         )
         entry = dataset["reports"]
         if entry is None or entry["state"] != "unpacked":
@@ -1370,7 +1740,7 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
         "dataset_pages": len(document["datasets"]),
         "report_views": n_views,
         "reports_present": n_unpacked,
-        "route": fetch_route(report_root),
+        "route": route,
         # The pages and the assets, not the reports: what this build wrote, as
         # against what it found already sitting in the directory.
         "bytes": sum(
@@ -1381,10 +1751,28 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
     }
 
 
+class _Preview(http.server.SimpleHTTPRequestHandler):
+    """The preview handler. Every reply is uncacheable.
+
+    `SimpleHTTPRequestHandler` sends `Last-Modified` and no `Cache-Control`,
+    which is an invitation to heuristic freshness: with no explicit lifetime a
+    browser is entitled to guess one from the file's age, so a page re-rendered
+    a minute ago is served from memory and a reader looking at a fix is shown
+    the version before it. That failure is silent and it looks exactly like the
+    fix not working, which is the worst shape a preview bug can have.
+
+    This says nothing about the published site -- Pages sends its own headers,
+    and the site *should* be cacheable. It is a fact about looking at the
+    output while it is still changing.
+    """
+
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
+
+
 def serve(out: Path, port: int) -> None:
-    handler = functools.partial(
-        http.server.SimpleHTTPRequestHandler, directory=str(out)
-    )
+    handler = functools.partial(_Preview, directory=str(out))
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("127.0.0.1", port), handler) as httpd:
         print(f"serving {out} at http://127.0.0.1:{port}/  (ctrl-c to stop)")

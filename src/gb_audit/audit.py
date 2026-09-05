@@ -127,6 +127,13 @@ if sorted(DISPLAY_PROBE_CHECKS) != sorted(PROBE_CHECKS) or sorted(
         "columns by position and cannot label a family that is split"
     )
 
+# The five gates a dataset is judged against, in the order the funnel applies
+# them. The sixth funnel step, the diversity selection, is not a gate in this
+# sense: it picks among the datasets that already passed all five, so a dataset
+# has no pass-or-fail outcome on it and there is no `gate: diversity selection`
+# column to read.
+GATES = ("evaluable", "integrity", "leakage", "separability", "joint")
+
 FLAGS = ("Pass", "Warning", "Fail", "Unknown")
 UNKNOWN = "Unknown"
 
@@ -335,6 +342,37 @@ def _split_rank(split: str) -> tuple[int, str]:
 
 
 @dataclass(frozen=True)
+class Joint:
+    """What the checks' own features recover when they are read together.
+
+    Every other number on this site is one check on its own. This is the same
+    features -- length, GC, mono- and dinucleotide composition, and the two
+    per-position blocks -- handed to one model and scored on a held-out split, so
+    it answers the question ten separate flags cannot: not "does any one feature
+    separate the classes" but "do they between them".
+
+    It is the number the Core Set's fifth gate turns on, and it is the reason the
+    gate exists. Six datasets in this corpus return no Fail on any of the ten
+    checks and are recovered jointly anyway.
+
+    `lower_bound` is not a footnote. Two things cap the measurement -- a position
+    window that had to be truncated, and a training pool that had to be
+    subsampled -- and both push the value *down*, so a capped dataset may recover
+    more than the figure says. For a gate that admits on being below a ceiling
+    that is the anticonservative direction, which is why the caveat travels with
+    the number everywhere it is shown.
+    """
+
+    au_roc: float
+    lo: float | None
+    hi: float | None
+    split: str | None
+    n_held_out: int | None
+    lower_bound: bool
+    caveat: str | None
+
+
+@dataclass(frozen=True)
 class Dataset:
     """One of the 93 included datasets, and everything the run says about it."""
 
@@ -381,6 +419,14 @@ class Dataset:
     reports: Reports | None
     core_set_rank: int | None
 
+    # From the Core Set run rather than the audit: the audit cannot compute either
+    # of these. `joint` is None for the one dataset with no held-out split to score
+    # on; `gates` is empty only if the selection did not consider the dataset,
+    # which cannot happen while the two tables cover the same corpus.
+    joint: Joint | None
+    gates: dict[str, bool]
+    excluded_by: str | None
+
     @property
     def benchmark_id(self) -> str:
         return f"{self.collection}:{self.dataset_name}"
@@ -422,6 +468,23 @@ class Dataset:
             return None
         return max(scored, key=lambda c: c.leaked_queries_pct)
 
+    @property
+    def clean_but_joint(self) -> bool:
+        """No check flagged it Fail, and the same features together recovered it.
+
+        The one statement this site can make that no single flag can. It is what
+        the Core Set's joint gate is for, and it is the concrete form of the
+        asymmetry every page states in prose: a Pass bounds separability from
+        below, so ten of them do not add up to a dataset whose labels are hard to
+        recover.
+
+        Read off `excluded_by`, which records the *first* gate a dataset broke.
+        The per-gate columns beside it are each gate's own verdict taken alone, so
+        a dataset that failed on leakage can still carry a passing separability
+        gate; testing those directly would count it here.
+        """
+        return self.excluded_by == "joint"
+
 
 @dataclass(frozen=True)
 class Gate:
@@ -434,6 +497,10 @@ class Gate:
     n_in: int
     n_removed: int
     n_out: int
+    # Set on the joint gate alone, and printed rather than summarised: it records
+    # how many of the values that gate admitted are lower bounds, which is the one
+    # thing a reader has to know before reading the step as a clean cut.
+    note: str | None
 
 
 @dataclass
@@ -565,6 +632,40 @@ def _read_leakage(path: Path) -> dict[tuple[str, str], list[LeakageComparison]]:
     for comparisons in found.values():
         comparisons.sort(key=lambda c: (_split_rank(c.query_split), c.target_split))
     return found
+
+
+def _read_candidates(path: Path) -> dict[tuple[str, str], tuple[Joint | None, dict[str, bool], str | None]]:
+    """The Core Set run's view of every dataset it considered, not only the ten.
+
+    Read for two things the audit itself cannot produce: what the checks' features
+    recover jointly, and which gate each dataset first broke. Both are per dataset
+    over the whole corpus, which is why this file is copied in rather than the
+    ten-row `core_set.csv` alone -- a reader on the page of a dataset that did not
+    make the set is owed the number it was judged on, not an absence.
+    """
+    out: dict[tuple[str, str], tuple[Joint | None, dict[str, bool], str | None]] = {}
+    for row in _rows(path):
+        key = (row["collection"], row["dataset"])
+        where = f"{key[0]}:{key[1]}"
+        value = _optional_float(row["joint_auroc"], where, "joint_auroc")
+        joint = None
+        if value is not None:
+            joint = Joint(
+                au_roc=value,
+                lo=_optional_float(row["joint_auroc_lo"], where, "joint_auroc_lo"),
+                hi=_optional_float(row["joint_auroc_hi"], where, "joint_auroc_hi"),
+                split=row["joint_auroc_split"].strip() or None,
+                n_held_out=_optional_int(row["joint_n_held_out"], where, "joint_n_held_out"),
+                lower_bound=row["joint_auroc_is_lower_bound"].strip().lower()
+                in ("true", "1"),
+                caveat=row["joint_auroc_caveat"].strip() or None,
+            )
+        gates = {
+            name: row[f"gate: {name}"].strip().lower() in ("true", "1")
+            for name in GATES
+        }
+        out[key] = (joint, gates, row["excluded_by"].strip() or None)
+    return out
 
 
 def _read_splits(path: Path) -> dict[tuple[str, str], list[Split]]:
@@ -710,6 +811,7 @@ def read(root: Path | str = DATA) -> Run:
         (row["collection"], row["dataset"]): int(row["selection_rank"])
         for row in _rows(root / "core_set.csv")
     }
+    candidates = _read_candidates(root / "core_set_candidates.csv")
 
     datasets: dict[str, Dataset] = {}
     for row in rollup_rows:
@@ -729,6 +831,7 @@ def read(root: Path | str = DATA) -> Run:
             if value is not None:
                 probe_auroc_by_split[split] = value
 
+        joint, gates, excluded_by = candidates.get(key, (None, {}, None))
         dataset = Dataset(
             collection=key[0],
             dataset_name=key[1],
@@ -769,6 +872,9 @@ def read(root: Path | str = DATA) -> Run:
             splits=tuple(splits.get(key, ())),
             reports=reports.get(key),
             core_set_rank=core_set.get(key),
+            joint=joint,
+            gates=gates,
+            excluded_by=excluded_by,
         )
         _verify(dataset)
         datasets[where] = dataset
@@ -777,6 +883,7 @@ def read(root: Path | str = DATA) -> Run:
     _cover(datasets, leakage, "combined_splits_results.csv", allow_missing=1)
     _cover(datasets, splits, "splits.csv")
     _cover(datasets, reports, "reports.csv")
+    _cover(datasets, candidates, "core_set_candidates.csv")
 
     missing_rank = sorted(set(core_set) - {(d.collection, d.dataset_name) for d in datasets.values()})
     if missing_rank:
@@ -799,6 +906,7 @@ def read(root: Path | str = DATA) -> Run:
                 n_in=int(row["n_in"]),
                 n_removed=int(row["n_removed"]),
                 n_out=int(row["n_out"]),
+                note=row.get("note", "").strip() or None,
             )
             for row in _rows(root / "core_set_criteria.csv")
         ),
