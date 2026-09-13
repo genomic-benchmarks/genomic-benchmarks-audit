@@ -731,23 +731,65 @@ main p b, main p strong { color: var(--ink); font-weight: 600; }
   > .tabulator-col-content .tabulator-col-title {
   font-size: 9px; font-weight: 500; letter-spacing: 0.05em; text-align: center;
 }
+/* A band is as wide as the columns under it, and no wider.
+ *
+ * Tabulator does not give a group a width: the element is `inline-flex`, so it
+ * takes its widest content, and one of its two children is the band's own title.
+ * `leakage scan` over the one column in that family is 73 pixels of title over a
+ * 66-pixel column, so the group came out 81 wide -- the band's rule ran fifteen
+ * pixels past the column it was drawn for, and the title sat off-centre over it
+ * by half of that. Taking the title out of flow takes it out of that
+ * measurement, and the group is left measuring the only thing it should.
+ *
+ * Out of flow it can no longer set the row's height either, so the row is given
+ * one: two lines, which is what the longest of the three band names needs at the
+ * width of one column. The title sits at the foot of it, so a name on one line
+ * and a name on two both end on the rule under the band. */
+.tabulator .tabulator-header .tabulator-col.tabulator-col-group
+  > .tabulator-col-content {
+  position: relative; height: 31px; padding: 0;
+}
+.tabulator .tabulator-header .tabulator-col.tabulator-col-group
+  > .tabulator-col-content .tabulator-col-title-holder {
+  position: absolute; left: 2px; right: 2px; bottom: 4px;
+}
 /* The rule under a band is the vendor's `#aaa`, which is a light theme's value
  * and twice the weight of every other rule on this page. */
 .tabulator .tabulator-header .tabulator-col-group .tabulator-col-group-cols {
   border-top: 1px solid var(--rule);
 }
 /* Tabulator keeps 25 pixels at the right of a sortable heading for its sort
- * arrow. On a column 64 pixels wide that is a third of the heading spent holding
+ * arrow. On a column 66 pixels wide that is a third of the heading spent holding
  * a mark 12 pixels across, and `Dinucleotide` came apart into three lines to pay
  * for it. The arrow goes under the two lines instead, where the width it wants
- * is width the heading was not using. */
+ * is width the heading was not using: eleven pixels of the column's own padding,
+ * under the last line of every heading.
+ *
+ * The arrow is placed against the title rather than against the column, because
+ * that is what it is positioned in -- Tabulator puts the sorter inside
+ * `.tabulator-col-title-holder`, and the vendor's `top: 0; bottom: 0` on it is
+ * written with five classes, so it reached this file's `bottom: 2px` and won.
+ * What that produced was an arrow centred on the heading: a grey triangle drawn
+ * through the middle of `Per position nucleotide`, on all ten at once. */
 .tabulator .tabulator-header .tabulator-col-group-cols .tabulator-col-content {
   padding: 4px 2px 11px;
 }
 .tabulator .tabulator-header .tabulator-col-group-cols
   .tabulator-col.tabulator-sortable .tabulator-col-title { padding-right: 0; }
-.tabulator .tabulator-header .tabulator-col-group-cols .tabulator-col-sorter {
-  left: 0; right: 0; top: auto; bottom: 2px; justify-content: center;
+.tabulator .tabulator-header .tabulator-col-group-cols .tabulator-col
+  .tabulator-col-content .tabulator-col-sorter {
+  top: calc(100% + 3px); bottom: auto; left: 0; right: 0; justify-content: center;
+}
+/* And the columns with no band over them sit on the same line as the ten that
+ * have. `columnHeaderVertAlign: "bottom"` in `assets/catalogue.js` drops every
+ * heading to the foot of a header three rows deep -- without it `Dataset` floats
+ * at the top, level with the band titles and reading as though it were one. That
+ * leaves one difference: a check keeps eleven pixels under its last line for the
+ * sort arrow that goes there, and a column with its arrow at the right does not,
+ * so it would sit those eleven pixels lower. It takes the same space. */
+.tabulator .tabulator-header .tabulator-headers
+  > .tabulator-col:not(.tabulator-col-group) > .tabulator-col-content {
+  padding-bottom: 11px;
 }
 
 /* The disclosure and the name stay while the checks scroll past them. Tabulator
@@ -1016,10 +1058,6 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
   border-top: 1px solid var(--rule); background: var(--paper);
   padding: 40px 0 48px; margin-top: 40px;
 }
-.colophon p { font-size: 14px; color: var(--ink-soft); max-width: var(--measure-fine); }
-.provenance { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; font-size: 13px; margin: 16px 0; }
-.provenance dt { color: var(--ink-faint); }
-.provenance dd { margin: 0; color: var(--ink-soft); }
 
 /* Where else to go, from the bottom of any page. The site had no link out to the
  * project it is part of, to the tool that produced every number on it, or to its
@@ -1028,7 +1066,7 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .site-links {
   display: grid; gap: 24px 40px;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  margin: 0 0 32px; padding: 0 0 32px; border-bottom: 1px solid var(--rule);
+  margin: 0;
 }
 .site-links h2 {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600;
@@ -1117,9 +1155,6 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 }
 .stat-label { display: block; font-size: 14px; color: var(--ink-soft); margin: 10px 0 6px; line-height: 1.45; }
 .stat-grid .fine { display: block; font-size: 13px; }
-
-/* What the four numbers do not say, directly under them. */
-.after-numbers { margin: 22px 0 8px; }
 
 /* The same panel on a dataset page, where the four cells are that dataset's own
  * figures and each one is a word rather than a count. */

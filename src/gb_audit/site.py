@@ -126,11 +126,11 @@ def plural(n: int, one: str, many: str | None = None) -> str:
 # Those went to the pages their questions come up on. The provenance was a page
 # about files rather than about measurements, and it went to the README, whose
 # reader is a maintainer. What is left of it is `cite.html`, which is one screen
-# and is reached from the run labels it is about -- in the footer of every page --
-# rather than from a nav item the size of a section.
+# and is in the masthead: the run labels it is about used to be in the footer of
+# every page, and with those gone a nav item is the whole of its findability.
 # All three addresses still resolve; see `catalogue_page`, `reports_page` and
 # `methods_page`.
-NAV_KEYS = ("index", "checks", "core")
+NAV_KEYS = ("index", "checks", "core", "cite")
 
 # An attribute, not a word: `site.css` turns this same attribute into a colour
 # and a rule, and a screen reader reads it directly. Which is how the masthead
@@ -289,7 +289,7 @@ def check_fresh(run: audit.Run) -> None:
 
 
 def record_line(document: dict) -> str:
-    """The footer's one line about where the reports and full tables live."""
+    """The one line on `cite.html` about where the reports and full tables live."""
     provenance = document["provenance"]
     values = {
         "record_id": html.escape(str(provenance["zenodo_record_id"])),
@@ -1086,11 +1086,12 @@ def landing(run: audit.Run, document: dict, copy: dict) -> str:
     the same headline and the same four numbers, and then the thing that section
     could not carry -- all 93 datasets against all ten checks, every mark a link.
 
-    So this page has one figure. The corpus-wide distributions live where a reader
-    goes to find out what one of them means: the probe AUROC spread and the split
-    overlap bands and the per-check bars on the checks page. A
-    landing page that showed all four asked a first-time reader to interpret four
-    figures before it had told them what a check was.
+    So this page draws no figure of its own. The two under the table are drawn in
+    the browser from the rows it is showing, and the corpus-wide distributions
+    live where a reader goes to find out what one of them means: the probe AUROC
+    spread and the split overlap bands and the per-check bars on the checks page.
+    A landing page that showed all of them asked a first-time reader to interpret
+    four figures before it had told them what a check was.
 
     The flag matrix is not here. It answers the first question anyone brings to
     this site -- "is the dataset I am about to use in here, and what did it
@@ -1098,13 +1099,11 @@ def landing(run: audit.Run, document: dict, copy: dict) -> str:
     per check, and the same statement made twice on one page is what makes a page
     feel like it has no shape.
     """
-    by_slug = {f.slug: f for f in charts.corpus_figures(run)}
     return render_page(
         "index",
         document,
         {
             "title": "Overview",
-            "fig_collection_bars": charts.render(by_slug["collection-bars"]),
             "head_extra": (
                 '<link rel="stylesheet" '
                 'href="vendor/tabulator-6.5.2/tabulator.min.css">'
@@ -1244,10 +1243,12 @@ def cite_page(document: dict) -> str:
     published, and which curated datasets were never measured -- is in the README,
     whose reader is a maintainer rather than someone reading a number.
 
-    No `nav` key. It is one screen, and the reader who wants it is looking at the
-    run labels in the footer, which is what links to it from every page.
+    In the masthead, because the run labels it explains are no longer in the
+    footer of every page: the one link that carried it is gone.
     """
-    return render_page("cite", document, {"title": "How to cite this run"})
+    return render_page(
+        "cite", document, {"title": "How to cite this run"}, nav="cite"
+    )
 
 
 def methods_page(document: dict) -> str:

@@ -24,11 +24,11 @@ import pytest
 # does not: what was on it went to three different pages, so it lists them.
 SIGNPOSTS = ("catalogue.html", "reports.html", "methods.html")
 
-# Pages the masthead does not mark. The signposts, because they are addresses
-# rather than places to be -- and `cite.html`, because it is one screen naming
-# this run, reached from the run labels in the footer of every page rather than
-# from a nav item the size of the three sections beside it.
-UNMARKED = SIGNPOSTS + ("cite.html",)
+# Pages the masthead does not mark: the signposts, because they are addresses
+# rather than places to be. `cite.html` is not among them any more -- the run
+# labels it explains used to be in the footer of every page, and with those gone
+# a nav item is the whole of its findability.
+UNMARKED = SIGNPOSTS
 
 
 def test_the_table_is_on_the_page_a_reader_lands_on(built):
@@ -206,11 +206,11 @@ def test_a_framed_report_says_which_dataset_it_is_a_report_of(built, committed):
 
 
 def test_the_citation_is_reachable_from_every_page(built, pages):
-    """It is not in the masthead, so the footer is the whole of its findability.
+    """A page saying what a number on screen belongs to, from every page.
 
-    A page that says what a number on screen belongs to is worth one link from
-    every page that shows one. It is in the footer, beside the run labels it
-    names, which is the only reason it does not need to be in the masthead.
+    It is in the masthead and in the footer's list of this site. The run labels
+    it explains were in the footer of every page and are not any more, so the
+    masthead is what keeps it one click away from a number.
     """
     for page in pages:
         if "qc-reports" in page.parts:

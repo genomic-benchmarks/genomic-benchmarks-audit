@@ -142,8 +142,11 @@ function panelHtml(d, copy, checks) {
       `<th scope="colgroup">${esc(heading)}</th>${head}</tr>${rows}</tbody>`;
   }).join("");
 
-  /* ------------------------------------------------------ the split overlaps --- */
+  /* ------------------------------------------- the splits, and their overlaps --- */
 
+  /* Every split this dataset ships and the worst flag the per-split checks
+   * returned on it. Not an overlap: an overlap is a statement about two splits
+   * and is in the list below this one. */
   const splits = d.splits.map((s) => {
     const mark = s.is_reference
       ? ` <span class="ref-mark">${esc(copy.panel.reference)}</span>`
@@ -196,6 +199,7 @@ function panelHtml(d, copy, checks) {
       </div>
       <div>
         <h3>${esc(copy.panel.splits_heading)}</h3>
+        <p class="note">${esc(copy.panel.splits_note)}</p>
         <ul class="shares">${splits}</ul>
         <h4>${esc(copy.panel.overlap_heading)}</h4>
         ${pairs}

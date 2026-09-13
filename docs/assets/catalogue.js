@@ -37,12 +37,13 @@ const FACETS = [
 /* Which columns the table can show besides the dataset's name, in the order
  * they sit in, and which of them it opens with.
  *
- * It opens as the overview's grid and the flag that rolls up out of it: a name,
- * ten checks, and the worst thing any of them returned. The dozen other facts
- * the run holds about a dataset are one tick away and off until asked for --
- * twelve columns of metadata beside ten of flags is a table nobody can read at
- * any width, and which two of the twelve a reader wants is not a thing this file
- * can know. So it is a control rather than a decision made here.
+ * It opens as the overview's grid and nothing else: a name and ten checks. The
+ * dozen other facts the run holds about a dataset are one tick away and off
+ * until asked for -- twelve columns of metadata beside ten of flags is a table
+ * nobody can read at any width, and which two of the twelve a reader wants is
+ * not a thing this file can know. So it is a control rather than a decision made
+ * here. The worst flag over the ten is among them: it is a summary of the ten
+ * columns already on screen, which is the one column the grid does not need.
  *
  * `checks` is the whole block of ten and not a column: they go on and off
  * together, because nine of them on their own is not a view anyone asked for.
@@ -55,7 +56,7 @@ const OPTIONAL_COLUMNS = [
   { key: "species", on: false },
   { key: "total_size", on: false },
   { key: "seq_length", on: false },
-  { key: "overall_verdict", on: true },
+  { key: "overall_verdict", on: false },
   { key: "n_checks_failed", on: false },
   { key: "max_probe_auroc", on: false },
   { key: "joint_auroc", on: false },
@@ -231,15 +232,20 @@ function build(document_, copy) {
     return {
       title: check.name,
       field: checkField(index),
-      /* Room to grow, but not much. `fitColumns` hands the slack to whatever
-       * will take it, and with only the name column asking, the name column got
-       * five hundred pixels for a thirty-character string while the grid beside
-       * it stayed at the width it needs on a phone. A ceiling on the cell is
-       * what keeps the ten reading as a grid rather than as ten bars. */
-      width: 50,
-      minWidth: 44,
+      /* The width of the longest word in the ten headings, and not a pixel
+       * chosen for the cell. `across labels` is 57 pixels of Inter at the size
+       * these headings are set in; under 62 it comes apart onto a third line,
+       * and `Dinucleotide` is simply cut off. So the column is 66: the four
+       * pixels over are the gutter between one heading and the next.
+       *
+       * Fixed at that, rather than given room to grow. `fitColumns` never grew
+       * them anyway -- a column with a `width` is not one it hands slack to, so
+       * `widthGrow` here was doing nothing and the name column was taking all of
+       * it. Saying so is the honest version, and it also means the ten read as
+       * one grid at every width instead of as ten bars on a wide screen. */
+      width: 66,
+      minWidth: 66,
       maxWidth: 66,
-      widthGrow: 1,
       resizable: false,
       hozAlign: "center",
       headerHozAlign: "center",
@@ -497,6 +503,7 @@ function build(document_, copy) {
     data: rows,
     columns,
     layout: "fitColumns",
+    columnHeaderVertAlign: "bottom",
     height: "70vh",
     placeholder: esc(copy.empty.no_rows),
     initialSort: [state.sort ?? { column: "benchmark_id", dir: "asc" }],

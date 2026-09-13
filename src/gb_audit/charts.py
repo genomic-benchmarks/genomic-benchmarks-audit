@@ -781,87 +781,6 @@ def core_set_funnel(run: Run) -> Figure:
     )
 
 
-def collection_bars(run: Run) -> Figure:
-    """The rollup flag per collection, so a reader can see where flags cluster."""
-    datasets = list(run.datasets.values())
-    groups: dict[str, list[Dataset]] = {}
-    for dataset in datasets:
-        groups.setdefault(dataset.collection, []).append(dataset)
-
-    entries = []
-    for collection, members in groups.items():
-        counts = {flag: 0 for flag in audit.FLAGS}
-        for member in members:
-            if member.overall_verdict in counts:
-                counts[member.overall_verdict] += 1
-        entries.append((collection, len(members), counts))
-    entries.sort(key=lambda e: (-e[2]["Fail"] / e[1], e[0]))
-
-    label_w, plot_w = 220, 520
-    row_h, pitch = 22, 32
-    top, bottom = 34, 42
-    width = label_w + plot_w + 96
-    height = top + len(entries) * pitch + bottom
-
-    body = []
-    for tick in range(0, 101, 25):
-        x = label_w + plot_w * tick / 100
-        body.append(_gridline(x, top - 8, x, top + len(entries) * pitch - 10))
-        body.append(_text(x, top - 14, f"{tick}%", "tick", "middle"))
-    body.append(_text(label_w + plot_w / 2, 12, "share of the collection", "axis", "middle"))
-
-    rows_out = []
-    for index, (collection, total, counts) in enumerate(entries):
-        y = top + index * pitch
-        body.append(_text(label_w - 12, y + row_h - 6, collection, "rowlab", "end"))
-        cursor = float(label_w)
-        for flag in ("Pass", "Warning", "Fail"):
-            n = counts[flag]
-            if not n:
-                continue
-            w = plot_w * n / total
-            body.append(
-                f'<rect class="cell" x="{cursor:.1f}" y="{y:.1f}" width="{max(w - 2, 1):.1f}" '
-                f'height="{row_h}" rx="2" fill="{FLAG_FILL[flag]}" '
-                f'data-tip="{_esc(f"{collection}: {n} of {total} datasets roll up to {flag}")}" '
-                f'tabindex="0"/>'
-            )
-            cursor += w
-        body.append(_text(label_w + plot_w + 10, y + row_h - 6, f"n={total}", "val"))
-        rows_out.append([collection, total, counts["Pass"], counts["Warning"], counts["Fail"]])
-
-    body.append(_flag_legend(label_w, height - 14, ["Pass", "Warning", "Fail"]))
-    svg = _svg(
-        width,
-        height,
-        "Rollup flag by collection",
-        "One stacked bar per collection showing the share of its datasets whose "
-        "checks roll up to Pass, Warning or Fail.",
-        "".join(body),
-        _hatch_def(),
-    )
-    return Figure(
-        slug="collection-bars",
-        title="Rollup flag by collection",
-        caption=(
-            "For each collection, the share of its datasets whose ten checks "
-            "roll up to each flag. The rollup is the worst flag over the checks "
-            "that scored."
-        ),
-        note=(
-            "Collections differ in size, in task, and in how their splits were "
-            "drawn; a taller red bar is a measurement on those datasets, not a "
-            "comparison between collections."
-        ),
-        svg=svg,
-        table=_table(
-            ["Collection", "Datasets", "Pass", "Warning", "Fail"],
-            rows_out,
-            "Rollup flag per collection.",
-        ),
-    )
-
-
 # ------------------------------------------------------- per-dataset figures ---
 
 
@@ -1187,6 +1106,5 @@ def corpus_figures(run: Run) -> tuple[Figure, ...]:
         check_bars(run),
         auroc_histogram(run),
         leakage_bands(run),
-        collection_bars(run),
         core_set_funnel(run),
     )

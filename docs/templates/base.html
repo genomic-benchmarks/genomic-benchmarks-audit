@@ -50,6 +50,7 @@
       <a href="{{root}}index.html"{{nav_index}}>Overview</a>
       <a href="{{root}}checks.html"{{nav_checks}}>Checks</a>
       <a href="{{root}}core-set.html"{{nav_core}}>Core Set</a>
+      <a href="{{root}}cite.html"{{nav_cite}}>Cite</a>
     </nav>
     <div class="masthead-right">
       <button type="button" class="icon-button" id="theme-toggle">
@@ -115,37 +116,6 @@
         </ul>
       </div>
     </nav>
-    <p>
-      Every number on this site comes from one committed file,
-      <code>docs/data/catalogue.json</code>, built offline from the tables this
-      repository carries under <code>data/</code>. Nothing is fetched at render
-      time. Three things are computed in the browser and no others: the sorting,
-      filtering and grouping of rows; and, on the overview, the flag a published
-      AUROC would have been given under boundaries a reader moved. That last one
-      re-decides a flag from a number this run measured &mdash; it never re-runs a
-      check, and the page marks itself as showing something other than the shipped
-      boundaries whenever it is doing so.
-    </p>
-    <dl class="provenance">
-      <dt>Measurements</dt>
-      <dd><code>genomic-benchmarks-qc</code>, run <code>{{qc_run}}</code></dd>
-      <dt>Audit</dt>
-      <dd><code>gb-audit {{package_version}}</code>, run <code>{{audit_run}}</code></dd>
-      <dt>Core Set</dt>
-      <dd>run <code>{{core_set_run}}</code></dd>
-      <dt>Reports and full tables</dt>
-      <dd>{{record_line}}</dd>
-      <dt>Catalogue schema</dt>
-      <dd>version {{schema_version}}</dd>
-    </dl>
-    <p class="fine">
-      There is no build date here on purpose. Everything above comes from pinned
-      files, so two builds of the same commit produce the same page, and what a
-      reader needs in order to find these numbers again is the run label rather
-      than the hour it was rendered.
-      <a href="{{root}}cite.html">What each of these labels names, and how to cite
-      this run</a>
-    </p>
   </div>
 </footer>
 
@@ -165,7 +135,7 @@
     "species": "Species",
     "total_size": "Rows",
     "seq_length": "Sequence length",
-    "overall_verdict": "Rollup flag",
+    "overall_verdict": "Worst flag",
     "n_checks_failed": "Checks flagged Fail",
     "max_probe_auroc": "Strongest probe AUROC",
     "max_leaked_test_pct": "Worst split overlap",
@@ -289,8 +259,9 @@
       "integrity": "Integrity"
     },
     "auroc": "AUROC",
-    "splits_heading": "Splits and their overlap",
-    "overlap_heading": "Overlap",
+    "splits_heading": "Splits",
+    "splits_note": "The worst flag the {{n_split_checks_word}} per-split checks returned on each split.",
+    "overlap_heading": "Overlap between two splits",
     "pair_vs": "vs",
     "pair_share": "of {from} was also found in {to}",
     "reports_heading": "Reports",
@@ -329,19 +300,15 @@
     "flags_title": "What the checks returned on the datasets shown",
     "flags_desc": "{checks} horizontal stacked bars, one per check, showing the share of the {n} datasets currently shown that carry each flag on that check.",
     "flags_axis": "share of the {n} datasets shown",
-    "flags_caption": "The share of the {n} datasets shown carrying each flag on each of the {checks} checks, measured on each dataset's reference split. The trailing figure counts the datasets flagged Warning or Fail. Select a segment to filter the table to the datasets it counts.",
     "flags_tip": "{check}: {n} of the {total} shown flagged {flag}. Select to filter the table to them.",
-    "flags_twin": "Datasets per flag per check, over the {n} shown.",
     "probe_title": "How far each single feature got on the datasets shown",
     "probe_desc": "{probes} rows, one per probe, with one mark per dataset at the AUROC that probe reached on it, over the {n} datasets currently shown.",
     "probe_axis": "AUROC on the reference split",
-    "probe_caption": "One mark per dataset per probe, over the {n} datasets shown: where a mark sits is the AUROC that one feature reached on that dataset's reference split. The strongest-probe column in the table is the furthest right of the {probes} marks on a dataset; this is which of the {probes} it was. The rule behind each row is its median, and the trailing figure repeats it. Every mark opens its dataset. The colour is that check's flag, which on a probe is a boundary drawn on this same number at 0.60 and 0.70 — so it marks where the boundaries fall rather than adding a second measurement, and the dashed line is the 0.70 the Core Set cuts at.",
     "probe_tip": "{dataset} — {check} reaches AUROC {value} on the reference split, and the check returned {flag}.",
     "probe_median": "{check}: median AUROC {value} over the {n} datasets shown.",
     "probe_cut": "0.70",
     "probe_twin": "What each probe reached over the {n} datasets shown, and how many reached {cut} or more.",
     "col_check": "Check",
-    "col_blank": "No result",
     "col_measured": "Measured",
     "col_median": "Median AUROC",
     "col_strongest": "Strongest",

@@ -118,11 +118,11 @@
     return parts.join("");
   }
 
-  /** The caption and the table twin every figure on this site ships, in the shape
-   * `charts.render` gives the server-drawn ones: the sentence first, then the same
-   * values as text under a disclosure. The twin is not a fallback -- a reader after
-   * the number should not have to hover 930 marks to get it. */
-  function foot(caption, headers, rows, tableCaption, copy) {
+  /** The table twin a figure ships under a disclosure, in the shape
+   * `charts.render` gives the server-drawn ones: the same values as text. The
+   * twin is not a fallback -- a reader after the number should not have to hover
+   * 930 marks to get it. */
+  function foot(headers, rows, tableCaption, copy) {
     const head = headers.map((h, i) =>
       `<th scope="col"${i ? ' class="right"' : ""}>${svgEsc(h)}</th>`).join("");
     const body = rows.map((row) =>
@@ -130,7 +130,7 @@
         i ? `<td class="right">${svgEsc(cell)}</td>` : `<th scope="row">${svgEsc(cell)}</th>`)
         .join("") + "</tr>").join("");
     return (
-      `<figcaption><p class="fig-caption">${svgEsc(caption)}</p>` +
+      `<figcaption>` +
       `<details class="fig-table"><summary>${svgEsc(copy.explore.table_view)}</summary>` +
       `<table><caption>${svgEsc(tableCaption)}</caption><thead><tr>${head}</tr></thead>` +
       `<tbody>${body}</tbody></table></details></figcaption>`
@@ -167,13 +167,16 @@
     }
     body.push(text(labelW + plotW / 2, 13, fill(copy.explore.flags_axis, { n: total }), "axis", "middle"));
 
-    const twinRows = [];
+    /* Whether the legend names `Unknown`. Asked of the rows rather than assumed:
+     * a filtered view where nothing went unscored should not carry a key to a
+     * fill it is not showing. */
+    let anyUnknown = false;
     checks.forEach((check, index) => {
       const y = top + index * pitch;
       const flags = rows.map((d) => d.flags[check.name] ?? null);
       const counts = {};
       for (const flag of FLAG_ORDER) counts[flag] = flags.filter((f) => f === flag).length;
-      const blank = flags.filter((f) => f === null).length;
+      if (counts.Unknown) anyUnknown = true;
 
       body.push(text(labelW - 12, y + rowH - 5, check.name, "rowlab", "end"));
       let cursor = labelW;
@@ -196,22 +199,14 @@
       }
       const flagged = counts.Warning + counts.Fail;
       body.push(text(labelW + plotW + 10, y + rowH - 5, `${flagged}/${total}`, "val"));
-      twinRows.push([check.name, counts.Pass, counts.Warning, counts.Fail,
-        counts.Unknown || "", blank || ""]);
     });
 
-    const anyUnknown = twinRows.some((r) => r[4] !== "");
     body.push(legend(labelW, height - 14, fills, copy,
       anyUnknown ? FLAG_ORDER : ["Pass", "Warning", "Fail"]));
 
-    const svg = chart(width, height, copy.explore.flags_title,
+    return chart(width, height, copy.explore.flags_title,
       fill(copy.explore.flags_desc, { n: total, checks: checks.length }),
       body.join(""), hatchDef(fills.Unknown));
-    return svg + foot(
-      fill(copy.explore.flags_caption, { n: total, checks: checks.length }),
-      [copy.explore.col_check, copy.flags.Pass, copy.flags.Warning, copy.flags.Fail,
-        copy.flags.Unknown, copy.explore.col_blank],
-      twinRows, fill(copy.explore.flags_twin, { n: total }), copy);
   }
 
   /* -------------------------------------------------------- probes by check --- */
@@ -319,7 +314,6 @@
       fill(copy.explore.probe_desc, { n: rows.length, probes: probes.length }),
       body.join(""), hatchDef(fills.Unknown));
     return svg + foot(
-      fill(copy.explore.probe_caption, { n: rows.length, probes: probes.length }),
       [copy.explore.col_check, copy.explore.col_measured, copy.explore.col_median,
         copy.explore.col_strongest, copy.explore.col_over_cut],
       twinRows, fill(copy.explore.probe_twin, { n: rows.length, cut: AUROC_CUT.toFixed(2) }), copy);
