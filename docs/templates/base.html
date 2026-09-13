@@ -37,9 +37,18 @@
      page's prefix. -->
 <body data-root="{{root}}">
 
+<!-- The address the Top button points at, and the one element on this page it
+     cannot live on. It read as though it belonged to the masthead and sat there
+     -- but the masthead is `position: sticky`, so from the moment there is
+     enough page to scroll it is stuck against the top of the viewport and is
+     already, entirely, in view. Nothing scrolls to reach what it can already
+     see: the button set the address to `#top` and moved the page not at all.
+     Zero height, above everything, and somewhere the reader genuinely is not. -->
+<span id="top"></span>
+
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="masthead" id="top">
+<header class="masthead">
   <div class="wrap">
     <a class="wordmark" href="{{root}}index.html">Genomic Benchmarks <strong>audit</strong></a>
     <!-- Exactly one of these carries `aria-current="page"`, set by `site.py`.

@@ -237,6 +237,29 @@ def test_methods_says_where_each_of_its_parts_went(built):
     assert "assets/forward.js" not in page
 
 
+def test_the_way_back_to_the_top_goes_somewhere_the_reader_is_not(built):
+    """An anchor can resolve and still scroll nowhere.
+
+    The masthead is `position: sticky`, and `#top` was on it. By the time a reader
+    is far enough down for the Top button to appear, the masthead is pinned
+    against the top of the viewport and is entirely in view -- and nothing scrolls
+    to reach an element it can already see. The button set the address and left
+    the page where it was. The anchor check below passed throughout, because the
+    anchor was there; being there was never the question. So the target has to be
+    an element that scrolls away with the rest of the page.
+    """
+    page = (Path(built["out"]) / "index.html").read_text()
+    assert 'href="#top"' in page
+
+    css = (Path(built["out"]) / "assets" / "site.css").read_text()
+    rule = css.partition(".masthead {")[2].partition("}")[0]
+    assert "position: sticky" in rule, "the premise of this test moved"
+
+    masthead = re.search(r'<header class="masthead"[^>]*>', page).group(0)
+    assert "id=" not in masthead, masthead
+    assert page.index('id="top"') < page.index(masthead)
+
+
 def test_every_anchor_this_site_links_to_is_on_the_page_it_names(built, pages):
     """A section that moved pages leaves every `#anchor` at it pointing at nothing.
 
