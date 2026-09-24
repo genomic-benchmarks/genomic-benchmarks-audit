@@ -1077,6 +1077,9 @@ a.tag:hover { background: var(--accent-line); color: var(--paper); }
 .site-links a { color: var(--ink-soft); text-decoration: none; }
 .site-links a:hover { color: var(--accent); text-decoration: underline; }
 
+.colophon .licence { margin: 28px 0 0; }
+.colophon .licence a { color: var(--ink-soft); }
+
 @media (max-width: 1000px) {
   .panel-grid { grid-template-columns: minmax(0, 1fr); }
 }

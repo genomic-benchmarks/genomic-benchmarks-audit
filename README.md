@@ -6,7 +6,8 @@
 
 [![CI](https://github.com/genomic-benchmarks/genomic-benchmarks-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/genomic-benchmarks/genomic-benchmarks-audit/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.14%20%7C%203.13%20%7C%203.12-blue)](pyproject.toml)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![License](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
+[![Data licence](https://img.shields.io/badge/data-CC%20BY%204.0-blue)](https://creativecommons.org/licenses/by/4.0/)
 [![Site](https://img.shields.io/badge/site-genomic--benchmarks.github.io-1f6fd0)](https://genomic-benchmarks.github.io/genomic-benchmarks-audit/)
 
 ### Read the benchmark before you beat it.
@@ -138,4 +139,15 @@ with the tables under `data/`, which is what CI checks on every commit.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Two licences, because the repository holds two kinds of thing.
+
+- **Code** — `src/`, `scripts/`, `tools/`, the templates and assets under `docs/` —
+  is under the Apache License 2.0; see [LICENSE](LICENSE). Vendored libraries under
+  `docs/vendor/` keep their own licences.
+- **The run** — the tables under [`data/`](data/README.md), the rendered site, the
+  QC reports and the Zenodo record — is under
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+CC BY 4.0 covers what the audit measured, not the datasets it measured. A sequence
+shown in a report remains under the licence of the dataset it comes from, and
+[`data/sources.csv`](data/sources.csv) records that licence for every one of them.

@@ -111,3 +111,11 @@ checkout and rewrites `provenance.json`. It is the only thing that should write
 into this directory. Re-running it against a different QC run is a new audit run,
 not an edit to this one: the run labels in `provenance.json` are what a reader
 uses to find these numbers again.
+
+## Licence
+
+These tables are released under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), as are the reports and
+the full tables on the Zenodo record. The licence covers the measurements, not the
+datasets they were made on: `sources.csv` gives each dataset's own licence, and a
+sequence quoted in a report stays under it.

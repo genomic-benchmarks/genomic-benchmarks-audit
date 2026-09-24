@@ -7,7 +7,7 @@ name = "gb-audit"
 version = "0.1.0"
 description = "Render one pinned run of genomic-benchmarks-qc over the corpus as a browsable site"
 requires-python = ">=3.12"
-license = "MIT"
+license = "Apache-2.0"
 authors = [{ name = "Katarina Gresova" }]
 
 # The standard library, and nothing else.
