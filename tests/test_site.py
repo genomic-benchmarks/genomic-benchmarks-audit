@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 import pytest
-from gb_audit import audit, charts, site, zenodo
+from gb_audit import audit, charts, site
 
 PLACEHOLDER_LEFT = re.compile(r"\{\{[a-z0-9_]+\}\}")
 
@@ -66,22 +66,6 @@ def test_the_grids_agree_on_what_a_check_is_called():
     assert [copy["bands"][kind] for kind in ("probe", "integrity", "leakage scan")] == [
         name for name, _, _ in charts.KIND_BANDS
     ]
-
-
-def test_no_draft_token_is_ever_rendered(built, monkeypatch):
-    """A share token in a published page is a published token.
-
-    The build is allowed to read the draft; the site it writes is not allowed to
-    say how. `public_record_url()` exists for this and this test is what keeps it
-    being the one the templates use.
-    """
-    assert "token" not in zenodo.public_record_url()
-    for page in Path(built["out"]).rglob("*.html"):
-        if site.reports.SITE_DIR in page.parts:
-            continue
-        text = page.read_text(encoding="utf-8")
-        assert "preview=1" not in text
-        assert "?token=" not in text
 
 
 def test_every_internal_link_resolves(built):
@@ -243,14 +227,6 @@ def test_render_refuses_a_directory_it_did_not_write(tmp_path, run):
         site.build(theirs, run=run)
     assert "thesis.tex" in str(raised.value)
     assert (theirs / "thesis.tex").is_file()
-
-
-def test_the_route_note_names_the_route_only_where_it_changes_what_they_are():
-    """Bytes from an unpublished draft are not bytes a reader can go and get."""
-    assert "unpublished draft" in site.route_note("zenodo_draft", 423)
-    assert "local copy" in site.route_note("local_mirror", 423)
-    assert site.route_note("zenodo", 423) == ""
-    assert site.route_note("zenodo_draft", 0) == ""
 
 
 def test_the_checks_table_is_rendered_on_one_page_and_not_two(built):

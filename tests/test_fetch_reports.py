@@ -52,7 +52,7 @@ def test_an_archive_whose_digest_is_wrong_is_not_unpacked(tmp_path, monkeypatch)
     def serve(name, destination, timeout=60.0):
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(payload)
-        return destination, "zenodo"
+        return destination
 
     monkeypatch.setattr(zenodo, "fetch", serve)
     with pytest.raises(fetch_reports.Refused) as raised:
@@ -113,13 +113,11 @@ def test_a_directory_that_is_short_is_not_called_present(tmp_path):
     assert not fetch_reports.present(root, entry)
 
 
-def test_provenance_records_the_route_and_carries_no_timestamp(tmp_path):
-    """The site prints this. Reports fetched from an unpublished draft are not
-    reports a reader can go and get for themselves."""
+def test_provenance_records_the_record_and_carries_no_timestamp(tmp_path):
     root = tmp_path / "site" / "qc-reports"
-    fetch_reports.write_provenance(root, [], "zenodo_draft")
+    fetch_reports.write_provenance(root, [], "zenodo")
     recorded = json.loads((root / "PROVENANCE.json").read_text())
-    assert recorded["route"] == "zenodo_draft"
+    assert recorded["route"] == "zenodo"
     assert recorded["zenodo_record_id"] == zenodo.RECORD_ID
-    assert recorded["zenodo_record_registered"] is False
+    assert recorded["zenodo_record_registered"] is True
     assert not any("time" in k or "date" in k for k in recorded)

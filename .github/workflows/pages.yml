@@ -38,8 +38,7 @@ jobs:
 
       # 90 MB of archives, verified against the digests in data/reports.csv
       # before anything is unpacked, and unpacked straight into ./site/qc-reports
-      # where the render serves them from. While the record is a draft this needs
-      # its share token in a repository secret.
+      # where the render serves them from.
       #
       # Allowed to fail on purpose: the site renders without the reports and says
       # so on every page that would have carried one, which beats no site at all
@@ -47,8 +46,6 @@ jobs:
       - name: Fetch the reports
         id: fetch
         continue-on-error: true
-        env:
-          GENOMIC_BENCHMARKS_ZENODO_TOKEN: ${{ secrets.ZENODO_DRAFT_TOKEN }}
         run: gb-audit fetch --out ./site --jobs 6
 
       - name: Report what was fetched

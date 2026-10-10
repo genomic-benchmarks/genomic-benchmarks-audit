@@ -1,7 +1,7 @@
 """`gb-audit` -- build the catalogue, fetch the reports, render the site.
 
     gb-audit build     data/*.csv          -> docs/data/catalogue.json
-    gb-audit fetch     Zenodo or a mirror  -> site/qc-reports/
+    gb-audit fetch     Zenodo              -> site/qc-reports/
     gb-audit render    the above           -> site/
     gb-audit check     all of it, writing nothing
 
@@ -97,11 +97,7 @@ def cmd_render(args: argparse.Namespace) -> int:
     )
     present = result["reports_present"]
     if present:
-        route = result["route"]
-        print(
-            f"reports: {present} already in {out / site.reports.SITE_DIR}"
-            + (f", fetched via {route}" if route else "")
-        )
+        print(f"reports: {present} already in {out / site.reports.SITE_DIR}")
     else:
         print(
             "no reports in this build -- every report page says so. "

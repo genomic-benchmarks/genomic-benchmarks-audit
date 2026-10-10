@@ -156,7 +156,7 @@ REDISTRIBUTION = ("permitted", "denied", "unknown")
 # with a `KeyError`.
 ROLLUP_COLUMNS = (
     "collection",
-    "dataset",
+    "dataset_name",
     "task_category",
     "molecular_level",
     "task_type",
@@ -593,10 +593,9 @@ class Run:
 def _rows(path: Path, delimiter: str = ",") -> list[dict[str, str]]:
     if not path.exists():
         raise RunInvalid(
-            f"{path.name} is not in {path.parent}. Regenerate the archived run "
-            f"with scripts/regenerate_audit_data.py rather than assembling it by "
-            f"hand; the tables are checked against each other on read and a "
-            f"missing one cannot be checked at all."
+            f"{path.name} is not in {path.parent}. The tables are checked "
+            f"against each other on read, and a missing one cannot be checked "
+            f"at all."
         )
     with path.open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter=delimiter))
@@ -637,7 +636,7 @@ def _flag(value: str, where: str, column: str) -> str | None:
 def _read_measurements(path: Path) -> dict[tuple[str, str], list[Measurement]]:
     found: dict[tuple[str, str], list[Measurement]] = {}
     for row in _rows(path):
-        key = (row["collection"], row["dataset"])
+        key = (row["collection"], row["dataset_name"])
         where = f"{key[0]}:{key[1]} {row['split']} {row['check']}"
         found.setdefault(key, []).append(
             Measurement(
@@ -660,7 +659,7 @@ def _read_leakage(path: Path) -> dict[tuple[str, str], list[LeakageComparison]]:
     """
     found: dict[tuple[str, str], list[LeakageComparison]] = {}
     for row in _rows(path):
-        key = (row["collection"], row["dataset"])
+        key = (row["collection"], row["dataset_name"])
         found.setdefault(key, [])
         if not row["check"].strip():
             if row["statistic"].strip():
@@ -700,7 +699,7 @@ def _read_candidates(path: Path) -> dict[tuple[str, str], tuple[Joint | None, di
     """
     out: dict[tuple[str, str], tuple[Joint | None, dict[str, bool], str | None]] = {}
     for row in _rows(path):
-        key = (row["collection"], row["dataset"])
+        key = (row["collection"], row["dataset_name"])
         where = f"{key[0]}:{key[1]}"
         value = _optional_float(row["joint_auroc"], where, "joint_auroc")
         joint = None
@@ -726,7 +725,7 @@ def _read_candidates(path: Path) -> dict[tuple[str, str], tuple[Joint | None, di
 def _read_splits(path: Path) -> dict[tuple[str, str], list[Split]]:
     found: dict[tuple[str, str], list[Split]] = {}
     for row in _rows(path):
-        key = (row["collection"], row["dataset"])
+        key = (row["collection"], row["dataset_name"])
         where = f"{key[0]}:{key[1]} {row['split']}"
         found.setdefault(key, []).append(
             Split(
@@ -748,14 +747,14 @@ def _read_splits(path: Path) -> dict[tuple[str, str], list[Split]]:
 def _read_sources(path: Path) -> dict[tuple[str, str], Source]:
     found = {}
     for row in _rows(path):
-        where = f"{row['collection']}:{row['dataset']}"
+        where = f"{row['collection']}:{row['dataset_name']}"
         if row["redistribution"] not in REDISTRIBUTION:
             raise RunInvalid(
                 f"{where}.redistribution: {row['redistribution']!r} is not one of "
                 f"{sorted(REDISTRIBUTION)}. The site says in words what this value "
                 f"says in one, so a fourth value would be published unread."
             )
-        found[(row["collection"], row["dataset"])] = Source(
+        found[(row["collection"], row["dataset_name"])] = Source(
             doi=row["doi"],
             collection_doi=row["collection_doi"],
             licence=row["licence"],
@@ -769,7 +768,7 @@ def _read_sources(path: Path) -> dict[tuple[str, str], Source]:
 def _read_reports(path: Path) -> dict[tuple[str, str], Reports]:
     found = {}
     for row in _rows(path):
-        found[(row["collection"], row["dataset"])] = Reports(
+        found[(row["collection"], row["dataset_name"])] = Reports(
             archive=row["archive"],
             n_bytes=int(row["bytes"]),
             sha256=row["sha256"],
@@ -886,14 +885,14 @@ def read(root: Path | str = DATA) -> Run:
     sources = _read_sources(root / "sources.csv")
     reports = _read_reports(root / "reports.csv")
     core_set = {
-        (row["collection"], row["dataset"]): int(row["selection_rank"])
+        (row["collection"], row["dataset_name"]): int(row["selection_rank"])
         for row in _rows(root / "core_set.csv")
     }
     candidates = _read_candidates(root / "core_set_candidates.csv")
 
     datasets: dict[str, Dataset] = {}
     for row in rollup_rows:
-        key = (row["collection"], row["dataset"])
+        key = (row["collection"], row["dataset_name"])
         where = f"{key[0]}:{key[1]}"
         if where in datasets:
             raise RunInvalid(f"{where} appears twice in dataset_level_summary.csv")

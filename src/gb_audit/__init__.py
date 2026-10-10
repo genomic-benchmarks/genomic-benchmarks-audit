@@ -7,7 +7,7 @@ The audit is re-run -> here.
 
     gb-audit build      # data/ -> docs/data/catalogue.json
     gb-audit render     # docs/ -> site/
-    gb-audit fetch      # the report archives, from Zenodo or a local mirror
+    gb-audit fetch      # the report archives, from Zenodo
     gb-audit check      # every generated file is what its inputs build
 
 What this package holds is a measurement, not a corpus and not a score. It reads

@@ -19,10 +19,9 @@ escaping one aborts the archive.
 the rendered pages link to, so the download lands where it is served and nothing
 copies it afterwards. `gb-audit render` preserves that directory.
 
-**The route is recorded, not just taken.** `PROVENANCE.json` sits beside what was
-fetched and the reports page prints it: reports from an unpublished draft or a
-local checkout are not reports a reader can go and get. No timestamp -- the site is
-built from it, and two builds of one run must produce the same bytes.
+**What was fetched is recorded.** `PROVENANCE.json` sits beside it, naming the
+record and the archives unpacked. No timestamp -- the site is built from it, and
+two builds of one run must produce the same bytes.
 """
 
 from __future__ import annotations
@@ -133,11 +132,11 @@ def unpack(root: Path, source: Path, entry: dict) -> None:
         shutil.rmtree(staging, ignore_errors=True)
 
 
-def acquire(root: Path, entry: dict, *, timeout: float) -> tuple[str, str]:
-    """Fetch one archive, verify it, unpack it. Returns (archive, route)."""
+def acquire(root: Path, entry: dict, *, timeout: float) -> str:
+    """Fetch one archive, verify it, unpack it. Returns the archive's name."""
     with tempfile.TemporaryDirectory(prefix="gb-audit-fetch-") as scratch:
         scratch_file = Path(scratch) / entry["archive"]
-        path, route = zenodo.fetch(entry["archive"], scratch_file, timeout=timeout)
+        path = zenodo.fetch(entry["archive"], scratch_file, timeout=timeout)
         found = digest(path)
         if found != entry["sha256"]:
             size = path.stat().st_size
@@ -147,7 +146,7 @@ def acquire(root: Path, entry: dict, *, timeout: float) -> tuple[str, str]:
                 f"{int(entry['bytes']):,}. Not unpacked."
             )
         unpack(root, path, entry)
-    return entry["archive"], route
+    return entry["archive"]
 
 
 def write_provenance(root: Path, entries: list[dict], route: str) -> None:
@@ -279,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
             entry = futures[future]
             done += 1
             try:
-                name, _ = future.result()
+                name = future.result()
             except (Refused, zenodo.RecordUnavailable) as exc:
                 failures.append(entry["archive"])
                 print(f"  [{done}/{len(todo)}] FAILED {entry['archive']}: {exc}")

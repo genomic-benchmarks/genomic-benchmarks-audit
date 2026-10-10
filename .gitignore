@@ -29,8 +29,7 @@ venv/
 .vscode/
 *.swp
 
-# VOCABULARY.md, and the one test that reads it. The rules it documents are
-# committed in tools/vocabulary.toml and still checked in CI; only the prose
-# cross-check needs the document, so that test lives beside it, untracked.
+# custom
 VOCABULARY.md
 tools/test_vocab_check_local.py
+CLAUDE.md

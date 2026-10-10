@@ -342,11 +342,9 @@ def provenance(run: Run) -> dict:
     recorded = run.provenance
     return {
         "package_version": __version__,
-        "audit_run": recorded.get("audit_run"),
-        "qc_run": recorded.get("qc_run"),
-        "core_set_run": recorded.get("core_set_run"),
         "zenodo_record_id": recorded.get("zenodo_record_id"),
         "zenodo_concept_record_id": recorded.get("zenodo_concept_record_id"),
+        "zenodo_record_version": recorded.get("zenodo_record_version"),
         "zenodo_record_registered": recorded.get("zenodo_record_registered"),
     }
 

@@ -1,20 +1,13 @@
 # The archived run
 
 Fourteen CSVs and a `provenance.json`. This is the only input the site has: every
-number on every page is computed from these files, and nothing here is written by
-hand.
+number on every page is computed from these files.
 
-They come from three pipelines, not one, and the chain runs one way: `dataset_qc`
-measures, `dataset_audit` rolls up, and `core_set` applies the criteria over that
-rollup plus a joint model of the same features. `provenance.json` names all three
-runs, because a page quoting a Core Set figure and a page quoting a flag are
-quoting two different pieces of work.
-
-One of the fourteen comes from none of them. `sources.csv` is read out of the
-corpus metadata records — the curation's own files, upstream of the first pipeline
-— because the licence a dataset is published under, the DOI its credit is owed to
-and the URL its files are served from are facts about the data rather than
-measurements of it, and no run computes any of the three.
+Three of them come from the Zenodo record: `combined_classes_results.csv`,
+`combined_splits_results.csv`, and `reports.csv`, the manifest of the record's 93
+archives. `provenance.json` names the record and its version, and records a
+SHA-256 for each of the three. The other eleven are not on the record. They are
+kept here as they are.
 
 ## Why these are committed and the reports are not
 
@@ -60,20 +53,20 @@ computed from all 93 datasets' flags instead, so that the checks page and the
 dataset pages agree with each other, and the leakage row is shown as 92 scored
 plus one blank rather than as a smaller denominator nothing on the page explains.
 
-## The one table here no pipeline produced
+## The one table here that is not a measurement
 
-`sources.csv` is derived from `datasets/<collection>/<collection>_metadata.json`
-in the source checkout, and it is the only file in this directory whose source is
-not a run. Two things follow from that.
+`sources.csv` holds facts about the data rather than measurements of it: the
+licence each dataset is published under, whether that licence permits
+republication, and the DOI its credit is owed to. Two things about it matter.
 
-The first is that its licence and its DOI are **resolved** here, not inherited at
+The first is that its licence and its DOI are **resolved**, not inherited at
 read time. Both are stated per collection and overridden per dataset, and the
 override is not the rare case it looks like: eleven datasets carry their own
 licence, and mRNABench's collection-level one grants nothing at all — the
 collection was published with no licence stated — so every one of its retained
 datasets overrides it at its true upstream. A fallback applied in two places is a
-fallback that will one day be applied in one, so it is applied in `read_sources`
-and nowhere else. `doi` and `collection_doi` are both carried, and are equal for
+fallback that will one day be applied in one, so each row already carries the
+answer for its own dataset. `doi` and `collection_doi` are both carried, and are equal for
 the 67 datasets that inherit.
 
 The second is that `redistribution` is the field the site branches on, and its
@@ -106,11 +99,10 @@ them.
 
 ## Regenerating
 
-`scripts/regenerate_audit_data.py` copies these out of a `GenBench2_paper`
-checkout and rewrites `provenance.json`. It is the only thing that should write
-into this directory. Re-running it against a different QC run is a new audit run,
-not an edit to this one: the run labels in `provenance.json` are what a reader
-uses to find these numbers again.
+`scripts/regenerate_audit_data.py` downloads the three files the record supplies
+and rewrites `provenance.json`; with `--check` it reports whether they still match
+the record. It writes nothing else: the other eleven tables are kept here as they
+are.
 
 ## Licence
 

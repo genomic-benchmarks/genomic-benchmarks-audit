@@ -250,24 +250,6 @@ def resolve(document: dict, root: Path) -> int:
     return unpacked
 
 
-def fetch_route(root: Path) -> str | None:
-    """Which of the three routes served the bytes in `root`, if it says.
-
-    Written by `gb-audit fetch` beside what it fetched. Reports from a draft or a
-    local checkout are not reports a reader can go and get, and the page offering
-    them says so.
-    """
-    recorded = root / "PROVENANCE.json"
-    if not recorded.is_file():
-        return None
-    try:
-        return json.loads(recorded.read_text(encoding="utf-8")).get("route")
-    except (json.JSONDecodeError, OSError):
-        # A provenance file that cannot be read is not a reason to refuse to
-        # render 522 pages. The route note is simply omitted.
-        return None
-
-
 def check_fresh(run: audit.Run) -> None:
     """Refuse to render a catalogue that is not what the tables produce."""
     if not CATALOGUE.is_file():
@@ -294,6 +276,8 @@ def record_line(document: dict) -> str:
     values = {
         "record_id": html.escape(str(provenance["zenodo_record_id"])),
         "record_url": html.escape(zenodo.public_record_url(), quote=True),
+        "doi": html.escape(zenodo.DOI),
+        "doi_url": html.escape(f"https://doi.org/{zenodo.DOI}", quote=True),
         "full_table": html.escape(zenodo.FULL_TABLE),
         "n_datasets": str(document["totals"]["n_datasets"]),
         "n_reports": str(document["totals"]["n_reports"]),
@@ -413,11 +397,9 @@ def counts(document: dict) -> dict[str, str]:
         "n_clean_but_joint": str(totals["n_clean_but_joint"]),
         "n_species": str(len(facets["species"])),
         "n_task_categories": str(len(facets["task_category_grouped"])),
-        "audit_run": html.escape(str(provenance["audit_run"])),
-        "qc_run": html.escape(str(provenance["qc_run"])),
-        "core_set_run": html.escape(str(provenance["core_set_run"])),
         "package_version": html.escape(str(provenance["package_version"])),
         "record_id": html.escape(str(provenance["zenodo_record_id"])),
+        "record_version": html.escape(str(provenance["zenodo_record_version"])),
         "schema_version": str(document["schema_version"]),
         "record_line": record_line(document),
     }
@@ -1219,21 +1201,6 @@ def reports_page(document: dict) -> str:
     )
 
 
-# One part per route: what each means for a reader is different. `zenodo` gets
-# none, being the case the page already describes.
-ROUTE_PARTS = {
-    "zenodo_draft": "route_draft",
-    "local_mirror": "route_mirror",
-}
-
-
-def route_note(route: str | None, unpacked: int) -> str:
-    """Where these particular bytes came from, where that changes what they are."""
-    if not unpacked or route not in ROUTE_PARTS:
-        return ""
-    return part(ROUTE_PARTS[route], {"record_id": html.escape(zenodo.RECORD_ID)})
-
-
 def cite_page(document: dict) -> str:
     """What identifies this run, and what a citation of it has to name.
 
@@ -1272,19 +1239,12 @@ def dataset_page(
     measured: audit.Dataset,
     document: dict,
     copy: dict,
-    route: str | None = None,
 ) -> str:
-    """One dataset's page: what the ten checks returned, and what they do not say.
-
-    `route` is where this build's reports came from, and it is said here because
-    here is where a reader opens one. It renders to nothing for the published
-    record, which is the case the page already describes.
-    """
+    """One dataset's page: what the ten checks returned, and what they do not say."""
     drawn = {f.slug: f for f in charts.dataset_figures(measured)}
     reference = dataset["reference_split"]
     corpus = counts(document)
     entry = dataset["reports"]
-    unpacked = int(bool(entry) and entry["state"] == "unpacked")
 
     core = (
         part(
@@ -1359,7 +1319,6 @@ def dataset_page(
             "n_dataset_splits": str(len(dataset["splits"])),
             "split_word": plural(len(dataset["splits"]), "split"),
             "reference_split": html.escape(reference or ""),
-            "route_note": route_note(route, unpacked),
             "rollup_flag": flag_chip(dataset["overall_verdict"], copy),
             "n_checks_failed": str(dataset["n_checks_failed"]),
             "n_checks_warning": str(dataset["n_checks_warning"]),
@@ -1806,14 +1765,13 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
         Path("cite.html"): cite_page(document),
         Path("methods.html"): methods_page(document),
     }
-    route = fetch_route(report_root)
 
     n_views = 0
     for dataset in document["datasets"]:
         slug = safe_component(dataset["slug"], dataset["benchmark_id"])
         measured = run.datasets[dataset["benchmark_id"]]
         pages[Path("datasets") / f"{slug}.html"] = dataset_page(
-            dataset, measured, document, copy, route
+            dataset, measured, document, copy
         )
         entry = dataset["reports"]
         if entry is None or entry["state"] != "unpacked":
@@ -1849,7 +1807,6 @@ def build(out: Path | None = None, *, run: audit.Run | None = None) -> dict:
         "dataset_pages": len(document["datasets"]),
         "report_views": n_views,
         "reports_present": n_unpacked,
-        "route": route,
         # The pages and the assets, not the reports: what this build wrote, as
         # against what it found already sitting in the directory.
         "bytes": sum(
